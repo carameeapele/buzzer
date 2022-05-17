@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "638792572460",
+    "project_id": "buzzer-c4c4c",
+    "storage_bucket": "buzzer-c4c4c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:638792572460:android:9445cde314339a8e403b89",
+        "android_client_info": {
+          "package_name": "com.carameea.buzzer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "638792572460-3q97c4h3c5j9h3phckbltu7dn9nl3ffp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJW08ZDwQs2Hyala7nSUxa-IdS_BYxzW8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "638792572460-3q97c4h3c5j9h3phckbltu7dn9nl3ffp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

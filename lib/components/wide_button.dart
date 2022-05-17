@@ -13,8 +13,8 @@ class WideButton extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: SizedBox(
-        width: double.infinity,
         child: TextButton(
+          onPressed: () {},
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.deepOrange),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -23,7 +23,15 @@ class WideButton extends StatelessWidget {
               ),
             ),
           ),
-          child: Padding,
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ),
       ),
     );
