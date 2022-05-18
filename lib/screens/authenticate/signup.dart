@@ -1,13 +1,11 @@
-import 'package:buzzer/components/text_form_field.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
+import 'package:buzzer/widgets/text_form_field_style.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
-  final Function toggleView;
   const SignUp({
     Key? key,
-    required this.toggleView,
   }) : super(key: key);
 
   @override

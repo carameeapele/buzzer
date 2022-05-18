@@ -1,5 +1,5 @@
-import 'package:buzzer/components/app_bar_widget.dart';
-import 'package:buzzer/components/menu_drawer.dart';
+import 'package:buzzer/widgets/app_bar_widget.dart';
+import 'package:buzzer/style/menu_drawer_widget.dart';
 import 'package:flutter/material.dart';
 
 class TasksScreen extends StatefulWidget {

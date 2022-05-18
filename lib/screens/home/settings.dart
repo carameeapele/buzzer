@@ -1,5 +1,5 @@
-import 'package:buzzer/components/app_bar_widget.dart';
-import 'package:buzzer/components/menu_drawer.dart';
+import 'package:buzzer/widgets/app_bar_widget.dart';
+import 'package:buzzer/style/menu_drawer_widget.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -12,12 +12,20 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBarWidget(
+      appBar: const AppBarWidget(
         title: 'Settings',
       ),
-      drawer: MenuDrawer(),
+      drawer: const MenuDrawer(),
+      body: Column(
+        children: <Widget>[
+          TextButton(
+            onPressed: () async {},
+            child: const Text('Sign out'),
+          ),
+        ],
+      ),
     );
   }
 }

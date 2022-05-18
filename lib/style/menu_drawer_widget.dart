@@ -17,38 +17,48 @@ class MenuDrawer extends StatelessWidget {
         color: Colors.deepOrange,
         child: ListView(
           children: <Widget>[
-            const DrawerHeader(
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontFamily: 'Roboto',
-                  color: Colors.white,
-                ),
-              ),
-            ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 children: [
+                  const SizedBox(
+                    height: 20.0,
+                  ),
                   buildMenuItem(
                     text: 'Today',
+                    icon: Icons.home_rounded,
                     onClicked: () => selectedItem(context, 'today'),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
                   ),
                   buildMenuItem(
                     text: 'Tasks',
+                    icon: Icons.check_box_outlined,
                     onClicked: () => selectedItem(context, 'tasks'),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
                   ),
                   buildMenuItem(
                     text: 'Timetable',
+                    icon: Icons.calendar_view_day_rounded,
                     onClicked: () => selectedItem(context, 'timetable'),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
                   ),
                   buildMenuItem(
                     text: 'Calendar',
+                    icon: Icons.calendar_today_rounded,
                     onClicked: () => selectedItem(context, 'calendar'),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
                   ),
                   buildMenuItem(
                     text: 'Settins',
+                    icon: Icons.settings_rounded,
                     onClicked: () => selectedItem(context, 'settings'),
                   ),
                 ],
@@ -76,9 +86,14 @@ class MenuDrawer extends StatelessWidget {
 
 Widget buildMenuItem({
   required String text,
+  required IconData icon,
   VoidCallback? onClicked,
 }) {
   return ListTile(
+    leading: Icon(
+      icon,
+      color: Colors.white,
+    ),
     title: Text(
       text,
       style: const TextStyle(

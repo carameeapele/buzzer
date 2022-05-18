@@ -33,8 +33,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Buzzer',
         theme: ThemeData(
-          primarySwatch: Colors.deepOrange,
+          primaryColor: BuzzerColors.orange,
           backgroundColor: Colors.white,
+          fontFamily: 'Roboto',
         ),
         debugShowCheckedModeBanner: false,
         home: const Wrapper(),
@@ -54,4 +55,5 @@ class BuzzerColors {
   static var grey = const Color(0xffC4C4C4);
   static var darkGrey = const Color(0xff464646);
   static var lightOrange = const Color(0xffFFB58B);
+  static var orange = const Color(0xffD76626);
 }

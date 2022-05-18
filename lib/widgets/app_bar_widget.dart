@@ -1,3 +1,4 @@
+import 'package:buzzer/icons/icons.dart';
 import 'package:flutter/material.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
@@ -26,6 +27,11 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           fontSize: 25.0,
           fontWeight: FontWeight.w900,
         ),
+      ),
+      leading: IconButton(
+        onPressed: () => Scaffold.of(context).openDrawer(),
+        //icon: const Icon(Buzzer.menuIcon),
+        icon: const Icon(Icons.menu_rounded),
       ),
       //actions: <Widget>[],
     );
