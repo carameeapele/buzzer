@@ -1,5 +1,5 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/screens/home/events.dart';
+import 'package:buzzer/screens/events/events.dart';
 import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/home/settings.dart';
 import 'package:buzzer/screens/home/tasks.dart';

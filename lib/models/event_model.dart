@@ -3,21 +3,14 @@
 // final lastDay = DateTime(today.year, today.month + 3, today.day);
 
 class Event {
-  DateTime date;
-  String title;
+  final String title;
+  final DateTime date;
+  final String location;
+  final DateTime startTime;
+  final DateTime endTime;
+  final int reminders;
+  final String notes;
 
-  Event(this.date, this.title);
-
-  @override
-  String toString() => title;
+  Event(this.title, this.date, this.location, this.startTime, this.endTime,
+      this.reminders, this.notes);
 }
-
-
-// final eventsList = LinkedHashMap<DateTime, List<Event>>(
-//   equals: isSameDay,
-//   hashCode: getHashCode,
-// )..addAll(_eventsSource);
-
-// final _eventsSource = Map.fromIterable(List.generate(50, (index) => index),
-// key: (item) => DateTime.utc(firstDay.year, firstDay.month, item * 5),
-// value: (item) => List.generate(item, (index) => null))

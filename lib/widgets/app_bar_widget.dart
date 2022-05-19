@@ -1,4 +1,3 @@
-import 'package:buzzer/icons/icons.dart';
 import 'package:buzzer/main.dart';
 import 'package:flutter/material.dart';
 

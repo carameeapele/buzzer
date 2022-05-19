@@ -1,3 +1,4 @@
+import 'package:buzzer/models/event_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
@@ -18,5 +19,24 @@ class DatabaseService {
       'reminders': reminders,
       'notes': notes,
     });
+  }
+
+  // events from snapshot
+  List<Event>? _eventsListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return Event(
+          doc.get('title') ?? '',
+          doc.get('date') ?? DateTime.now(),
+          doc.get('location') ?? '',
+          doc.get('startTime') ?? DateTime.now(),
+          doc.get('endTime') ?? DateTime.now(),
+          doc.get('reminders') ?? 0,
+          doc.get('notes') ?? '');
+    }).toList();
+  }
+
+  // get events stream
+  Stream<List<Event>?> get events {
+    return eventsCollection.snapshots().map(_eventsListFromSnapshot);
   }
 }
