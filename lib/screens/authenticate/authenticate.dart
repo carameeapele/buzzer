@@ -1,6 +1,7 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/screens/authenticate/signin.dart';
 import 'package:buzzer/screens/authenticate/signup.dart';
+import 'package:buzzer/widgets/text_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class Authenticate extends StatefulWidget {
@@ -11,83 +12,74 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
+  void buttonFunction(BuildContext context, String path) {
+    Navigator.of(context).pop();
+    switch (path) {
+      case 'signin':
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const SignIn(),
+        ));
+        break;
+      case 'signup':
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const SignUp(),
+        ));
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            'Organized\nProcrastination',
-            style: TextStyle(
-              fontFamily: 'Roboto',
-              fontWeight: FontWeight.w700,
-              fontSize: 30.0,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
-          const Text(
-            'Made For Students\nBy Students',
-            style: TextStyle(
-              fontFamily: 'Roboto',
-              fontWeight: FontWeight.w400,
-              fontSize: 16.0,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(
-            height: 70.0,
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => SignIn(),
-              ));
-            },
-            child: const Text(
-              'Sign in to account',
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 60.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'Organized\nProcrastination',
               style: TextStyle(
-                color: Colors.white,
                 fontFamily: 'Roboto',
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
+                fontSize: 30.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            const Text(
+              'Made For Students\nBy Students',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w400,
                 fontSize: 16.0,
               ),
+              textAlign: TextAlign.center,
             ),
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              primary: Colors.deepOrange,
+            const SizedBox(
+              height: 70.0,
             ),
-          ),
-          const SizedBox(
-            height: 32.0,
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => SignUp(),
-              ));
-            },
-            child: const Text(
-              'Create your account',
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w600,
-                fontSize: 16.0,
-              ),
+            TextButtonWidget(
+              text: 'Sign in to account',
+              function: () => buttonFunction(context, 'signin'),
+              backgroundColor: BuzzerColors.orange,
+              textColor: Colors.white,
             ),
-            style: TextButton.styleFrom(
-              primary: BuzzerColors.lightGrey,
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
+            const SizedBox(
+              height: 20.0,
             ),
-          ),
-        ],
+            TextButtonWidget(
+              text: 'Create an account',
+              function: () => buttonFunction(context, 'signup'),
+              backgroundColor: BuzzerColors.lightGrey,
+              textColor: Colors.black,
+            ),
+          ],
+        ),
       ),
     );
   }

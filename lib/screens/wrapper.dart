@@ -9,7 +9,7 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<BuzzUser>(context);
+    final user = Provider.of<BuzzUser?>(context);
 
     if (user == null) {
       return const Authenticate();

@@ -1,5 +1,5 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/screens/home/calendar.dart';
+import 'package:buzzer/screens/home/events.dart';
 import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/home/settings.dart';
 import 'package:buzzer/screens/home/tasks.dart';
@@ -49,7 +49,7 @@ class MenuDrawer extends StatelessWidget {
                     height: 20.0,
                   ),
                   buildMenuItem(
-                    text: 'Calendar',
+                    text: 'Events',
                     icon: Icons.calendar_today_rounded,
                     onClicked: () => selectedItem(context, 'calendar'),
                   ),
@@ -129,7 +129,7 @@ void selectedItem(BuildContext context, String path) {
       break;
     case 'calendar':
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const CalendarScreen(),
+        builder: (context) => EventsScreen(),
       ));
       break;
     case 'settings':

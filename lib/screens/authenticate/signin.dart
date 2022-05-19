@@ -1,3 +1,5 @@
+import 'package:buzzer/screens/authenticate/signup.dart';
+import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/widgets/text_form_field_style.dart';
@@ -39,9 +41,9 @@ class _SignInState extends State<SignIn> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       const Text(
-                        'Welcome Back',
+                        'Welcome\nBack',
                         style: TextStyle(
-                          fontSize: 30.0,
+                          fontSize: 35.0,
                           color: Colors.black,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w900,
@@ -102,6 +104,11 @@ class _SignInState extends State<SignIn> {
                                 loading = false;
                                 error = 'Email or password incorrect';
                               });
+                            } else {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const Home(),
+                              ));
                             }
                           }
                         },
@@ -143,10 +150,10 @@ class _SignInState extends State<SignIn> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/signup',
-                              );
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const SignUp(),
+                              ));
                             },
                             child: const Text(
                               'Register',

@@ -1,3 +1,5 @@
+import 'package:buzzer/screens/authenticate/signin.dart';
+import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/widgets/text_form_field_style.dart';
@@ -35,15 +37,15 @@ class _SignUpState extends State<SignUp> {
                   maxHeight: MediaQuery.of(context).size.height,
                 ),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 30.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       const Text(
-                        'Welcome',
+                        'Welcome\nTo Buzzer',
                         style: TextStyle(
-                          fontSize: 30.0,
+                          fontSize: 35.0,
                           color: Colors.black,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w900,
@@ -120,10 +122,10 @@ class _SignUpState extends State<SignUp> {
                                 error = 'Could not register';
                               });
                             } else {
-                              Navigator.pushNamed(
-                                context,
-                                '/home',
-                              );
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const Home(),
+                              ));
                             }
                           }
                         },
@@ -165,10 +167,10 @@ class _SignUpState extends State<SignUp> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/signin',
-                              );
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const SignIn(),
+                              ));
                             },
                             child: const Text(
                               'Login',

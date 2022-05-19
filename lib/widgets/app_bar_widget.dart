@@ -1,11 +1,14 @@
 import 'package:buzzer/icons/icons.dart';
+import 'package:buzzer/main.dart';
 import 'package:flutter/material.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  const AppBarWidget({
+  // VoidCallback? add;
+  AppBarWidget({
     Key? key,
     required this.title,
+    // required this.add,
   }) : super(key: key);
 
   @override
@@ -33,7 +36,16 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         //icon: const Icon(Buzzer.menuIcon),
         icon: const Icon(Icons.menu_rounded),
       ),
-      //actions: <Widget>[],
+      actions: <Widget>[
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          color: BuzzerColors.orange,
+        ),
+      ],
     );
   }
 }

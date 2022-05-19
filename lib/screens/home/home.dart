@@ -1,5 +1,5 @@
 import 'package:buzzer/widgets/app_bar_widget.dart';
-import 'package:buzzer/style/menu_drawer_widget.dart';
+import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:buzzer/style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: const AppBarWidget(
+      appBar: AppBarWidget(
         title: 'Today',
       ),
       drawer: const MenuDrawer(),
