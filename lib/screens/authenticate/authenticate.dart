@@ -72,12 +72,32 @@ class _AuthenticateState extends State<Authenticate> {
             const SizedBox(
               height: 20.0,
             ),
-            TextButtonWidget(
-              text: 'Create an account',
-              function: () => buttonFunction(context, 'signup'),
-              backgroundColor: BuzzerColors.lightGrey,
-              textColor: Colors.black,
-            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const SignUp(),
+                ));
+              },
+              child: const Text(
+                'Create an account',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.0,
+                ),
+              ),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                backgroundColor: BuzzerColors.lightGrey,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(7.0),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

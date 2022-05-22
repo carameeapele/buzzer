@@ -1,7 +1,4 @@
 import 'package:buzzer/models/buzz_user.dart';
-import 'package:buzzer/screens/home/home.dart';
-import 'package:buzzer/screens/authenticate/signin.dart';
-import 'package:buzzer/screens/authenticate/signup.dart';
 import 'package:buzzer/screens/wrapper.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,14 +11,14 @@ void main() async {
   await Firebase.initializeApp();
 
   SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
-  runApp(MyApp(sharedPrefs: sharedPrefs));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  SharedPreferences sharedPrefs;
+  //SharedPreferences sharedPrefs;
   MyApp({
     Key? key,
-    required this.sharedPrefs,
+    //required this.sharedPrefs,
   }) : super(key: key);
 
   // This widget is the root of your application.

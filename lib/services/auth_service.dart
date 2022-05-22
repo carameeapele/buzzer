@@ -4,6 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  String toString() {
+    return _auth.currentUser!.uid;
+  }
   //get user => _auth.currentUser;
 
   BuzzUser? _userFromFirebase(User? user) {
@@ -35,7 +40,7 @@ class AuthService {
       User? user = result.user;
 
       // create a new document for the user with the uid
-      await DatabaseService(uid: user!.uid).updateUserData(
+      await DatabaseService(uid: user!.uid).updateEvent(
           'New Event',
           DateTime.now(),
           'Location',
@@ -43,6 +48,9 @@ class AuthService {
           DateTime.now(),
           0,
           'Notes');
+
+      await DatabaseService(uid: user.uid)
+          .updateTask('New Task', DateTime.now(), 'None', 'Details');
 
       return _userFromFirebase(user);
     } catch (e) {
