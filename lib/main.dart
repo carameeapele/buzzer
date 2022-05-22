@@ -1,4 +1,4 @@
-import 'package:buzzer/models/buzz_user.dart';
+import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/screens/wrapper.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';

@@ -1,4 +1,4 @@
-import 'package:buzzer/models/buzz_user.dart';
+import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/screens/authenticate/authenticate.dart';
 import 'package:buzzer/screens/home/home.dart';
 import 'package:flutter/material.dart';

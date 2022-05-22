@@ -1,4 +1,5 @@
 import 'package:buzzer/main.dart';
+import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/screens/events/events.dart';
 import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/home/settings.dart';
@@ -7,7 +8,11 @@ import 'package:buzzer/screens/home/timetable.dart';
 import 'package:flutter/material.dart';
 
 class MenuDrawer extends StatelessWidget {
-  const MenuDrawer({Key? key}) : super(key: key);
+  final Future userInfo;
+  const MenuDrawer({
+    Key? key,
+    required this.userInfo,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,15 @@ class MenuDrawer extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
-                children: [
+                children: <Widget>[
+                  buidHeader(
+                    name: 'name',
+                    college: 'college',
+                    onClicked: () =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const SettingsScreen(),
+                    )),
+                  ),
                   const SizedBox(
                     height: 20.0,
                   ),
@@ -71,18 +84,41 @@ class MenuDrawer extends StatelessWidget {
   }
 }
 
-// Widget buidHeader({
-//   required String image,
-//   required String name,
-//   required String email,
-//   required VoidCallback onClicked,
-// }) =>
-//     InkWell(
-//       onTap: onClicked,
-//       child: Container(
-//         child: Row(),
-//       ),
-//     );
+Widget buidHeader({
+  required String name,
+  required String college,
+  required VoidCallback onClicked,
+}) =>
+    InkWell(
+      onTap: onClicked,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 40.0),
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 5.0),
+                Text(
+                  college,
+                  style: const TextStyle(
+                      fontSize: 14, color: Colors.white, fontFamily: 'Roboto'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
 
 Widget buildMenuItem({
   required String text,

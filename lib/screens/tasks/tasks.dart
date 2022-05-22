@@ -17,7 +17,7 @@ class _TasksScreenState extends State<TasksScreen> {
       appBar: AppBarWidget(
         title: 'Tasks',
       ),
-      drawer: MenuDrawer(),
+      //drawer: MenuDrawer(),
     );
   }
 }

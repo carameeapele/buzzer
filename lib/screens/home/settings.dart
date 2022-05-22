@@ -25,7 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             appBar: AppBarWidget(
               title: 'Settings',
             ),
-            drawer: const MenuDrawer(),
+            //drawer: const MenuDrawer(),
             body: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

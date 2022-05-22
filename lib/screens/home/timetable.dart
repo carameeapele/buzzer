@@ -18,7 +18,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
       appBar: AppBarWidget(
         title: 'Timetable',
       ),
-      drawer: MenuDrawer(),
+      //drawer: MenuDrawer(),
     );
   }
 }

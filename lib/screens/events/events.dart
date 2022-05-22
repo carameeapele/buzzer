@@ -32,7 +32,7 @@ class _EventsScreenState extends State<EventsScreen> {
       appBar: AppBarWidget(
         title: 'Events',
       ),
-      drawer: const MenuDrawer(),
+      //drawer: const MenuDrawer(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),

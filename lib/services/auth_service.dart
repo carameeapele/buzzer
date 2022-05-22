@@ -1,6 +1,7 @@
-import 'package:buzzer/models/buzz_user.dart';
+import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/services/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -40,17 +41,22 @@ class AuthService {
       User? user = result.user;
 
       // create a new document for the user with the uid
-      await DatabaseService(uid: user!.uid).updateEvent(
-          'New Event',
-          DateTime.now(),
-          'Location',
-          DateTime.now(),
-          DateTime.now(),
-          0,
-          'Notes');
+      // await DatabaseService(uid: user!.uid).updateEvent(
+      //     'New Event',
+      //     DateTime.now(),
+      //     'Location',
+      //     DateTime.now(),
+      //     DateTime.now(),
+      //     0,
+      //     'Notes');
 
-      await DatabaseService(uid: user.uid)
-          .updateTask('New Task', DateTime.now(), 'None', 'Details');
+      // await DatabaseService(uid: user.uid)
+      //     .updateTask('New Task', DateTime.now(), 'None', 'Details');
+
+      await DatabaseService(uid: user!.uid).addUserInfo(
+        'New User',
+        'College',
+      );
 
       return _userFromFirebase(user);
     } catch (e) {
