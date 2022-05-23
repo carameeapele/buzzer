@@ -59,11 +59,9 @@ class DatabaseService {
     await docRef.set(newUser);
   }
 
-  void updateUserInfo(String name, String college) async {
+  Future updateUserInfo(String name) async {
     final docRef = userInfoCollection.doc(uid);
-    docRef.update({
-      "name": name,
-    });
+    await docRef.update({"name": name});
   }
 
   Future getUserInfo() async {

@@ -16,7 +16,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   //SharedPreferences sharedPrefs;
-  MyApp({
+  const MyApp({
     Key? key,
     //required this.sharedPrefs,
   }) : super(key: key);
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
 }
 
 class BuzzerColors {
-  static var lightGrey = const Color(0xffF0F0F0);
+  static var lightGrey = const Color.fromARGB(255, 228, 228, 228);
   static var grey = const Color(0xffC4C4C4);
   static var darkGrey = const Color(0xff464646);
   static var lightOrange = const Color(0xffFFB58B);

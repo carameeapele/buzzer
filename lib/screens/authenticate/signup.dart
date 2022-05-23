@@ -4,6 +4,7 @@ import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/style/text_form_field_style.dart';
+import 'package:buzzer/widgets/text_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -60,6 +61,7 @@ class _SignUpState extends State<SignUp> {
                         child: Column(
                           children: <Widget>[
                             TextFormField(
+                              textCapitalization: TextCapitalization.words,
                               decoration: textInputDecoration.copyWith(
                                   hintText: 'Name'),
                               validator: (val) => val!.isEmpty
@@ -109,8 +111,9 @@ class _SignUpState extends State<SignUp> {
                           ],
                         ),
                       ),
-                      TextButton(
-                        onPressed: () async {
+                      TextButtonWidget(
+                        text: 'Sign up',
+                        function: () async {
                           if (validateFields()) {
                             setState(() {
                               loading = true;
@@ -131,25 +134,8 @@ class _SignUpState extends State<SignUp> {
                             }
                           }
                         },
-                        child: const Text(
-                          'Sign up',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        style: TextButton.styleFrom(
-                          elevation: 0.0,
-                          backgroundColor: BuzzerColors.orange,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30.0, vertical: 10.0),
-                          shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(7.0)),
-                          ),
-                        ),
+                        backgroundColor: BuzzerColors.orange,
+                        textColor: Colors.white,
                       ),
                       const SizedBox(
                         height: 10.0,
