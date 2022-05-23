@@ -10,11 +10,9 @@ class BuzzUser {
 
 class UserInfo {
   final String name;
-  final String college;
 
   UserInfo({
     required this.name,
-    required this.college,
   });
 
   factory UserInfo.fromFirestore(
@@ -24,14 +22,12 @@ class UserInfo {
     final data = snapshot.data();
     return UserInfo(
       name: data?['name'] as String,
-      college: data?['college'] as String,
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
       if (name != null) "name": name,
-      if (college != null) "college": college,
     };
   }
 }

@@ -1,7 +1,6 @@
 import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/services/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -10,7 +9,10 @@ class AuthService {
   String toString() {
     return _auth.currentUser!.uid;
   }
-  //get user => _auth.currentUser;
+
+  String getEmail() {
+    return _auth.currentUser!.email.toString();
+  }
 
   BuzzUser? _userFromFirebase(User? user) {
     return user != null ? BuzzUser(userId: user.uid) : null;
@@ -26,6 +28,7 @@ class AuthService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
+
       return _userFromFirebase(user);
     } catch (e) {
       print(e.toString());
@@ -34,29 +37,14 @@ class AuthService {
   }
 
   // sign up with email & password
-  Future signupWithEmailAndPassword(String email, String password) async {
+  Future signupWithEmailAndPassword(
+      String email, String password, String name) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
 
-      // create a new document for the user with the uid
-      // await DatabaseService(uid: user!.uid).updateEvent(
-      //     'New Event',
-      //     DateTime.now(),
-      //     'Location',
-      //     DateTime.now(),
-      //     DateTime.now(),
-      //     0,
-      //     'Notes');
-
-      // await DatabaseService(uid: user.uid)
-      //     .updateTask('New Task', DateTime.now(), 'None', 'Details');
-
-      await DatabaseService(uid: user!.uid).addUserInfo(
-        'New User',
-        'College',
-      );
+      await DatabaseService(uid: user!.uid).addUserInfo(name);
 
       return _userFromFirebase(user);
     } catch (e) {

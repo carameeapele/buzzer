@@ -1,5 +1,4 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/screens/events/events.dart';
 import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/home/settings.dart';
@@ -8,10 +7,13 @@ import 'package:buzzer/screens/home/timetable.dart';
 import 'package:flutter/material.dart';
 
 class MenuDrawer extends StatelessWidget {
-  final Future userInfo;
+  final String name;
+  final String email;
+
   const MenuDrawer({
     Key? key,
-    required this.userInfo,
+    required this.name,
+    required this.email,
   }) : super(key: key);
 
   @override
@@ -27,8 +29,8 @@ class MenuDrawer extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   buidHeader(
-                    name: 'name',
-                    college: 'college',
+                    name: name,
+                    college: email,
                     onClicked: () =>
                         Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const SettingsScreen(),
@@ -65,14 +67,6 @@ class MenuDrawer extends StatelessWidget {
                     text: 'Events',
                     icon: Icons.calendar_today_rounded,
                     onClicked: () => selectedItem(context, 'calendar'),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  buildMenuItem(
-                    text: 'Settins',
-                    icon: Icons.settings_rounded,
-                    onClicked: () => selectedItem(context, 'settings'),
                   ),
                 ],
               ),
@@ -165,12 +159,7 @@ void selectedItem(BuildContext context, String path) {
       break;
     case 'calendar':
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => EventsScreen(),
-      ));
-      break;
-    case 'settings':
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const SettingsScreen(),
+        builder: (context) => const EventsScreen(),
       ));
       break;
   }

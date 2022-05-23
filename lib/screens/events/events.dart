@@ -1,15 +1,11 @@
-import 'dart:convert';
-
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/event_model.dart';
-import 'package:buzzer/models/movie.dart';
-import 'package:buzzer/services/database_service.dart';
+import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/style/text_style.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 class EventsScreen extends StatefulWidget {
   const EventsScreen({Key? key}) : super(key: key);
@@ -21,18 +17,46 @@ class EventsScreen extends StatefulWidget {
 class _EventsScreenState extends State<EventsScreen> {
   final List<Item> _events = generateItems(3);
 
+  dynamic userName;
+  final AuthService _auth = AuthService();
+  String error = '';
+
+  Future<dynamic> getUserName() async {
+    final DocumentReference docRef = FirebaseFirestore.instance
+        .collection('user_info')
+        .doc(_auth.toString());
+
+    await docRef.get().then<dynamic>((DocumentSnapshot snapshot) async {
+      if (snapshot.data() != null) {
+        setState(() {
+          userName = snapshot.data();
+        });
+      } else {
+        setState(() {
+          error = 'Could not connect to databse';
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserName();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // return StreamProvider<List<Event>?>.value(
-    //   value: DatabaseService(uid: '').events,
-    //   initialData: null,
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
       appBar: AppBarWidget(
         title: 'Events',
       ),
-      //drawer: const MenuDrawer(),
+      drawer: MenuDrawer(
+        name: userName['name'],
+        email: _auth.getEmail(),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),

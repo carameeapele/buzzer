@@ -50,24 +50,19 @@ class DatabaseService {
   //   });
   // }
 
-  Future addUserInfo(String name, String college) async {
+  Future addUserInfo(String name) async {
     final newUser = UserInfo(
       name: name,
-      college: college,
     );
 
     final docRef = userInfoCollection.doc(uid);
-    await docRef.set(newUser).then(
-        (value) =>
-            print("On document: ${docRef.id} name: $name college: $college"),
-        onError: (e) => print("Error $e"));
+    await docRef.set(newUser);
   }
 
   void updateUserInfo(String name, String college) async {
     final docRef = userInfoCollection.doc(uid);
     docRef.update({
       "name": name,
-      "college": college,
     });
   }
 
@@ -78,7 +73,7 @@ class DatabaseService {
     if (userInfo != null) {
       return userInfo;
     } else {
-      print("No such document");
+      return UserInfo(name: 'New User');
     }
   }
 

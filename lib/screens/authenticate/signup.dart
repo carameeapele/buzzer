@@ -1,3 +1,4 @@
+import 'package:buzzer/main.dart';
 import 'package:buzzer/screens/authenticate/signin.dart';
 import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
@@ -29,7 +30,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return loading
-        ? Loading()
+        ? const Loading()
         : Scaffold(
             body: SingleChildScrollView(
               child: ConstrainedBox(
@@ -37,7 +38,7 @@ class _SignUpState extends State<SignUp> {
                   maxHeight: MediaQuery.of(context).size.height,
                 ),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -114,8 +115,9 @@ class _SignUpState extends State<SignUp> {
                             setState(() {
                               loading = true;
                             });
-                            dynamic result = await _auth
-                                .signupWithEmailAndPassword(email, password);
+                            dynamic result =
+                                await _auth.signupWithEmailAndPassword(
+                                    email, password, name);
                             if (result == null) {
                               setState(() {
                                 loading = false;
@@ -140,7 +142,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         style: TextButton.styleFrom(
                           elevation: 0.0,
-                          backgroundColor: Colors.deepOrange,
+                          backgroundColor: BuzzerColors.orange,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 30.0, vertical: 10.0),
                           shape: const RoundedRectangleBorder(
@@ -172,12 +174,13 @@ class _SignUpState extends State<SignUp> {
                                 builder: (context) => const SignIn(),
                               ));
                             },
-                            child: const Text(
+                            child: Text(
                               'Login',
                               style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontSize: 13.0,
-                                color: Colors.deepOrange,
+                                fontWeight: FontWeight.w700,
+                                color: BuzzerColors.orange,
                               ),
                             ),
                           ),
@@ -197,7 +200,7 @@ class _SignUpState extends State<SignUp> {
       return true;
     } else {
       SnackBar snack = const SnackBar(
-        content: Text('Email or password not correct'),
+        content: Text('Email or Password Not Correct'),
       );
       ScaffoldMessenger.of(context).showSnackBar(snack);
     }

@@ -1,4 +1,3 @@
-import 'package:buzzer/main.dart';
 import 'package:flutter/material.dart';
 
 class TextButtonWidget extends StatelessWidget {
