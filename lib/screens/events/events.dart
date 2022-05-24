@@ -74,6 +74,7 @@ class _EventsScreenState extends State<EventsScreen> {
               ExpansionPanelList(
                 elevation: 0.0,
                 expandedHeaderPadding: const EdgeInsets.all(5.0),
+                dividerColor: Colors.white,
                 animationDuration: const Duration(seconds: 1),
                 expansionCallback: (int index, bool isExpanded) {
                   setState(() {

@@ -1,9 +1,9 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/screens/events/events.dart';
 import 'package:buzzer/screens/home/home.dart';
-import 'package:buzzer/screens/home/settings.dart';
+import 'package:buzzer/screens/settings/settings.dart';
 import 'package:buzzer/screens/tasks/tasks.dart';
-import 'package:buzzer/screens/home/timetable.dart';
+import 'package:buzzer/screens/timetable/timetable.dart';
 import 'package:flutter/material.dart';
 
 class MenuDrawer extends StatelessWidget {
@@ -21,23 +21,22 @@ class MenuDrawer extends StatelessWidget {
     return Drawer(
       elevation: 0.0,
       child: Material(
-        color: Colors.deepOrange,
+        color: BuzzerColors.orange,
         child: ListView(
           children: <Widget>[
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 children: <Widget>[
                   buidHeader(
                     name: name,
-                    college: email,
+                    email: email,
                     onClicked: () =>
                         Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const SettingsScreen(),
                     )),
                   ),
                   const SizedBox(
-                    height: 20.0,
+                    height: 40.0,
                   ),
                   buildMenuItem(
                     text: 'Today',
@@ -80,13 +79,13 @@ class MenuDrawer extends StatelessWidget {
 
 Widget buidHeader({
   required String name,
-  required String college,
+  required String email,
   required VoidCallback onClicked,
 }) =>
     InkWell(
       onTap: onClicked,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 40.0),
+        padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 30.0),
         child: Row(
           children: [
             Column(
@@ -103,9 +102,12 @@ Widget buidHeader({
                 ),
                 const SizedBox(height: 5.0),
                 Text(
-                  college,
+                  email,
                   style: const TextStyle(
-                      fontSize: 14, color: Colors.white, fontFamily: 'Roboto'),
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontFamily: 'Roboto',
+                  ),
                 ),
               ],
             ),
@@ -120,16 +122,13 @@ Widget buildMenuItem({
   VoidCallback? onClicked,
 }) {
   return ListTile(
-    leading: Icon(
-      icon,
-      color: Colors.white,
-    ),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 30.0),
     title: Text(
       text,
       style: const TextStyle(
         color: Colors.white,
-        fontWeight: FontWeight.w500,
-        fontSize: 18.0,
+        fontWeight: FontWeight.w400,
+        fontSize: 16.0,
         fontFamily: 'Roboto',
       ),
     ),

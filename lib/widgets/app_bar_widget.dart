@@ -26,23 +26,32 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         style: const TextStyle(
           color: Colors.black,
           fontFamily: 'Roboto',
-          fontSize: 25.0,
-          fontWeight: FontWeight.w900,
+          fontSize: 20.0,
+          fontWeight: FontWeight.w700,
+          wordSpacing: 3.0,
         ),
       ),
-      leading: IconButton(
-        onPressed: () => Scaffold.of(context).openDrawer(),
-        //icon: const Icon(Buzzer.menuIcon),
-        icon: const Icon(Icons.menu_rounded),
-      ),
+      titleSpacing: 0.0,
       actions: <Widget>[
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.add,
-            color: Colors.white,
+        Material(
+          color: Colors.white,
+          child: Center(
+            child: Ink(
+              decoration: ShapeDecoration(
+                color: BuzzerColors.orange,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(7.0),
+                  ),
+                ),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.add),
+                color: Colors.white,
+                onPressed: () {},
+              ),
+            ),
           ),
-          color: BuzzerColors.orange,
         ),
       ],
     );

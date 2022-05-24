@@ -5,19 +5,17 @@ import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/services/database_service.dart';
 import 'package:buzzer/style/text_form_field_style.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
-import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:buzzer/widgets/text_button_widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+class AccountSettings extends StatefulWidget {
+  const AccountSettings({Key? key}) : super(key: key);
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<AccountSettings> createState() => _AccountSettingsState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _AccountSettingsState extends State<AccountSettings> {
   final AuthService _auth = AuthService();
 
   bool loading = false;
@@ -25,29 +23,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String name = '';
   String email = '';
 
-  dynamic userName;
-  Future<dynamic> getUserName() async {
-    final DocumentReference docRef = FirebaseFirestore.instance
-        .collection('user_info')
-        .doc(_auth.toString());
-
-    await docRef.get().then<dynamic>((DocumentSnapshot snapshot) async {
-      if (snapshot.data() != null) {
-        setState(() {
-          userName = snapshot.data();
-        });
-      } else {
-        setState(() {
-          error = 'Could not connect to databse';
-        });
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    getUserName();
   }
 
   @override
@@ -55,18 +33,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return loading
         ? const Loading()
         : Scaffold(
-            extendBodyBehindAppBar: true,
+            extendBodyBehindAppBar: false,
             appBar: AppBarWidget(
-              title: 'Settings',
-            ),
-            drawer: MenuDrawer(
-              name: userName['name'],
-              email: _auth.getEmail(),
+              title: 'Account Settings',
             ),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Form(
@@ -138,6 +112,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                       if (loading) {
                         initState();
+                        widget.createState();
                       }
                     },
                     backgroundColor: BuzzerColors.lightGrey,
