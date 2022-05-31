@@ -13,47 +13,21 @@ class TimetableScreen extends StatefulWidget {
 }
 
 class _TimetableScreenState extends State<TimetableScreen> {
-  final AuthService _auth = AuthService();
-
   bool loading = false;
-  String error = '';
-
-  dynamic userName;
-  Future<dynamic> getUserName() async {
-    final DocumentReference docRef = FirebaseFirestore.instance
-        .collection('user_info')
-        .doc(_auth.toString());
-
-    await docRef.get().then<dynamic>((DocumentSnapshot snapshot) async {
-      if (snapshot.data() != null) {
-        setState(() {
-          userName = snapshot.data();
-        });
-      } else {
-        setState(() {
-          error = 'Could not connect to databse';
-        });
-      }
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    getUserName();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: false,
       appBar: AppBarWidget(
         title: 'Timetable',
       ),
-      drawer: MenuDrawer(
-        name: userName['name'],
-        email: _auth.getEmail(),
-      ),
+      drawer: const MenuDrawer(),
     );
   }
 }

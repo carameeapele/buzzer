@@ -1,11 +1,13 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/event_model.dart';
+import 'package:buzzer/screens/movies/movie.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/style/text_style.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class EventsScreen extends StatefulWidget {
   const EventsScreen({Key? key}) : super(key: key);
@@ -17,33 +19,23 @@ class EventsScreen extends StatefulWidget {
 class _EventsScreenState extends State<EventsScreen> {
   final List<Item> _events = generateItems(3);
 
-  dynamic userName;
-  final AuthService _auth = AuthService();
-  String error = '';
-
-  Future<dynamic> getUserName() async {
-    final DocumentReference docRef = FirebaseFirestore.instance
-        .collection('user_info')
-        .doc(_auth.toString());
-
-    await docRef.get().then<dynamic>((DocumentSnapshot snapshot) async {
-      if (snapshot.data() != null) {
-        setState(() {
-          userName = snapshot.data();
-        });
-      } else {
-        setState(() {
-          error = 'Could not connect to databse';
-        });
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    getUserName();
   }
+
+  // var httpUri =
+  //     Uri(scheme: 'https', host: 'ghibliapi.herokuapp.com', path: '/films');
+
+  // Future<List<Movie>> fetchData() async {
+  //   final response = await http.get(httpUri);
+  //   if (response.statusCode == 200) {
+  //     List jsonResponse = json.decode(response.body);
+  //     return jsonResponse.map((movie) => Movie.fromJson(movie)).toList();
+  //   } else {
+  //     throw Exception('Unexpected error occured');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +45,7 @@ class _EventsScreenState extends State<EventsScreen> {
       appBar: AppBarWidget(
         title: 'Events',
       ),
-      drawer: MenuDrawer(
-        name: userName['name'],
-        email: _auth.getEmail(),
-      ),
+      drawer: const MenuDrawer(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -100,7 +89,7 @@ class _EventsScreenState extends State<EventsScreen> {
                         ),
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(
-                            Radius.circular(7.0),
+                            Radius.circular(10.0),
                           ),
                         ),
                         trailing: const Text('3'),

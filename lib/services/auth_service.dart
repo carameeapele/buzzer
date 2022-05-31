@@ -1,6 +1,4 @@
 import 'package:buzzer/models/user_model.dart';
-import 'package:buzzer/services/database_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -36,7 +34,6 @@ class AuthService {
 
       return _userFromFirebase(user);
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
@@ -49,11 +46,8 @@ class AuthService {
           email: email, password: password);
       User? user = result.user;
 
-      await DatabaseService(uid: user!.uid).addUserInfo(name);
-
       return _userFromFirebase(user);
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
@@ -63,7 +57,6 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }

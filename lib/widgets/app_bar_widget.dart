@@ -1,4 +1,5 @@
 import 'package:buzzer/main.dart';
+import 'package:buzzer/style/text_style.dart';
 import 'package:flutter/material.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
@@ -23,35 +24,17 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Text(
         title,
-        style: const TextStyle(
-          color: Colors.black,
-          fontFamily: 'Roboto',
-          fontSize: 20.0,
-          fontWeight: FontWeight.w700,
-          wordSpacing: 3.0,
-        ),
+        style: appBarTextStyle,
       ),
       titleSpacing: 0.0,
       actions: <Widget>[
-        Material(
-          color: Colors.white,
-          child: Center(
-            child: Ink(
-              decoration: ShapeDecoration(
-                color: BuzzerColors.orange,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(7.0),
-                  ),
-                ),
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.add),
-                color: Colors.white,
-                onPressed: () {},
-              ),
-            ),
+        IconButton(
+          iconSize: 30.0,
+          icon: Icon(
+            Icons.add_box_rounded,
+            color: BuzzerColors.orange,
           ),
+          onPressed: () {},
         ),
       ],
     );

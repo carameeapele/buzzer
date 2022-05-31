@@ -1,6 +1,7 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/screens/settings/account_settings.dart';
 import 'package:buzzer/services/auth_service.dart';
+import 'package:buzzer/style/text_style.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:buzzer/widgets/text_button_widget.dart';
@@ -15,66 +16,50 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final AuthService _auth = AuthService();
-
   bool loading = false;
   String error = '';
-  String name = '';
-  String email = '';
-
-  dynamic userName;
-  Future<dynamic> getUserName() async {
-    final DocumentReference docRef = FirebaseFirestore.instance
-        .collection('user_info')
-        .doc(_auth.toString());
-
-    await docRef.get().then<dynamic>((DocumentSnapshot snapshot) async {
-      if (snapshot.data() != null) {
-        setState(() {
-          userName = snapshot.data();
-        });
-      } else {
-        setState(() {
-          error = 'Could not connect to databse';
-        });
-      }
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    getUserName();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: false,
-      appBar: AppBarWidget(
-        title: 'Settings',
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
+        titleSpacing: 0.0,
+        title: Text(
+          'Account Settings',
+          style: appBarTextStyle,
+        ),
       ),
-      drawer: MenuDrawer(
-        name: userName['name'],
-        email: _auth.getEmail(),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            TextButtonWidget(
-              text: 'Account',
-              function: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const AccountSettings(),
-                ));
-              },
-              backgroundColor: BuzzerColors.lightGrey,
-              textColor: Colors.black,
-            ),
-          ],
+      drawer: const MenuDrawer(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              TextButtonWidget(
+                text: 'Account',
+                function: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const AccountSettings(),
+                  ));
+                },
+                backgroundColor: BuzzerColors.lightGrey,
+                textColor: Colors.black,
+              ),
+            ],
+          ),
         ),
       ),
     );

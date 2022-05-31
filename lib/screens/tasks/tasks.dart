@@ -49,10 +49,7 @@ class _TasksScreenState extends State<TasksScreen> {
       appBar: AppBarWidget(
         title: 'Tasks',
       ),
-      drawer: MenuDrawer(
-        name: userName['name'],
-        email: _auth.getEmail(),
-      ),
+      drawer: MenuDrawer(),
     );
   }
 }

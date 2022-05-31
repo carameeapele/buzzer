@@ -9,70 +9,50 @@ class DatabaseService {
     required this.uid,
   });
 
-  // collection reference
-  // final CollectionReference eventsCollection =
-  //     FirebaseFirestore.instance.collection('events');
-  // final CollectionReference tasksCollection =
-  //     FirebaseFirestore.instance.collection('tasks');
-  final userInfoCollection =
-      FirebaseFirestore.instance.collection("user_info").withConverter(
-            fromFirestore: UserInfo.fromFirestore,
-            toFirestore: (UserInfo userInfo, options) => userInfo.toFirestore(),
-          );
+  Future<List<Task>> getTasks() async {
+    final docRef = FirebaseFirestore.instance
+        .collection(uid)
+        .doc('tasks')
+        .collection('tasks');
 
-  // Future updateEvent(String title, DateTime date, String location,
-  //     DateTime startTime, DateTime endTime, int reminders, String notes) async {
-  //   return await eventsCollection.doc(uid).set({
-  //     'title': title,
-  //     'date': date,
-  //     'location': location,
-  //     'startTime': startTime,
-  //     'endTime': endTime,
-  //     'reminders': reminders,
-  //     'notes': notes,
-  //   });
-  // }
+    final docSnap = await docRef.get();
+    List<DocumentSnapshot> tasksDocs = docSnap.docs.toList();
+    List<Task> tasks = [];
 
-  // Future updateTask(
-  //     String title, DateTime dueDate, String category, String details) async {
-  //   return await tasksCollection.doc(uid).set({
-  //     'title': title,
-  //     'dueDate': dueDate,
-  //     'category': category,
-  //     'details': details,
-  //   });
-  // }
+    if (docSnap != null) {
+      tasksDocs.forEach((doc) {
+        if (doc.data() != null) {
+          dynamic taskData = doc.data();
 
-  // Future updateUserInfo(String name, String college) async {
-  //   return await userInfoCollection.doc(uid).set({
-  //     'name': name,
-  //     'college': college,
-  //   });
-  // }
+          tasks.add(Task(taskData['title'], taskData['dueDate'],
+              taskData['tag'], taskData['notes']));
+        }
+      });
+    } else {
+      print('Unexpected error');
+    }
 
-  Future addUserInfo(String name) async {
-    final newUser = UserInfo(
-      name: name,
-    );
-
-    final docRef = userInfoCollection.doc(uid);
-    await docRef.set(newUser);
-  }
-
-  Future updateUserInfo(String name) async {
-    final docRef = userInfoCollection.doc(uid);
-    await docRef.update({"name": name});
+    return tasks;
   }
 
   Future getUserInfo() async {
-    final docRef = userInfoCollection.doc(uid);
+    final docRef = FirebaseFirestore.instance.collection(uid).doc('user_info');
     final docSnap = await docRef.get();
     final userInfo = docSnap.data();
     if (userInfo != null) {
+      print(userInfo.toString());
       return userInfo;
     } else {
       return UserInfo(name: 'New User');
     }
+  }
+
+  Future updateUserInfo(String name) async {
+    final docRef = FirebaseFirestore.instance.collection(uid).doc('user_info');
+    docRef
+        .update({'name': name})
+        .then((value) => print('User Updated'))
+        .catchError((error) => print('Unexpected error: $error'));
   }
 
   // events from snapshot
@@ -106,15 +86,5 @@ class DatabaseService {
   //     return UserInfo(
   //         name: doc.get('name') ?? '', college: doc.get('college') ?? '');
   //   }).toList();
-  // }
-
-  // get events stream
-  // Stream<List<Event>?> get events {
-  //   return eventsCollection.snapshots().map(_eventsListFromSnapshot);
-  // }
-
-  // get tasks stream
-  // Stream<List<Task>?> get tasks {
-  //   return tasksCollection.snapshots().map(_tasksListFromSnapshot);
   // }
 }

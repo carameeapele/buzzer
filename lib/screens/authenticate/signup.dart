@@ -26,7 +26,8 @@ class _SignUpState extends State<SignUp> {
   String name = '';
   String email = '';
   String password = '';
-  String error = '';
+  String emailError = '';
+  String passwordError = '';
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,8 @@ class _SignUpState extends State<SignUp> {
                             TextFormField(
                               textCapitalization: TextCapitalization.words,
                               decoration: textInputDecoration.copyWith(
-                                  hintText: 'Name'),
+                                hintText: 'Name',
+                              ),
                               validator: (val) => val!.isEmpty
                                   ? 'Please enter your name'
                                   : null,
@@ -80,7 +82,9 @@ class _SignUpState extends State<SignUp> {
                               keyboardType: TextInputType.emailAddress,
                               controller: controller,
                               decoration: textInputDecoration.copyWith(
-                                  hintText: 'Email'),
+                                hintText: 'Email',
+                                errorText: emailError,
+                              ),
                               validator: (val) =>
                                   val!.isEmpty ? 'Please enter an email' : null,
                               onChanged: (val) {
@@ -95,7 +99,9 @@ class _SignUpState extends State<SignUp> {
                             TextFormField(
                               obscureText: true,
                               decoration: textInputDecoration.copyWith(
-                                  hintText: 'Password'),
+                                hintText: 'Password',
+                                errorText: passwordError,
+                              ),
                               validator: (val) => val!.isEmpty
                                   ? 'Please enter the password'
                                   : null,
@@ -124,7 +130,11 @@ class _SignUpState extends State<SignUp> {
                             if (result == null) {
                               setState(() {
                                 loading = false;
-                                error = 'Could not register';
+                                SnackBar snack = const SnackBar(
+                                  content: Text('Could Not Register'),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snack);
                               });
                             } else {
                               Navigator.of(context).pop();
@@ -182,7 +192,10 @@ class _SignUpState extends State<SignUp> {
   }
 
   bool validateFields() {
-    if (email.isNotEmpty && password.isNotEmpty) {
+    if (email.isNotEmpty &&
+        password.isNotEmpty &&
+        validateEmail() &&
+        validatePassword()) {
       return true;
     } else {
       SnackBar snack = const SnackBar(
@@ -190,7 +203,28 @@ class _SignUpState extends State<SignUp> {
       );
       ScaffoldMessenger.of(context).showSnackBar(snack);
     }
-
     return false;
+  }
+
+  bool validateEmail() {
+    if (email.contains('@') && email.endsWith('.com')) {
+      return true;
+    } else {
+      setState(() {
+        emailError = 'Invalid email address';
+      });
+      return false;
+    }
+  }
+
+  bool validatePassword() {
+    if (password.length >= 6) {
+      return true;
+    } else {
+      setState(() {
+        passwordError = 'Must be at least 6 characters';
+      });
+      return false;
+    }
   }
 }

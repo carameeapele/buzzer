@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Task {
   String title;
-  DateTime dueDate;
+  Timestamp dueDate;
   String category;
   String details;
 

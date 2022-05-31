@@ -4,6 +4,7 @@ import 'package:buzzer/screens/wrapper.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/services/database_service.dart';
 import 'package:buzzer/style/text_form_field_style.dart';
+import 'package:buzzer/style/text_style.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/text_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +35,17 @@ class _AccountSettingsState extends State<AccountSettings> {
         ? const Loading()
         : Scaffold(
             extendBodyBehindAppBar: false,
-            appBar: AppBarWidget(
-              title: 'Account Settings',
+            appBar: AppBar(
+              elevation: 0.0,
+              backgroundColor: Colors.transparent,
+              iconTheme: const IconThemeData(
+                color: Colors.black,
+              ),
+              titleSpacing: 0.0,
+              title: Text(
+                'Account Settings',
+                style: appBarTextStyle,
+              ),
             ),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),

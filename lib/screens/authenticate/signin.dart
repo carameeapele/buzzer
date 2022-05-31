@@ -60,7 +60,8 @@ class _SignInState extends State<SignIn> {
                               keyboardType: TextInputType.emailAddress,
                               controller: controller,
                               decoration: textInputDecoration.copyWith(
-                                  hintText: 'Email'),
+                                hintText: 'Email',
+                              ),
                               validator: (val) =>
                                   val!.isEmpty ? 'Please enter an email' : null,
                               onChanged: (val) {

@@ -11,7 +11,7 @@ void main() async {
   await Firebase.initializeApp();
 
   SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -36,12 +36,6 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         home: const Wrapper(),
-        // initialRoute: '/signin',
-        // routes: {
-        //   '/signin': (context) => const SignIn(),
-        //   '/signup': (context) => const SignUp(),
-        //   '/home': (context) => const Home(),
-        // },
       ),
     );
   }

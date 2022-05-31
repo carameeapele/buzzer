@@ -1,9 +1,9 @@
 import 'package:buzzer/models/event_model.dart';
 import 'package:flutter/material.dart';
 
-class EventWidget extends StatelessWidget {
+class EventTile extends StatelessWidget {
   final Event event;
-  const EventWidget({
+  const EventTile({
     Key? key,
     required this.event,
   }) : super(key: key);
@@ -13,9 +13,10 @@ class EventWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Card(
-        margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0.0),
+        margin: const EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0.0),
         child: ListTile(
           title: Text(event.title),
+          subtitle: Text(event.date.toString()),
         ),
       ),
     );

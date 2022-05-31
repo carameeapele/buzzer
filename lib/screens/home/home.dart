@@ -1,8 +1,9 @@
+import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/services/auth_service.dart';
+import 'package:buzzer/services/database_service.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:buzzer/style/text_style.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -26,34 +27,9 @@ class _HomeState extends State<Home> {
 
   final now = DateTime.now();
   final AuthService _auth = AuthService();
-
   bool loading = false;
-  String error = '';
 
-  dynamic userName;
-  Future<dynamic> getUserName() async {
-    final DocumentReference docRef = FirebaseFirestore.instance
-        .collection('user_info')
-        .doc(_auth.toString());
-
-    await docRef.get().then<dynamic>((DocumentSnapshot snapshot) async {
-      if (snapshot.data() != null) {
-        setState(() {
-          userName = snapshot.data();
-        });
-      } else {
-        setState(() {
-          error = 'Could not connect to databse';
-        });
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getUserName();
-  }
+  void getTaskList() {}
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +38,7 @@ class _HomeState extends State<Home> {
       appBar: AppBarWidget(
         title: 'Today',
       ),
-      drawer: MenuDrawer(
-        name: userName['name'],
-        email: _auth.getEmail(),
-      ),
+      drawer: const MenuDrawer(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -76,6 +49,7 @@ class _HomeState extends State<Home> {
               Text(
                 DateFormat('EEEEE', 'en_US').format(now),
                 style: const TextStyle(
+                  color: Colors.black,
                   fontWeight: FontWeight.w700,
                   fontFamily: 'Roboto',
                   fontSize: 16.0,
@@ -87,6 +61,7 @@ class _HomeState extends State<Home> {
               Text(
                 DateFormat('d MMMM', 'en_US').format(now),
                 style: const TextStyle(
+                  color: Colors.black,
                   fontWeight: FontWeight.w400,
                   fontFamily: 'Roboto',
                   fontSize: 14.0,
@@ -101,6 +76,15 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(
                 height: 10.0,
+              ),
+              TextButton(
+                onPressed: () async {
+                  dynamic tasks =
+                      await DatabaseService(uid: _auth.toString()).getTasks();
+
+                  print(tasks.toString());
+                },
+                child: Text('Get Tasks'),
               ),
               //const TasksList(),
               const SizedBox(

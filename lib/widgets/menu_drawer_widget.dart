@@ -4,17 +4,49 @@ import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/settings/settings.dart';
 import 'package:buzzer/screens/tasks/tasks.dart';
 import 'package:buzzer/screens/timetable/timetable.dart';
+import 'package:buzzer/services/auth_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class MenuDrawer extends StatelessWidget {
-  final String name;
-  final String email;
-
+class MenuDrawer extends StatefulWidget {
   const MenuDrawer({
     Key? key,
-    required this.name,
-    required this.email,
   }) : super(key: key);
+
+  @override
+  State<MenuDrawer> createState() => _MenuDrawerState();
+}
+
+class _MenuDrawerState extends State<MenuDrawer> {
+  final AuthService _auth = AuthService();
+
+  String name = '';
+  String email = '';
+  String error = '';
+
+  Future<dynamic> getUserData() async {
+    final DocumentReference docRef = FirebaseFirestore.instance
+        .collection(_auth.toString())
+        .doc('user_info');
+
+    await docRef.get().then<dynamic>((DocumentSnapshot snapshot) async {
+      if (snapshot.data() != null) {
+        dynamic userData = snapshot.data();
+        name = userData['name'];
+      } else {
+        error = 'Could not connect to databse';
+        name = 'Name';
+      }
+    });
+
+    email = _auth.getEmail();
+  }
+
+  @override
+  void initState() {
+    getUserData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,51 +56,54 @@ class MenuDrawer extends StatelessWidget {
         color: BuzzerColors.orange,
         child: ListView(
           children: <Widget>[
-            Container(
-              child: Column(
-                children: <Widget>[
-                  buidHeader(
-                    name: name,
-                    email: email,
-                    onClicked: () =>
-                        Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const SettingsScreen(),
-                    )),
-                  ),
-                  const SizedBox(
-                    height: 40.0,
-                  ),
-                  buildMenuItem(
-                    text: 'Today',
-                    icon: Icons.home_rounded,
-                    onClicked: () => selectedItem(context, 'today'),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  buildMenuItem(
-                    text: 'Tasks',
-                    icon: Icons.check_box_outlined,
-                    onClicked: () => selectedItem(context, 'tasks'),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  buildMenuItem(
-                    text: 'Timetable',
-                    icon: Icons.calendar_view_day_rounded,
-                    onClicked: () => selectedItem(context, 'timetable'),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  buildMenuItem(
-                    text: 'Events',
-                    icon: Icons.calendar_today_rounded,
-                    onClicked: () => selectedItem(context, 'calendar'),
-                  ),
-                ],
-              ),
+            Column(
+              children: <Widget>[
+                FutureBuilder(
+                    future: getUserData(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<dynamic> snapshot) {
+                      return buidHeader(
+                        name: name,
+                        email: email,
+                        onClicked: () =>
+                            Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const SettingsScreen(),
+                        )),
+                      );
+                    }),
+                const SizedBox(
+                  height: 40.0,
+                ),
+                buildMenuItem(
+                  text: 'Today',
+                  icon: Icons.home_rounded,
+                  onClicked: () => selectedItem(context, 'today'),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                buildMenuItem(
+                  text: 'Tasks',
+                  icon: Icons.check_box_outlined,
+                  onClicked: () => selectedItem(context, 'tasks'),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                buildMenuItem(
+                  text: 'Timetable',
+                  icon: Icons.calendar_view_day_rounded,
+                  onClicked: () => selectedItem(context, 'timetable'),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                buildMenuItem(
+                  text: 'Events',
+                  icon: Icons.calendar_today_rounded,
+                  onClicked: () => selectedItem(context, 'calendar'),
+                ),
+              ],
             ),
           ],
         ),
