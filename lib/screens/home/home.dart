@@ -1,4 +1,5 @@
 import 'package:buzzer/models/task_model.dart';
+import 'package:buzzer/screens/tasks/tasks_list.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/services/database_service.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
@@ -34,6 +35,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
       appBar: AppBarWidget(
         title: 'Today',
@@ -78,15 +80,10 @@ class _HomeState extends State<Home> {
                 height: 10.0,
               ),
               TextButton(
-                onPressed: () async {
-                  dynamic tasks =
-                      await DatabaseService(uid: _auth.toString()).getTasks();
-
-                  print(tasks.toString());
-                },
-                child: Text('Get Tasks'),
+                onPressed: () {},
+                child: const Text('Get Tasks'),
               ),
-              //const TasksList(),
+              const TasksList(),
               const SizedBox(
                 height: 30.0,
               ),
