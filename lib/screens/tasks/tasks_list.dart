@@ -20,9 +20,17 @@ class _TasksListState extends State<TasksList> {
   final AuthService _auth = AuthService();
   List<Task> tasks = [
     Task(
-        'Something', Timestamp.fromDate(DateTime(2022, 06, 03)), 'English', ''),
-    Task('Something else', Timestamp.fromDate(DateTime(2022, 06, 05)), 'Enlish',
-        'details')
+      title: 'Something',
+      dueDate: Timestamp.fromDate(DateTime(2022, 06, 03)),
+      category: 'English',
+      details: '',
+    ),
+    Task(
+      title: 'Something else',
+      dueDate: Timestamp.fromDate(DateTime(2022, 06, 05)),
+      category: 'Enlish',
+      details: 'details',
+    ),
   ];
 
   @override

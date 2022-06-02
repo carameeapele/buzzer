@@ -36,11 +36,11 @@ class Event {
 
   Map<String, dynamic> toFirestore() {
     return {
-      if (title != null) "title": title,
-      if (date != null) 'date': date,
-      if (tag != null) 'tag': tag,
-      if (reminders != null) 'reminders': reminders,
-      if (notes != null) 'notes': notes,
+      'title': title,
+      'date': date,
+      'tag': tag,
+      'reminders': reminders,
+      'notes': notes,
     };
   }
 }

@@ -1,12 +1,37 @@
-import 'package:buzzer/services/database_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 
 class Task {
-  String title;
-  Timestamp dueDate;
-  String category;
-  String details;
+  final String title;
+  final Timestamp dueDate;
+  final String category;
+  final String details;
 
-  Task(this.title, this.dueDate, this.category, this.details);
+  Task({
+    required this.title,
+    required this.dueDate,
+    required this.category,
+    required this.details,
+  });
+
+  factory Task.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    final data = snapshot.data();
+    return Task(
+      title: data?['title'],
+      dueDate: data?['dueDate'],
+      category: data?['tag'],
+      details: data?['notes'],
+    );
+  }
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      'title': title,
+      'dueDate': dueDate,
+      'tag': category,
+      'notes': details,
+    };
+  }
 }

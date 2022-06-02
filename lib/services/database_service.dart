@@ -9,8 +9,7 @@ class DatabaseService {
     required this.uid,
   });
 
-  final _tasks = <Task>[];
-  Future getTasks() async {
+  Future<List<Task>> getTasks() async {
     final docRef = FirebaseFirestore.instance
         .collection(uid)
         .doc('tasks')
@@ -18,24 +17,26 @@ class DatabaseService {
 
     final docSnap = await docRef.get();
     List<DocumentSnapshot> tasksDocs = docSnap.docs.toList();
+    List<Task> tasks = [];
 
     if (docSnap != null) {
       for (var doc in tasksDocs) {
         if (doc.data() != null) {
           dynamic taskData = doc.data();
 
-          _tasks.add(Task(taskData['title'], taskData['dueDate'],
-              taskData['tag'], taskData['notes']));
+          tasks.add(Task(
+            title: taskData['title'],
+            dueDate: taskData['dueDate'],
+            category: taskData['tag'],
+            details: taskData['notes'],
+          ));
         }
       }
     } else {
       print('Unexpected error');
     }
-  }
 
-  List<Task> getTaskList() {
-    getTasks();
-    return _tasks;
+    return tasks;
   }
 
   Future getUserInfo() async {
