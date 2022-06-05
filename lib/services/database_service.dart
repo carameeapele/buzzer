@@ -9,6 +9,22 @@ class DatabaseService {
     required this.uid,
   });
 
+  Future addTasks() async {
+    final collRef = FirebaseFirestore.instance
+        .collection(uid)
+        .doc('tasks')
+        .collection('tasks');
+
+    final task = {
+      'title': 'Something',
+      'dueDate': DateTime(2022, 7, 9),
+      'tag': 'French',
+      'notes': '',
+    };
+
+    collRef.add(task);
+  }
+
   Future<List<Task>> getTasks() async {
     final docRef = FirebaseFirestore.instance
         .collection(uid)
@@ -19,21 +35,17 @@ class DatabaseService {
     List<DocumentSnapshot> tasksDocs = docSnap.docs.toList();
     List<Task> tasks = [];
 
-    if (docSnap != null) {
-      for (var doc in tasksDocs) {
-        if (doc.data() != null) {
-          dynamic taskData = doc.data();
+    for (var doc in tasksDocs) {
+      if (doc.data() != null) {
+        dynamic taskData = doc.data();
 
-          tasks.add(Task(
-            title: taskData['title'],
-            dueDate: taskData['dueDate'],
-            category: taskData['tag'],
-            details: taskData['notes'],
-          ));
-        }
+        tasks.add(Task(
+          title: taskData['title'],
+          dueDate: taskData['dueDate'],
+          category: taskData['tag'],
+          details: taskData['notes'],
+        ));
       }
-    } else {
-      print('Unexpected error');
     }
 
     return tasks;

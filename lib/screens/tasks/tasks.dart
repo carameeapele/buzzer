@@ -57,26 +57,22 @@ class _TasksScreenState extends State<TasksScreen> {
                 final docSnap = await docRef.get();
                 List<DocumentSnapshot> tasksDocs = docSnap.docs.toList();
 
-                if (docSnap != null) {
-                  for (var doc in tasksDocs) {
-                    if (doc.data() != null) {
-                      dynamic taskData = doc.data();
+                for (var doc in tasksDocs) {
+                  if (doc.data() != null) {
+                    dynamic taskData = doc.data();
 
-                      tasks.add(Task(
-                        title: taskData['title'],
-                        dueDate: taskData['dueDate'],
-                        category: taskData['tag'],
-                        details: taskData['notes'],
-                      ));
-                    }
+                    tasks.add(Task(
+                      title: taskData['title'],
+                      dueDate: taskData['dueDate'],
+                      category: taskData['tag'],
+                      details: taskData['notes'],
+                    ));
                   }
-                } else {
-                  print('Unexpected error');
                 }
 
-                // tasks.forEach((element) {
-                //   print(element.title);
-                // });
+                tasks.forEach((element) {
+                  print(element.title);
+                });
               },
               child: const Text('Get Tasks'),
             ),

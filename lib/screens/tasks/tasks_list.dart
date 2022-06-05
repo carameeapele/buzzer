@@ -2,7 +2,6 @@ import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/screens/tasks/task_tile.dart';
 import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/services/database_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
