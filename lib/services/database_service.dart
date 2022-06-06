@@ -1,4 +1,3 @@
-import 'package:buzzer/models/event_model.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

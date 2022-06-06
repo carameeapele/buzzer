@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  // VoidCallback? add;
+  // VoidCallback? addFunction;
+
   AppBarWidget({
     Key? key,
     required this.title,
-    // required this.add,
+    // required this.addFunction,
   }) : super(key: key);
 
   @override

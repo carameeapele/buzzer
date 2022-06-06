@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BuzzUser {
   final String userId;
+  final String name = 'New User';
 
   BuzzUser({
     required this.userId,
