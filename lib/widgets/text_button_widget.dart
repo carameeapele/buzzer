@@ -23,7 +23,7 @@ class TextButtonWidget extends StatelessWidget {
         style: TextStyle(
           color: textColor,
           fontFamily: 'Roboto',
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
           fontSize: 16.0,
         ),
       ),

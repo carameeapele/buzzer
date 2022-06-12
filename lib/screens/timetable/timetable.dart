@@ -26,6 +26,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
       extendBodyBehindAppBar: false,
       appBar: AppBarWidget(
         title: 'Timetable',
+        addFunction: () {},
       ),
       drawer: const MenuDrawer(),
     );

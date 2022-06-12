@@ -53,9 +53,9 @@ class MyApp extends ConsumerWidget {
 }
 
 class BuzzerColors {
-  static var lightGrey = const Color.fromARGB(255, 240, 240, 240);
-  static var grey = const Color(0xffC4C4C4);
+  static var lightGrey = const Color(0xffF0F0F0);
+  static var grey = Color.fromARGB(255, 160, 160, 160);
   static var darkGrey = const Color(0xff464646);
   static var lightOrange = const Color(0xffFFB58B);
-  static var orange = const Color.fromARGB(255, 228, 129, 72);
+  static var orange = const Color(0xffDB6622);
 }

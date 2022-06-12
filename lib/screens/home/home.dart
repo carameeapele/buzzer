@@ -1,11 +1,9 @@
 import 'package:buzzer/models/task_model.dart';
-import 'package:buzzer/screens/tasks/tasks_list.dart';
+import 'package:buzzer/screens/home/todayTasks.dart';
 import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/services/database_service.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:buzzer/style/text_style.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -28,7 +26,6 @@ class _HomeState extends State<Home> {
   // ];
 
   final now = DateTime.now();
-  final AuthService _auth = AuthService();
   bool loading = false;
   List<Task> tasks = [];
 
@@ -41,6 +38,7 @@ class _HomeState extends State<Home> {
       extendBodyBehindAppBar: false,
       appBar: AppBarWidget(
         title: 'Today',
+        addFunction: () {},
       ),
       drawer: const MenuDrawer(),
       body: SingleChildScrollView(
@@ -81,8 +79,9 @@ class _HomeState extends State<Home> {
               const SizedBox(
                 height: 10.0,
               ),
+              const TodayTasks(),
               const SizedBox(
-                height: 30.0,
+                height: 10.0,
               ),
               Text(
                 'Schedule',

@@ -2,7 +2,7 @@ import 'package:buzzer/models/event_model.dart';
 import 'package:flutter/material.dart';
 
 class EventWidget extends StatelessWidget {
-  final Event event;
+  final Exam event;
   const EventWidget({
     Key? key,
     required this.event,

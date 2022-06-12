@@ -4,50 +4,65 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
   final String uid;
+
   DatabaseService({
     required this.uid,
   });
 
-  Future addTasks() async {
-    final collRef = FirebaseFirestore.instance
+  Future addTasks(Task task) async {
+    final collectionRef = FirebaseFirestore.instance
         .collection(uid)
         .doc('tasks')
         .collection('tasks');
 
-    final task = {
-      'title': 'Something',
-      'dueDate': DateTime(2022, 7, 9),
-      'tag': 'French',
-      'notes': '',
+    final docData = {
+      'title': task.title,
+      'dueDate': task.dueDate,
+      'tag': task.category,
+      'notes': task.notes,
+      'complete': task.complete,
     };
 
-    collRef.add(task);
+    collectionRef.add(docData).then((documentSnapshot) =>
+        print('Added data with id: ${documentSnapshot.id}'));
   }
 
-  Future<List<Task>> getTasks() async {
+  Future completeTask(String id, bool complete) async {
     final docRef = FirebaseFirestore.instance
         .collection(uid)
         .doc('tasks')
+        .collection('tasks')
+        .doc(id);
+
+    docRef.update({'complete': complete}).catchError(
+        (error) => print('Error: $error'));
+  }
+
+  Future deleteTask(String id) async {
+    final collectionRef = FirebaseFirestore.instance
+        .collection(uid)
+        .doc('tasks')
         .collection('tasks');
 
-    final docSnap = await docRef.get();
-    List<DocumentSnapshot> tasksDocs = docSnap.docs.toList();
-    List<Task> tasks = [];
+    collectionRef.doc(id).delete();
+  }
 
-    for (var doc in tasksDocs) {
-      if (doc.data() != null) {
-        dynamic taskData = doc.data();
+  void addExam(exam) {
+    final collectionRef = FirebaseFirestore.instance
+        .collection(uid)
+        .doc('events')
+        .collection('exams');
 
-        tasks.add(Task(
-          title: taskData['title'],
-          dueDate: taskData['dueDate'],
-          category: taskData['tag'],
-          details: taskData['notes'],
-        ));
-      }
-    }
+    collectionRef.add(exam);
+  }
 
-    return tasks;
+  void deleteExam(String id) {
+    FirebaseFirestore.instance
+        .collection(uid)
+        .doc('events')
+        .collection('exams')
+        .doc(id)
+        .delete();
   }
 
   Future getUserInfo() async {
@@ -70,20 +85,6 @@ class DatabaseService {
         .catchError((error) => print('Unexpected error: $error'));
   }
 
-  // events from snapshot
-  // List<Event>? _eventsListFromSnapshot(QuerySnapshot snapshot) {
-  //   return snapshot.docs.map((doc) {
-  //     return Event(
-  //         title: doc.get('title') ?? '',
-  //         date: doc.get('date') ?? DateTime.now(),
-  //         location: doc.get('location') ?? '',
-  //         startTime: doc.get('startTime') ?? DateTime.now(),
-  //         endTime: doc.get('endTime') ?? DateTime.now(),
-  //         reminders: doc.get('reminders') ?? 0,
-  //         notes: doc.get('notes') ?? '');
-  //   }).toList();
-  // }
-
   // tasks from snapshot
   // List<Task>? _tasksListFromSnapshot(QuerySnapshot snapshot) {
   //   return snapshot.docs.map((doc) {
@@ -92,14 +93,6 @@ class DatabaseService {
   //         dueDate: doc.get('dueDate') ?? DateTime.now(),
   //         category: doc.get('category') ?? 'None',
   //         details: doc.get('details') ?? '');
-  //   }).toList();
-  // }
-
-  // user info from snapshot
-  // List<UserInfo> _userInfoFromSnapshot(QuerySnapshot snapshot) {
-  //   return snapshot.docs.map((doc) {
-  //     return UserInfo(
-  //         name: doc.get('name') ?? '', college: doc.get('college') ?? '');
   //   }).toList();
   // }
 }

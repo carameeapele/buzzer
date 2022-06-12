@@ -36,7 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         titleSpacing: 0.0,
         title: Text(
-          'Account Settings',
+          'Settings',
           style: appBarTextStyle,
         ),
       ),

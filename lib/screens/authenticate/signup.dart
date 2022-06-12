@@ -124,9 +124,11 @@ class _SignUpState extends State<SignUp> {
                             setState(() {
                               loading = true;
                             });
+
                             dynamic result =
                                 await _auth.signupWithEmailAndPassword(
                                     email, password, name);
+
                             if (result == null) {
                               setState(() {
                                 loading = false;
@@ -207,7 +209,8 @@ class _SignUpState extends State<SignUp> {
   }
 
   bool validateEmail() {
-    if (email.contains('@') && email.endsWith('.com')) {
+    if (email.contains('@') &&
+        (email.endsWith('.com') || email.endsWith('.ro'))) {
       return true;
     } else {
       setState(() {

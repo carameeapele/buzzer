@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  // VoidCallback? addFunction;
+  final VoidCallback? addFunction;
 
-  AppBarWidget({
+  const AppBarWidget({
     Key? key,
     required this.title,
-    // required this.addFunction,
+    required this.addFunction,
   }) : super(key: key);
 
   @override
@@ -35,7 +35,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             Icons.add_box_rounded,
             color: BuzzerColors.orange,
           ),
-          onPressed: () {},
+          onPressed: addFunction,
         ),
       ],
     );
