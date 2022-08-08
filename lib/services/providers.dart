@@ -1,4 +1,4 @@
-import 'package:buzzer/models/event_model.dart';
+import 'package:buzzer/models/exam_model.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/services/auth_service.dart';
@@ -38,8 +38,9 @@ final tasksFetchProvider = FutureProvider<List<Task>>((ref) async {
             id: doc.id,
             title: taskData['title'],
             dueDate: taskData['dueDate'],
+            time: taskData['time'],
             category: taskData['tag'],
-            notes: taskData['notes'],
+            details: taskData['notes'],
             complete: taskData['complete'] ?? false,
           ));
 

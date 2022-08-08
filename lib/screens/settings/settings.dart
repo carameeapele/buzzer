@@ -1,11 +1,9 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/screens/settings/account_settings.dart';
-import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/style/text_style.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:buzzer/widgets/text_button_widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -28,17 +26,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: false,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-        titleSpacing: 0.0,
-        title: Text(
-          'Settings',
-          style: appBarTextStyle,
-        ),
+      appBar: const AppBarWidget(
+        title: 'Settings',
       ),
       drawer: const MenuDrawer(),
       body: SingleChildScrollView(

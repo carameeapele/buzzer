@@ -40,7 +40,10 @@ class _SignUpState extends State<SignUp> {
                   maxHeight: MediaQuery.of(context).size.height,
                 ),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 25.0,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,

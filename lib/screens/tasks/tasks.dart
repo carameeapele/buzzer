@@ -4,7 +4,7 @@ import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/services/database_service.dart';
 import 'package:buzzer/services/providers.dart';
-import 'package:buzzer/widgets/app_bar_widget.dart';
+import 'package:buzzer/widgets/add_app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +49,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
           return Scaffold(
             backgroundColor: Colors.white,
             extendBodyBehindAppBar: false,
-            appBar: AppBarWidget(
+            appBar: AddAppBarWidget(
                 title: 'Tasks',
                 addFunction: () async {
                   setState(() {
@@ -58,8 +58,10 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                           id: '',
                           title: 'Something',
                           dueDate: Timestamp.fromDate(DateTime(2022, 06, 15)),
+                          time: Timestamp.fromDate(
+                              DateTime(2022, 06, 15, 23, 59)),
                           category: 'French',
-                          notes: 'Something else',
+                          details: 'Something else',
                           complete: false),
                     );
                   });
@@ -166,8 +168,8 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                           expandedCrossAxisAlignment: CrossAxisAlignment.start,
                           expandedAlignment: Alignment.centerLeft,
                           children: <Widget>[
-                            task.notes.isNotEmpty
-                                ? Text(task.notes)
+                            task.details.isNotEmpty
+                                ? Text(task.details)
                                 : const SizedBox(
                                     height: 0.0,
                                   ),

@@ -1,34 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hive/hive.dart';
+part 'user_model.g.dart';
 
-class BuzzUser {
-  final String userId;
-  final String name = 'New User';
+@HiveType(typeId: 0)
+class BuzzUser extends HiveObject {
+  @HiveField(0)
+  late String userId;
+
+  @HiveField(1)
+  late String name;
+
+  @HiveField(2)
+  late String email;
 
   BuzzUser({
     required this.userId,
   });
-}
-
-class UserInfo {
-  final String name;
-
-  UserInfo({
-    required this.name,
-  });
-
-  factory UserInfo.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    final data = snapshot.data();
-    return UserInfo(
-      name: data?['name'] as String,
-    );
-  }
-
-  Map<String, dynamic> toFirestore() {
-    return {
-      if (name != null) "name": name,
-    };
-  }
 }

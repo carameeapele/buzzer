@@ -1,6 +1,5 @@
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/home/todayTasks.dart';
-import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:buzzer/style/text_style.dart';
@@ -15,16 +14,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<TaskPointer>? getTodayTasks = generateTasks(3);
-  final List<TaskPointer> tomorrowTasks = generateTasks(1);
-  final List<TaskPointer> upcomingTasks = generateTasks(2);
-
-  // final List<PanelItem> _panelItems = [
-  //   PanelItem('Today', todayTasks, false),
-  //   PanelItem('Tomorrow', false),
-  //   PanelItem('Upcoming', false)
-  // ];
-
   final now = DateTime.now();
   bool loading = false;
   List<Task> tasks = [];
@@ -36,9 +25,8 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
-      appBar: AppBarWidget(
+      appBar: const AppBarWidget(
         title: 'Today',
-        addFunction: () {},
       ),
       drawer: const MenuDrawer(),
       body: SingleChildScrollView(
@@ -70,7 +58,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               const SizedBox(
-                height: 30.0,
+                height: 20.0,
               ),
               Text(
                 'Tasks',
@@ -94,87 +82,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-List<TaskPointer> generateTasks(int numberOfTasks) {
-  return List<TaskPointer>.generate(numberOfTasks, (index) {
-    return TaskPointer('Task Title', DateTime.now());
-  });
-}
-
-class TaskPointer {
-  String title;
-  DateTime dueTime;
-
-  TaskPointer(this.title, this.dueTime);
-}
-
-class PanelItem {
-  String title;
-  final List<TaskPointer> taskList;
-  bool isExpanded;
-
-  PanelItem(this.title, this.taskList, this.isExpanded);
-}
-
-// child: ExpansionPanelList(
-//                   elevation: 0.0,
-//                   expandedHeaderPadding: const EdgeInsets.all(5.0),
-//                   animationDuration: const Duration(seconds: 1),
-//                   expansionCallback: (int index, bool isExpanded) {
-//                     setState(() {
-//                       _panelItems[index].isExpanded = !isExpanded;
-//                     });
-//                   },
-//                   children: _panelItems.map<ExpansionPanel>((PanelItem item) {
-//                     return ExpansionPanel(
-//                       canTapOnHeader: true,
-//                       backgroundColor: item.isExpanded
-//                           ? BuzzerColors.orange
-//                           : BuzzerColors.lightGrey,
-//                       headerBuilder: (BuildContext context, bool isExpanded) {
-//                         return ListTile(
-//                           textColor: isExpanded ? Colors.white : Colors.black,
-//                           title: Text(
-//                             item.title,
-//                             style: const TextStyle(
-//                               fontFamily: 'Roboto',
-//                               fontSize: 16.0,
-//                               fontWeight: FontWeight.w700,
-//                             ),
-//                           ),
-//                           shape: const RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.all(
-//                               Radius.circular(7.0),
-//                             ),
-//                           ),
-//                           trailing: Text(
-//                             todayTasks.length.toString(),
-//                             style: const TextStyle(
-//                               fontFamily: 'Roboto',
-//                               fontSize: 16.0,
-//                               fontWeight: FontWeight.w700,
-//                             ),
-//                           ),
-//                         );
-//                       },
-//                       body: ListView.builder(
-//                         itemCount: todayTasks.length,
-//                         itemBuilder: (BuildContext context, int index) {
-//                           return ListTile(
-//                             textColor:
-//                                 item.isExpanded ? Colors.white : Colors.black,
-//                             title: Text(todayTasks[index].title),
-//                             subtitle:
-//                                 Text(todayTasks[index].dueTime.hour.toString()),
-//                             shape: const RoundedRectangleBorder(
-//                               borderRadius: BorderRadius.all(
-//                                 Radius.circular(7.0),
-//                               ),
-//                             ),
-//                           );
-//                         },
-//                       ),
-//                       isExpanded: item.isExpanded,
-//                     );
-//                   }).toList(),
-//                 ),

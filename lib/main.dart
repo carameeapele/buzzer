@@ -1,15 +1,19 @@
+import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive_flutter/adapters.dart';
 
-void main() async {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
-  runApp(const ProviderScope(child: MyApp()));
+  await Hive.initFlutter();
+  Hive.registerAdapter(BuzzUserAdapter());
+  await Hive.openBox<BuzzUser>('users');
+
+  runApp(const MyApp());
 }
 
 final firebaseInitializerProvider = FutureProvider<FirebaseApp>((ref) async {
@@ -17,10 +21,8 @@ final firebaseInitializerProvider = FutureProvider<FirebaseApp>((ref) async {
 });
 
 class MyApp extends ConsumerWidget {
-  //SharedPreferences sharedPrefs;
   const MyApp({
     Key? key,
-    //required this.sharedPrefs,
   }) : super(key: key);
 
   // This widget is the root of your application.
@@ -54,7 +56,7 @@ class MyApp extends ConsumerWidget {
 
 class BuzzerColors {
   static var lightGrey = const Color(0xffF0F0F0);
-  static var grey = Color.fromARGB(255, 160, 160, 160);
+  static var grey = const Color.fromARGB(255, 160, 160, 160);
   static var darkGrey = const Color(0xff464646);
   static var lightOrange = const Color(0xffFFB58B);
   static var orange = const Color(0xffDB6622);

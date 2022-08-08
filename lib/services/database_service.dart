@@ -19,7 +19,7 @@ class DatabaseService {
       'title': task.title,
       'dueDate': task.dueDate,
       'tag': task.category,
-      'notes': task.notes,
+      'notes': task.details,
       'complete': task.complete,
     };
 
@@ -39,12 +39,16 @@ class DatabaseService {
   }
 
   Future deleteTask(String id) async {
-    final collectionRef = FirebaseFirestore.instance
+    final docRef = FirebaseFirestore.instance
         .collection(uid)
         .doc('tasks')
-        .collection('tasks');
+        .collection('tasks')
+        .doc(id);
 
-    collectionRef.doc(id).delete();
+    docRef
+        .delete()
+        .then((value) => print('Deleted'))
+        .catchError((error) => print('Delete doc $id failed: $error'));
   }
 
   void addExam(exam) {
@@ -63,18 +67,6 @@ class DatabaseService {
         .collection('exams')
         .doc(id)
         .delete();
-  }
-
-  Future getUserInfo() async {
-    final docRef = FirebaseFirestore.instance.collection(uid).doc('user_info');
-    final docSnap = await docRef.get();
-    final userInfo = docSnap.data();
-    if (userInfo != null) {
-      print(userInfo.toString());
-      return userInfo;
-    } else {
-      return UserInfo(name: 'New User');
-    }
   }
 
   Future updateUserInfo(String name) async {

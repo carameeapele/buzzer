@@ -1,5 +1,5 @@
 import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/widgets/app_bar_widget.dart';
+import 'package:buzzer/widgets/add_app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -24,7 +24,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: false,
-      appBar: AppBarWidget(
+      appBar: AddAppBarWidget(
         title: 'Timetable',
         addFunction: () {},
       ),

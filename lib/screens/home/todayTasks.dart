@@ -3,7 +3,6 @@ import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/screens/tasks/tasks.dart';
 import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/services/database_service.dart';
 import 'package:buzzer/services/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
@@ -30,36 +29,35 @@ class _TodayTasksState extends ConsumerState<TodayTasks> {
 
     return Container(
       child: tasks.when(
-          data: (List<Task> tasks) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 3,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (tasks.isEmpty) {
-                      return Card(
-                        elevation: 0.0,
-                        color: BuzzerColors.lightGrey,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
+        data: (List<Task> tasks) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: tasks.length > 3 ? 3 : tasks.length,
+                itemBuilder: (BuildContext context, int index) {
+                  if (tasks.isEmpty) {
+                    return Card(
+                      elevation: 0.0,
+                      color: BuzzerColors.lightGrey,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                      ),
+                      child: const ListTile(
+                        title: Text(
+                          'No Tasks',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18.0,
                           ),
                         ),
-                        child: const ListTile(
-                          title: Text(
-                            'Add a Task',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-
+                      ),
+                    );
+                  } else {
                     Task task = tasks[index];
                     return Card(
                       elevation: 0.0,
@@ -118,15 +116,17 @@ class _TodayTasksState extends ConsumerState<TodayTasks> {
                         },
                       ),
                     );
-                  },
-                ),
-              ],
-            );
-          },
-          error: (Object error, StackTrace? stackTrace) {
-            return Container();
-          },
-          loading: () => const Loading()),
+                  }
+                },
+              ),
+            ],
+          );
+        },
+        error: (Object error, StackTrace? stackTrace) {
+          return Container();
+        },
+        loading: () {},
+      ),
     );
   }
 }

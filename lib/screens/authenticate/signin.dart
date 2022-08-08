@@ -1,3 +1,4 @@
+import 'package:buzzer/main.dart';
 import 'package:buzzer/screens/authenticate/signup.dart';
 import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
@@ -35,9 +36,12 @@ class _SignInState extends State<SignIn> {
                   maxHeight: MediaQuery.of(context).size.height,
                 ),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 25.0,
+                  ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       const Text(
@@ -50,7 +54,7 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                       const SizedBox(
-                        height: 60.0,
+                        height: 70.0,
                       ),
                       Form(
                         key: _formKey,
@@ -124,7 +128,7 @@ class _SignInState extends State<SignIn> {
                         ),
                         style: TextButton.styleFrom(
                           elevation: 0.0,
-                          backgroundColor: Colors.deepOrange,
+                          backgroundColor: Colors.orange[700],
                           padding: const EdgeInsets.symmetric(
                               horizontal: 30.0, vertical: 10.0),
                           shape: const RoundedRectangleBorder(
@@ -167,7 +171,7 @@ class _SignInState extends State<SignIn> {
                           ),
                           const Spacer(),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

@@ -1,6 +1,6 @@
-import 'package:buzzer/models/event_model.dart';
+import 'package:buzzer/models/exam_model.dart';
 import 'package:buzzer/screens/events/event_tile.dart';
-import 'package:buzzer/widgets/app_bar_widget.dart';
+import 'package:buzzer/widgets/add_app_bar_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

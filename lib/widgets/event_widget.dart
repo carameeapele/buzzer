@@ -1,4 +1,4 @@
-import 'package:buzzer/models/event_model.dart';
+import 'package:buzzer/models/exam_model.dart';
 import 'package:flutter/material.dart';
 
 class EventWidget extends StatelessWidget {

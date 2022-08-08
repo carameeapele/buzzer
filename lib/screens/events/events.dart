@@ -1,11 +1,11 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/models/event_model.dart';
+import 'package:buzzer/models/exam_model.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/services/database_service.dart';
 import 'package:buzzer/services/providers.dart';
 import 'package:buzzer/style/text_style.dart';
-import 'package:buzzer/widgets/app_bar_widget.dart';
+import 'package:buzzer/widgets/add_app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -65,7 +65,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
           return Scaffold(
             backgroundColor: Colors.white,
             extendBodyBehindAppBar: false,
-            appBar: AppBarWidget(
+            appBar: AddAppBarWidget(
               title: 'Events',
               addFunction: () {},
             ),

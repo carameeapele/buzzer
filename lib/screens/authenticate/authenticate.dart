@@ -1,7 +1,6 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/screens/authenticate/signin.dart';
 import 'package:buzzer/screens/authenticate/signup.dart';
-import 'package:buzzer/widgets/text_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class Authenticate extends StatefulWidget {
@@ -34,10 +33,13 @@ class _AuthenticateState extends State<Authenticate> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 60.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 25.0,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             const Text(
               'Organized\nProcrastination',
@@ -49,19 +51,7 @@ class _AuthenticateState extends State<Authenticate> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(
-              height: 20.0,
-            ),
-            const Text(
-              'Made For Students\nBy Students',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w400,
-                fontSize: 16.0,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(
-              height: 70.0,
+              height: 130.0,
             ),
             TextButton(
               onPressed: () {
@@ -90,7 +80,7 @@ class _AuthenticateState extends State<Authenticate> {
               ),
             ),
             const SizedBox(
-              height: 20.0,
+              height: 7.0,
             ),
             TextButton(
               onPressed: () {
@@ -117,6 +107,18 @@ class _AuthenticateState extends State<Authenticate> {
                   ),
                 ),
               ),
+            ),
+            const SizedBox(
+              height: 40.0,
+            ),
+            const Text(
+              'Made For Students By Students',
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w400,
+                fontSize: 14.0,
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

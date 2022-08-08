@@ -2,12 +2,14 @@ import 'package:buzzer/main.dart';
 import 'package:buzzer/style/text_style.dart';
 import 'package:flutter/material.dart';
 
-class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
+class AddAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final VoidCallback? addFunction;
 
-  const AppBarWidget({
+  const AddAppBarWidget({
     Key? key,
     required this.title,
+    required this.addFunction,
   }) : super(key: key);
 
   @override
@@ -26,6 +28,16 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         style: appBarTextStyle,
       ),
       titleSpacing: 0.0,
+      actions: <Widget>[
+        IconButton(
+          iconSize: 30.0,
+          icon: Icon(
+            Icons.add_box_rounded,
+            color: BuzzerColors.orange,
+          ),
+          onPressed: addFunction,
+        ),
+      ],
     );
   }
 }

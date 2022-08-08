@@ -64,8 +64,8 @@ class _TaskTileState extends State<TaskTile> {
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         expandedAlignment: Alignment.centerLeft,
         children: <Widget>[
-          widget.task.notes.isNotEmpty
-              ? Text(widget.task.notes)
+          widget.task.details.isNotEmpty
+              ? Text(widget.task.details)
               : const SizedBox(
                   height: 0.0,
                 ),
