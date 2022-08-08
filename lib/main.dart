@@ -13,7 +13,7 @@ Future main() async {
   Hive.registerAdapter(BuzzUserAdapter());
   await Hive.openBox<BuzzUser>('users');
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 final firebaseInitializerProvider = FutureProvider<FirebaseApp>((ref) async {

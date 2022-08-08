@@ -1,10 +1,6 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/screens/loading.dart';
-import 'package:buzzer/screens/wrapper.dart';
 import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/services/database_service.dart';
-import 'package:buzzer/style/text_form_field_style.dart';
-import 'package:buzzer/style/text_style.dart';
+import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/text_button_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -30,122 +26,125 @@ class _AccountSettingsState extends State<AccountSettings> {
 
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? const Loading()
-        : SingleChildScrollView(
-            child: Scaffold(
-              extendBodyBehindAppBar: false,
-              appBar: AppBar(
-                elevation: 0.0,
-                backgroundColor: Colors.transparent,
-                iconTheme: const IconThemeData(
-                  color: Colors.black,
-                ),
-                titleSpacing: 0.0,
-                title: Text(
-                  'Account Settings',
-                  style: appBarTextStyle,
-                ),
+    return Scaffold(
+      extendBodyBehindAppBar: false,
+      appBar: const AppBarWidget(
+        title: 'Account Settings',
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              TextButtonWidget(
+                text: 'Sign out',
+                function: () {
+                  // Sign out
+                  _auth.signout();
+
+                  // Navigate back to Authenticate
+                  Navigator.of(context).popAndPushNamed();
+                },
+                backgroundColor: BuzzerColors.orange,
+                textColor: Colors.white,
               ),
-              body: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Form(
-                      child: Column(
-                        children: <Widget>[
-                          TextFormField(
-                            textCapitalization: TextCapitalization.words,
-                            decoration:
-                                textInputDecoration.copyWith(hintText: 'Name'),
-                            onChanged: (val) {
-                              setState(() {
-                                name = val;
-                              });
-                            },
-                          ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                          TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            decoration:
-                                textInputDecoration.copyWith(hintText: 'Email'),
-                            onChanged: (val) {
-                              setState(() {
-                                email = val;
-                              });
-                            },
-                          ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                        ],
-                      ),
-                    ),
-                    TextButtonWidget(
-                      text: 'Update Data',
-                      function: () async {
-                        if (name.isNotEmpty) {
-                          setState(() {
-                            loading = true;
-                          });
 
-                          dynamic result =
-                              await DatabaseService(uid: _auth.toString())
-                                  .updateUserInfo(name);
+              // Form(
+              //   child: Column(
+              //     children: <Widget>[
+              //       TextFormField(
+              //         textCapitalization: TextCapitalization.words,
+              //         decoration:
+              //             textInputDecoration.copyWith(hintText: 'Name'),
+              //         onChanged: (val) {
+              //           setState(() {
+              //             name = val;
+              //           });
+              //         },
+              //       ),
+              //       const SizedBox(
+              //         height: 10.0,
+              //       ),
+              //       TextFormField(
+              //         keyboardType: TextInputType.emailAddress,
+              //         decoration:
+              //             textInputDecoration.copyWith(hintText: 'Email'),
+              //         onChanged: (val) {
+              //           setState(() {
+              //             email = val;
+              //           });
+              //         },
+              //       ),
+              //       const SizedBox(
+              //         height: 10.0,
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // TextButtonWidget(
+              //   text: 'Update Data',
+              //   function: () async {
+              //     if (name.isNotEmpty) {
+              //       setState(() {
+              //         loading = true;
+              //       });
 
-                          if (result == null) {
-                            setState(() {
-                              loading = false;
-                              error = 'Unexpected Error Occured';
-                            });
-                          }
-                        }
+              //       dynamic result =
+              //           await DatabaseService(uid: _auth.toString())
+              //               .updateUserInfo(name);
 
-                        if (email.isNotEmpty) {
-                          setState(() {
-                            loading = true;
-                          });
+              //       if (result == null) {
+              //         setState(() {
+              //           loading = false;
+              //           error = 'Unexpected Error Occured';
+              //         });
+              //       }
+              //     }
 
-                          dynamic result = await _auth.updateUserEmail(email);
+              //     if (email.isNotEmpty) {
+              //       setState(() {
+              //         loading = true;
+              //       });
 
-                          if (result == null) {
-                            setState(() {
-                              loading = false;
-                              error = 'Unexpected Error Occured';
-                            });
-                          }
-                        }
+              //       dynamic result = await _auth.updateUserEmail(email);
 
-                        if (loading) {
-                          initState();
-                          widget.createState();
-                        }
-                      },
-                      backgroundColor: BuzzerColors.lightGrey,
-                      textColor: Colors.black,
-                    ),
-                    TextButtonWidget(
-                        text: 'Sign out',
-                        function: () async {
-                          setState(() {
-                            loading = true;
-                          });
-                          await _auth.signout();
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const Wrapper(),
-                          ));
-                        },
-                        backgroundColor: BuzzerColors.lightGrey,
-                        textColor: Colors.black),
-                  ],
-                ),
-              ),
-            ),
-          );
+              //       if (result == null) {
+              //         setState(() {
+              //           loading = false;
+              //           error = 'Unexpected Error Occured';
+              //         });
+              //       }
+              //     }
+
+              //     if (loading) {
+              //       initState();
+              //       widget.createState();
+              //     }
+              //   },
+              //   backgroundColor: BuzzerColors.lightGrey,
+              //   textColor: Colors.black,
+              // ),
+              // TextButtonWidget(
+              //   text: 'Sign out',
+              //   function: () async {
+              //     setState(() {
+              //       loading = true;
+              //     });
+              //     await _auth.signout();
+              //     Navigator.of(context).push(MaterialPageRoute(
+              //       builder: (context) => const Wrapper(),
+              //     ));
+              //   },
+              //   backgroundColor: BuzzerColors.lightGrey,
+              //   textColor: Colors.black,
+              // ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   bool validateFields() {
