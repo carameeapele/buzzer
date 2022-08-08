@@ -45,7 +45,9 @@ class _AccountSettingsState extends State<AccountSettings> {
                   _auth.signout();
 
                   // Navigate back to Authenticate
-                  Navigator.of(context).popAndPushNamed();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/authenticate',
+                  );
                 },
                 backgroundColor: BuzzerColors.orange,
                 textColor: Colors.white,

@@ -1,4 +1,8 @@
 import 'package:buzzer/models/user_model.dart';
+import 'package:buzzer/screens/authenticate/authenticate.dart';
+import 'package:buzzer/screens/authenticate/signin.dart';
+import 'package:buzzer/screens/authenticate/signup.dart';
+import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -50,6 +54,13 @@ class MyApp extends ConsumerWidget {
           return const Loading();
         },
       ),
+      routes: {
+        '/wrapper': (context) => const Wrapper(),
+        '/authenticate': (context) => const Authenticate(),
+        '/signin': (context) => const SignIn(),
+        'signup': (context) => const SignUp(),
+        '/home': (context) => const Home(),
+      },
     );
   }
 }
