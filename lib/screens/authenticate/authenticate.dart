@@ -1,6 +1,4 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/screens/authenticate/signin.dart';
-import 'package:buzzer/screens/authenticate/signup.dart';
 import 'package:flutter/material.dart';
 
 class Authenticate extends StatefulWidget {
@@ -11,24 +9,6 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
-  void buttonFunction(BuildContext context, String path) {
-    Navigator.of(context).pop();
-    switch (path) {
-      case 'signin':
-        Navigator.of(context).pop();
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const SignIn(),
-        ));
-        break;
-      case 'signup':
-        Navigator.of(context).pop();
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const SignUp(),
-        ));
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +19,7 @@ class _AuthenticateState extends State<Authenticate> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             const Text(
               'Organized\nProcrastination',
@@ -55,10 +35,7 @@ class _AuthenticateState extends State<Authenticate> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const SignIn(),
-                ));
+                Navigator.of(context).popAndPushNamed('/signin');
               },
               child: const Text(
                 'Sign in to account',
@@ -84,10 +61,7 @@ class _AuthenticateState extends State<Authenticate> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const SignUp(),
-                ));
+                Navigator.of(context).popAndPushNamed('/signup');
               },
               child: const Text(
                 'Create an account',

@@ -2,8 +2,13 @@ import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/screens/authenticate/authenticate.dart';
 import 'package:buzzer/screens/authenticate/signin.dart';
 import 'package:buzzer/screens/authenticate/signup.dart';
+import 'package:buzzer/screens/events/events.dart';
 import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
+import 'package:buzzer/screens/settings/account_settings.dart';
+import 'package:buzzer/screens/settings/settings.dart';
+import 'package:buzzer/screens/tasks/tasks.dart';
+import 'package:buzzer/screens/timetable/timetable.dart';
 import 'package:buzzer/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +48,7 @@ class MyApp extends ConsumerWidget {
         scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Roboto',
       ),
+      // try adding a splash screen
       home: initialize.when(
         data: (data) {
           return const Wrapper();
@@ -58,8 +64,13 @@ class MyApp extends ConsumerWidget {
         '/wrapper': (context) => const Wrapper(),
         '/authenticate': (context) => const Authenticate(),
         '/signin': (context) => const SignIn(),
-        'signup': (context) => const SignUp(),
+        '/signup': (context) => const SignUp(),
         '/home': (context) => const Home(),
+        '/events': (context) => const EventsScreen(),
+        '/tasks': (context) => const TasksScreen(),
+        '/timetable': (context) => const TimetableScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/account_settings': (context) => const AccountSettings(),
       },
     );
   }
