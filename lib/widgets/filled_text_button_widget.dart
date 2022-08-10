@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TextButtonWidget extends StatelessWidget {
-  const TextButtonWidget({
+class FilledTextButtonWidget extends StatelessWidget {
+  const FilledTextButtonWidget({
     Key? key,
     required this.text,
     required this.function,
@@ -28,7 +28,9 @@ class TextButtonWidget extends StatelessWidget {
         ),
       ),
       style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        padding: const EdgeInsets.symmetric(
+          vertical: 12.0,
+        ),
         backgroundColor: backgroundColor,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(

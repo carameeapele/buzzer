@@ -81,5 +81,5 @@ class BuzzerColors {
   static var grey = const Color.fromARGB(255, 160, 160, 160);
   static var darkGrey = const Color(0xff464646);
   static var lightOrange = const Color(0xffFFB58B);
-  static var orange = const Color(0xffDB6622);
+  static var orange = const Color(0xffFF823C);
 }

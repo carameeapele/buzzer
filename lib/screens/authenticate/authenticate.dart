@@ -1,4 +1,6 @@
 import 'package:buzzer/main.dart';
+import 'package:buzzer/widgets/filled_text_button_widget.dart';
+import 'package:buzzer/widgets/outlined_text_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class Authenticate extends StatefulWidget {
@@ -21,66 +23,63 @@ class _AuthenticateState extends State<Authenticate> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
+            const SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 34,
+                  height: 31,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/media/buzzer_icon.png'),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                const Text(
+                  'Buzzer',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 40,
+            ),
             const Text(
               'Organized\nProcrastination',
               style: TextStyle(
                 fontFamily: 'Roboto',
                 fontWeight: FontWeight.w700,
-                fontSize: 30.0,
+                fontSize: 35,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(
-              height: 130.0,
-            ),
-            TextButton(
-              onPressed: () {
+            FilledTextButtonWidget(
+              text: 'Sign in to account',
+              function: () {
                 Navigator.of(context).popAndPushNamed('/signin');
               },
-              child: const Text(
-                'Sign in to account',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16.0,
-                ),
-              ),
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                backgroundColor: BuzzerColors.orange,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(7.0),
-                  ),
-                ),
-              ),
+              backgroundColor: BuzzerColors.orange,
+              textColor: Colors.white,
             ),
             const SizedBox(
               height: 7.0,
             ),
-            TextButton(
-              onPressed: () {
+            OutlinedTextButtonWidget(
+              text: 'Create an account',
+              function: () {
                 Navigator.of(context).popAndPushNamed('/signup');
               },
-              child: const Text(
-                'Create an account',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16.0,
-                ),
-              ),
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                backgroundColor: BuzzerColors.lightGrey,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(7.0),
-                  ),
-                ),
-              ),
+              color: BuzzerColors.orange,
             ),
             const SizedBox(
               height: 40.0,

@@ -3,7 +3,7 @@ import 'package:buzzer/screens/settings/account_settings.dart';
 import 'package:buzzer/style/text_style.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
-import 'package:buzzer/widgets/text_button_widget.dart';
+import 'package:buzzer/widgets/filled_text_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -37,7 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              TextButtonWidget(
+              FilledTextButtonWidget(
                 text: 'Account',
                 function: () {
                   Navigator.of(context).push(MaterialPageRoute(
