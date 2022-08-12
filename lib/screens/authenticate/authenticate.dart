@@ -24,14 +24,14 @@ class _AuthenticateState extends State<Authenticate> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             const SizedBox(
-              height: 40,
+              height: 10.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  width: 34,
-                  height: 31,
+                  width: 34.0,
+                  height: 31.0,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/media/buzzer_icon.png'),
@@ -39,50 +39,53 @@ class _AuthenticateState extends State<Authenticate> {
                   ),
                 ),
                 const SizedBox(
-                  width: 10,
+                  width: 10.0,
                 ),
                 const Text(
                   'Buzzer',
                   style: TextStyle(
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.bold,
-                    fontSize: 25,
+                    fontSize: 25.0,
                   ),
                 ),
               ],
-            ),
-            const SizedBox(
-              height: 40,
             ),
             const Text(
               'Organized\nProcrastination',
               style: TextStyle(
                 fontFamily: 'Roboto',
                 fontWeight: FontWeight.w700,
-                fontSize: 35,
+                fontSize: 35.0,
               ),
               textAlign: TextAlign.center,
             ),
-            FilledTextButtonWidget(
-              text: 'Sign in to account',
-              function: () {
-                Navigator.of(context).popAndPushNamed('/signin');
-              },
-              backgroundColor: BuzzerColors.orange,
-              textColor: Colors.white,
-            ),
             const SizedBox(
-              height: 7.0,
+              height: 10.0,
             ),
-            OutlinedTextButtonWidget(
-              text: 'Create an account',
-              function: () {
-                Navigator.of(context).popAndPushNamed('/signup');
-              },
-              color: BuzzerColors.orange,
-            ),
-            const SizedBox(
-              height: 40.0,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                FilledTextButtonWidget(
+                  text: 'Sign in to account',
+                  function: () {
+                    Navigator.of(context).popAndPushNamed('/signin');
+                  },
+                  backgroundColor: BuzzerColors.orange,
+                  textColor: Colors.white,
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                OutlinedTextButtonWidget(
+                  text: 'Create an account',
+                  function: () {
+                    Navigator.of(context).popAndPushNamed('/signup');
+                  },
+                  color: BuzzerColors.orange,
+                ),
+              ],
             ),
             const Text(
               'Made For Students By Students',
