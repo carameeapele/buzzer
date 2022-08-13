@@ -3,7 +3,7 @@ import 'package:buzzer/screens/authenticate/signin.dart';
 import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/style/text_form_field_style.dart';
+import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/filled_text_button_widget.dart';
 import 'package:flutter/material.dart';
 

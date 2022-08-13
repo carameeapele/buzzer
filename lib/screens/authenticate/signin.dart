@@ -3,7 +3,9 @@ import 'package:buzzer/screens/authenticate/signup.dart';
 import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/style/text_form_field_style.dart';
+import 'package:buzzer/widgets/form_field.dart';
+import 'package:buzzer/widgets/filled_text_button_widget.dart';
+import 'package:buzzer/widgets/spacer_button.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
@@ -41,9 +43,12 @@ class _SignInState extends State<SignIn> {
                     vertical: 25.0,
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
+                      const SizedBox(
+                        height: 10.0,
+                      ),
                       const Text(
                         'Welcome\nBack',
                         style: TextStyle(
@@ -54,7 +59,7 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                       const SizedBox(
-                        height: 70.0,
+                        height: 10.0,
                       ),
                       Form(
                         key: _formKey,
@@ -96,8 +101,8 @@ class _SignInState extends State<SignIn> {
                           ],
                         ),
                       ),
-                      TextButton(
-                        onPressed: () async {
+                      FilledTextButtonWidget(
+                        function: () async {
                           if (validateFields()) {
                             setState(() {
                               loading = true;
@@ -110,67 +115,20 @@ class _SignInState extends State<SignIn> {
                                 error = 'Email or password incorrect';
                               });
                             } else {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const Home(),
-                              ));
+                              Navigator.of(context).popAndPushNamed('/home');
                             }
                           }
                         },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        style: TextButton.styleFrom(
-                          elevation: 0.0,
-                          backgroundColor: Colors.orange[700],
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30.0, vertical: 10.0),
-                          shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(7.0)),
-                          ),
-                        ),
+                        text: 'Login',
+                        backgroundColor: BuzzerColors.orange,
+                        textColor: Colors.white,
                       ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          const Spacer(),
-                          const Text(
-                            'Don\'t have an account?',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Roboto',
-                              fontSize: 13.0,
-                            ),
-                            //textAlign: TextAlign.end,
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const SignUp(),
-                              ));
-                            },
-                            child: const Text(
-                              'Register',
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 13.0,
-                                color: Colors.deepOrange,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                        ],
+                      SpacerButton(
+                        text: 'Don\'t have an account?',
+                        buttonText: 'Register',
+                        function: () {
+                          Navigator.of(context).popAndPushNamed('/signup');
+                        },
                       ),
                     ],
                   ),
