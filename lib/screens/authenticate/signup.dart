@@ -63,62 +63,62 @@ class _SignUpState extends State<SignUp> {
                       Form(
                         key: _formKey,
                         child: Column(
-                          children: <Widget>[
-                            TextFormField(
-                              textCapitalization: TextCapitalization.words,
-                              decoration: textInputDecoration.copyWith(
-                                hintText: 'Name',
-                              ),
-                              validator: (val) => val!.isEmpty
-                                  ? 'Please enter your name'
-                                  : null,
-                              onChanged: (val) {
-                                setState(() {
-                                  name = val;
-                                });
-                              },
-                            ),
-                            const SizedBox(
+                          children: const <Widget>[
+                            // TextFormField(
+                            //   textCapitalization: TextCapitalization.words,
+                            //   decoration: textInputDecoration.copyWith(
+                            //     hintText: 'Name',
+                            //   ),
+                            //   validator: (val) => val!.isEmpty
+                            //       ? 'Please enter your name'
+                            //       : null,
+                            //   onChanged: (val) {
+                            //     setState(() {
+                            //       name = val;
+                            //     });
+                            //   },
+                            // ),
+                            SizedBox(
                               height: 30.0,
                             ),
-                            TextFormField(
-                              keyboardType: TextInputType.emailAddress,
-                              controller: controller,
-                              decoration: textInputDecoration.copyWith(
-                                hintText: 'Email',
-                                errorText: emailError,
-                              ),
-                              validator: (val) =>
-                                  val!.isEmpty ? 'Please enter an email' : null,
-                              onChanged: (val) {
-                                setState(() {
-                                  email = val;
-                                });
-                              },
-                            ),
-                            const SizedBox(
+                            // TextFormField(
+                            //   keyboardType: TextInputType.emailAddress,
+                            //   controller: controller,
+                            //   decoration: textInputDecoration.copyWith(
+                            //     hintText: 'Email',
+                            //     errorText: emailError,
+                            //   ),
+                            //   validator: (val) =>
+                            //       val!.isEmpty ? 'Please enter an email' : null,
+                            //   onChanged: (val) {
+                            //     setState(() {
+                            //       email = val;
+                            //     });
+                            //   },
+                            // ),
+                            SizedBox(
                               height: 30.0,
                             ),
-                            TextFormField(
-                              obscureText: true,
-                              decoration: textInputDecoration.copyWith(
-                                hintText: 'Password',
-                                errorText: passwordError,
-                              ),
-                              validator: (val) => val!.isEmpty
-                                  ? 'Please enter the password'
-                                  : null,
-                              onChanged: (val) {
-                                setState(() {
-                                  password = val;
-                                });
-                              },
-                            ),
-                            const SizedBox(
-                              height: 60.0,
-                            ),
+                            // TextFormField(
+                            //   obscureText: true,
+                            //   decoration: textInputDecoration.copyWith(
+                            //     hintText: 'Password',
+                            //     errorText: passwordError,
+                            //   ),
+                            //   validator: (val) => val!.isEmpty
+                            //       ? 'Please enter the password'
+                            //       : null,
+                            //   onChanged: (val) {
+                            //     setState(() {
+                            //       password = val;
+                            //     });
+                            //   },
+                            // ),
                           ],
                         ),
+                      ),
+                      const SizedBox(
+                        height: 60.0,
                       ),
                       FilledTextButtonWidget(
                         text: 'Sign up',

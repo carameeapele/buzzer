@@ -65,11 +65,43 @@ class _SignInState extends State<SignIn> {
                         key: _formKey,
                         child: Column(
                           children: <Widget>[
+                            // TextFieldWidget(
+                            //   labetText: 'Email',
+                            //   obscureText: false,
+                            //   onChannge: (value) {
+                            //     setState(() {
+                            //       email = value.toString().trim();
+                            //     });
+                            //   },
+                            // ),
                             TextFormField(
                               keyboardType: TextInputType.emailAddress,
                               controller: controller,
-                              decoration: textInputDecoration.copyWith(
-                                hintText: 'Email',
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                floatingLabelStyle: TextStyle(
+                                  color: BuzzerColors.orange,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(7.0)),
+                                  borderSide: BorderSide(
+                                    color: BuzzerColors.grey,
+                                    width: 2.0,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: BuzzerColors.grey,
+                                  fontFamily: 'Roboto',
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(7.0)),
+                                  borderSide: BorderSide(
+                                    color: BuzzerColors.orange,
+                                    width: 2.0,
+                                  ),
+                                ),
                               ),
                               validator: (val) =>
                                   val!.isEmpty ? 'Please enter an email' : null,
@@ -84,8 +116,32 @@ class _SignInState extends State<SignIn> {
                             ),
                             TextFormField(
                               obscureText: true,
-                              decoration: textInputDecoration.copyWith(
-                                  hintText: 'Password'),
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                floatingLabelStyle: TextStyle(
+                                  color: BuzzerColors.orange,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(7.0)),
+                                  borderSide: BorderSide(
+                                    color: BuzzerColors.grey,
+                                    width: 2.0,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: BuzzerColors.grey,
+                                  fontFamily: 'Roboto',
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(7.0)),
+                                  borderSide: BorderSide(
+                                    color: BuzzerColors.orange,
+                                    width: 2.0,
+                                  ),
+                                ),
+                              ),
                               validator: (val) => val!.isEmpty
                                   ? 'Please enter the password'
                                   : null,
@@ -95,11 +151,11 @@ class _SignInState extends State<SignIn> {
                                 });
                               },
                             ),
-                            const SizedBox(
-                              height: 60.0,
-                            ),
                           ],
                         ),
+                      ),
+                      const SizedBox(
+                        height: 60.0,
                       ),
                       FilledTextButtonWidget(
                         function: () async {
@@ -107,8 +163,10 @@ class _SignInState extends State<SignIn> {
                             setState(() {
                               loading = true;
                             });
+
                             dynamic result = await _auth
                                 .signinWithEmailAndPassword(email, password);
+
                             if (result == null) {
                               setState(() {
                                 loading = false;
