@@ -1,6 +1,4 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/screens/authenticate/signup.dart';
-import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/widgets/form_field.dart';
@@ -65,89 +63,26 @@ class _SignInState extends State<SignIn> {
                         key: _formKey,
                         child: Column(
                           children: <Widget>[
-                            // TextFieldWidget(
-                            //   labetText: 'Email',
-                            //   obscureText: false,
-                            //   onChannge: (value) {
-                            //     setState(() {
-                            //       email = value.toString().trim();
-                            //     });
-                            //   },
-                            // ),
-                            TextFormField(
+                            TextFieldWidget(
+                              labetText: 'Email',
                               keyboardType: TextInputType.emailAddress,
-                              controller: controller,
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                floatingLabelStyle: TextStyle(
-                                  color: BuzzerColors.orange,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(7.0)),
-                                  borderSide: BorderSide(
-                                    color: BuzzerColors.grey,
-                                    width: 2.0,
-                                  ),
-                                ),
-                                labelStyle: TextStyle(
-                                  color: BuzzerColors.grey,
-                                  fontFamily: 'Roboto',
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(7.0)),
-                                  borderSide: BorderSide(
-                                    color: BuzzerColors.orange,
-                                    width: 2.0,
-                                  ),
-                                ),
-                              ),
-                              validator: (val) =>
-                                  val!.isEmpty ? 'Please enter an email' : null,
-                              onChanged: (val) {
+                              obscureText: false,
+                              onChannge: (value) {
                                 setState(() {
-                                  email = val.toString().trim();
+                                  email = value.toString().trim();
                                 });
                               },
                             ),
                             const SizedBox(
                               height: 30.0,
                             ),
-                            TextFormField(
+                            TextFieldWidget(
+                              labetText: 'Password',
+                              keyboardType: TextInputType.text,
                               obscureText: true,
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                floatingLabelStyle: TextStyle(
-                                  color: BuzzerColors.orange,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(7.0)),
-                                  borderSide: BorderSide(
-                                    color: BuzzerColors.grey,
-                                    width: 2.0,
-                                  ),
-                                ),
-                                labelStyle: TextStyle(
-                                  color: BuzzerColors.grey,
-                                  fontFamily: 'Roboto',
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(7.0)),
-                                  borderSide: BorderSide(
-                                    color: BuzzerColors.orange,
-                                    width: 2.0,
-                                  ),
-                                ),
-                              ),
-                              validator: (val) => val!.isEmpty
-                                  ? 'Please enter the password'
-                                  : null,
-                              onChanged: (val) {
+                              onChannge: (value) {
                                 setState(() {
-                                  password = val;
+                                  password = value;
                                 });
                               },
                             ),
@@ -170,7 +105,7 @@ class _SignInState extends State<SignIn> {
                             if (result == null) {
                               setState(() {
                                 loading = false;
-                                error = 'Email or password incorrect';
+                                error = 'Incorrect Email or Password';
                               });
                             } else {
                               Navigator.of(context).popAndPushNamed('/home');

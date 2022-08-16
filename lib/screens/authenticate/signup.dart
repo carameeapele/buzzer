@@ -1,10 +1,9 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/screens/authenticate/signin.dart';
-import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/filled_text_button_widget.dart';
+import 'package:buzzer/widgets/form_field.dart';
+import 'package:buzzer/widgets/spacer_button.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -45,9 +44,12 @@ class _SignUpState extends State<SignUp> {
                     vertical: 25.0,
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
+                      const SizedBox(
+                        height: 10.0,
+                      ),
                       const Text(
                         'Welcome\nTo Buzzer',
                         style: TextStyle(
@@ -57,68 +59,64 @@ class _SignUpState extends State<SignUp> {
                           fontWeight: FontWeight.w900,
                         ),
                       ),
-                      const SizedBox(
-                        height: 60.0,
-                      ),
                       Form(
                         key: _formKey,
                         child: Column(
-                          children: const <Widget>[
-                            // TextFormField(
-                            //   textCapitalization: TextCapitalization.words,
-                            //   decoration: textInputDecoration.copyWith(
-                            //     hintText: 'Name',
-                            //   ),
-                            //   validator: (val) => val!.isEmpty
-                            //       ? 'Please enter your name'
-                            //       : null,
-                            //   onChanged: (val) {
-                            //     setState(() {
-                            //       name = val;
-                            //     });
-                            //   },
-                            // ),
-                            SizedBox(
-                              height: 30.0,
+                          children: <Widget>[
+                            TextFieldWidget(
+                              labetText: 'Name',
+                              keyboardType: TextInputType.text,
+                              obscureText: false,
+                              onChannge: (value) {
+                                setState(() {
+                                  name = value.toString();
+                                });
+                              },
                             ),
-                            // TextFormField(
-                            //   keyboardType: TextInputType.emailAddress,
-                            //   controller: controller,
-                            //   decoration: textInputDecoration.copyWith(
-                            //     hintText: 'Email',
-                            //     errorText: emailError,
-                            //   ),
-                            //   validator: (val) =>
-                            //       val!.isEmpty ? 'Please enter an email' : null,
-                            //   onChanged: (val) {
-                            //     setState(() {
-                            //       email = val;
-                            //     });
-                            //   },
-                            // ),
-                            SizedBox(
-                              height: 30.0,
+                            const SizedBox(
+                              height: 10.0,
                             ),
-                            // TextFormField(
-                            //   obscureText: true,
-                            //   decoration: textInputDecoration.copyWith(
-                            //     hintText: 'Password',
-                            //     errorText: passwordError,
-                            //   ),
-                            //   validator: (val) => val!.isEmpty
-                            //       ? 'Please enter the password'
-                            //       : null,
-                            //   onChanged: (val) {
-                            //     setState(() {
-                            //       password = val;
-                            //     });
-                            //   },
-                            // ),
+                            TextFieldWidget(
+                              labetText: 'Email',
+                              keyboardType: TextInputType.emailAddress,
+                              obscureText: false,
+                              onChannge: (value) {
+                                setState(() {
+                                  email = value.toString().trim();
+                                });
+                              },
+                            ),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            TextFieldWidget(
+                              labetText: 'Password',
+                              keyboardType: TextInputType.text,
+                              obscureText: true,
+                              onChannge: (value) {
+                                setState(() {
+                                  password = value;
+                                });
+                              },
+                            ),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            TextFieldWidget(
+                              labetText: 'Confirm Password',
+                              keyboardType: TextInputType.text,
+                              obscureText: true,
+                              onChannge: (value) {
+                                if (password != value) {
+                                  setState(() {
+                                    passwordError =
+                                        'Password must be the same as previous';
+                                  });
+                                }
+                              },
+                            ),
                           ],
                         ),
-                      ),
-                      const SizedBox(
-                        height: 60.0,
                       ),
                       FilledTextButtonWidget(
                         text: 'Sign up',
@@ -142,52 +140,20 @@ class _SignUpState extends State<SignUp> {
                                     .showSnackBar(snack);
                               });
                             } else {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const Home(),
-                              ));
+                              Navigator.of(context).popAndPushNamed('/home');
                             }
                           }
                         },
                         backgroundColor: BuzzerColors.orange,
                         textColor: Colors.white,
                       ),
-                      const SizedBox(
-                        height: 10.0,
+                      SpacerButton(
+                        text: 'Already have an account?',
+                        buttonText: 'Login',
+                        function: () {
+                          Navigator.of(context).popAndPushNamed('/signin');
+                        },
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          const Spacer(),
-                          const Text(
-                            'Already have an account?',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Roboto',
-                              fontSize: 13.0,
-                            ),
-                            //textAlign: TextAlign.end,
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const SignIn(),
-                              ));
-                            },
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.w700,
-                                color: BuzzerColors.orange,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                        ],
-                      )
                     ],
                   ),
                 ),

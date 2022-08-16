@@ -35,6 +35,7 @@ class SpacerButton extends StatelessWidget {
               fontFamily: 'Roboto',
               fontSize: 13.0,
               color: BuzzerColors.orange,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
