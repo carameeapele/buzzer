@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/screens/authenticate/authenticate.dart';
 import 'package:buzzer/screens/authenticate/signin.dart';
@@ -7,6 +9,8 @@ import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/screens/settings/account_settings.dart';
 import 'package:buzzer/screens/settings/settings.dart';
+import 'package:buzzer/screens/tasks/add_task_screen.dart';
+import 'package:buzzer/screens/tasks/edit_task_screen.dart';
 import 'package:buzzer/screens/tasks/tasks.dart';
 import 'package:buzzer/screens/timetable/timetable.dart';
 import 'package:buzzer/screens/wrapper.dart';
@@ -57,7 +61,13 @@ class MyApp extends ConsumerWidget {
           return Container();
         },
         loading: () {
-          return const Loading();
+          return Scaffold(
+              backgroundColor: Colors.white,
+              body: Center(
+                widthFactor: 50.0,
+                heightFactor: 50.0,
+                child: Image.asset('assets/media/buzzer_icon.png'),
+              ));
         },
       ),
       routes: {
@@ -68,6 +78,8 @@ class MyApp extends ConsumerWidget {
         '/home': (context) => const Home(),
         '/events': (context) => const EventsScreen(),
         '/tasks': (context) => const TasksScreen(),
+        '/add_task': (context) => const AddTaskScreen(),
+        '/edt_task': (context) => const EditTaskScreen(),
         '/timetable': (context) => const TimetableScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/account_settings': (context) => const AccountSettings(),

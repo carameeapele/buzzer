@@ -67,6 +67,7 @@ class _SignInState extends State<SignIn> {
                               labetText: 'Email',
                               keyboardType: TextInputType.emailAddress,
                               obscureText: false,
+                              textCapitalization: TextCapitalization.none,
                               onChannge: (value) {
                                 setState(() {
                                   email = value.toString().trim();
@@ -80,6 +81,7 @@ class _SignInState extends State<SignIn> {
                               labetText: 'Password',
                               keyboardType: TextInputType.text,
                               obscureText: true,
+                              textCapitalization: TextCapitalization.none,
                               onChannge: (value) {
                                 setState(() {
                                   password = value;

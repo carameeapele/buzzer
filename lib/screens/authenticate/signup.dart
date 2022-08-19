@@ -1,4 +1,5 @@
 import 'package:buzzer/main.dart';
+import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
 import 'package:buzzer/widgets/filled_text_button_widget.dart';
@@ -41,7 +42,7 @@ class _SignUpState extends State<SignUp> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20.0,
-                    vertical: 25.0,
+                    vertical: 10.0,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,9 +52,9 @@ class _SignUpState extends State<SignUp> {
                         height: 10.0,
                       ),
                       const Text(
-                        'Welcome\nTo Buzzer',
+                        'Welcome To\nBuzzer',
                         style: TextStyle(
-                          fontSize: 35.0,
+                          fontSize: 30.0,
                           color: Colors.black,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w900,
@@ -67,6 +68,7 @@ class _SignUpState extends State<SignUp> {
                               labetText: 'Name',
                               keyboardType: TextInputType.text,
                               obscureText: false,
+                              textCapitalization: TextCapitalization.words,
                               onChannge: (value) {
                                 setState(() {
                                   name = value.toString();
@@ -74,12 +76,13 @@ class _SignUpState extends State<SignUp> {
                               },
                             ),
                             const SizedBox(
-                              height: 10.0,
+                              height: 15.0,
                             ),
                             TextFieldWidget(
                               labetText: 'Email',
                               keyboardType: TextInputType.emailAddress,
                               obscureText: false,
+                              textCapitalization: TextCapitalization.none,
                               onChannge: (value) {
                                 setState(() {
                                   email = value.toString().trim();
@@ -87,12 +90,13 @@ class _SignUpState extends State<SignUp> {
                               },
                             ),
                             const SizedBox(
-                              height: 10.0,
+                              height: 15.0,
                             ),
                             TextFieldWidget(
                               labetText: 'Password',
                               keyboardType: TextInputType.text,
                               obscureText: true,
+                              textCapitalization: TextCapitalization.none,
                               onChannge: (value) {
                                 setState(() {
                                   password = value;
@@ -100,12 +104,13 @@ class _SignUpState extends State<SignUp> {
                               },
                             ),
                             const SizedBox(
-                              height: 10.0,
+                              height: 15.0,
                             ),
                             TextFieldWidget(
                               labetText: 'Confirm Password',
                               keyboardType: TextInputType.text,
                               obscureText: true,
+                              textCapitalization: TextCapitalization.none,
                               onChannge: (value) {
                                 if (password != value) {
                                   setState(() {
@@ -199,4 +204,8 @@ class _SignUpState extends State<SignUp> {
       return false;
     }
   }
+
+  // Future addUser(String name, String email, String password) async {
+  //   final user = BuzzUser(userId: '');
+  // }
 }

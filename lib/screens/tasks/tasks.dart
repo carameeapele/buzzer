@@ -6,7 +6,6 @@ import 'package:buzzer/services/database_service.dart';
 import 'package:buzzer/services/providers.dart';
 import 'package:buzzer/widgets/add_app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -51,24 +50,15 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
             extendBodyBehindAppBar: false,
             appBar: AddAppBarWidget(
                 title: 'Tasks',
-                addFunction: () async {
-                  setState(() {
-                    addTask(
-                      Task(
-                          id: '',
-                          title: 'Something',
-                          dueDate: Timestamp.fromDate(DateTime(2022, 06, 15)),
-                          time: Timestamp.fromDate(
-                              DateTime(2022, 06, 15, 23, 59)),
-                          category: 'French',
-                          details: 'Something else',
-                          complete: false),
-                    );
-                  });
+                addFunction: () {
+                  Navigator.of(context).pushNamed('/add_task');
                 }),
             drawer: const MenuDrawer(),
             body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 25.0,
+              ),
               child: SingleChildScrollView(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -7,6 +7,7 @@ import 'package:buzzer/services/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class TodayTasks extends ConsumerStatefulWidget {
   const TodayTasks({Key? key}) : super(key: key);
@@ -109,10 +110,7 @@ class _TodayTasksState extends ConsumerState<TodayTasks> {
                           ),
                         ),
                         onTap: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const TasksScreen(),
-                          ));
+                          Navigator.of(context).popAndPushNamed('/tasks');
                         },
                       ),
                     );
@@ -125,7 +123,12 @@ class _TodayTasksState extends ConsumerState<TodayTasks> {
         error: (Object error, StackTrace? stackTrace) {
           return Container();
         },
-        loading: () {},
+        loading: () {
+          return LoadingAnimationWidget.waveDots(
+            color: BuzzerColors.grey,
+            size: 20.0,
+          );
+        },
       ),
     );
   }

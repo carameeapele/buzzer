@@ -7,12 +7,14 @@ class TextFieldWidget extends StatelessWidget {
     required this.labetText,
     required this.keyboardType,
     required this.obscureText,
+    required this.textCapitalization,
     required this.onChannge,
   }) : super(key: key);
 
   final String labetText;
   final TextInputType keyboardType;
   final bool obscureText;
+  final TextCapitalization textCapitalization;
   final Function(String) onChannge;
 
   @override
@@ -24,8 +26,16 @@ class TextFieldWidget extends StatelessWidget {
             ? 'Please enter your ${labetText.toLowerCase()}'
             : null;
       },
+      style: const TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 15.0,
+      ),
       decoration: InputDecoration(
         labelText: labetText,
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 10.0,
+          horizontal: 12.0,
+        ),
         floatingLabelStyle: TextStyle(
           color: BuzzerColors.orange,
         ),
@@ -47,9 +57,17 @@ class TextFieldWidget extends StatelessWidget {
             width: 2.0,
           ),
         ),
+        errorBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(7.0)),
+          borderSide: BorderSide(
+            color: Color.fromARGB(255, 168, 28, 19),
+            width: 2.0,
+          ),
+        ),
       ),
       onChanged: onChannge,
       obscureText: obscureText,
+      textCapitalization: textCapitalization,
     );
   }
 }
