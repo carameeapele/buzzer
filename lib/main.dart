@@ -8,6 +8,7 @@ import 'package:buzzer/screens/events/events.dart';
 import 'package:buzzer/screens/home/home.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/screens/settings/account_settings.dart';
+import 'package:buzzer/screens/settings/general_settings.dart';
 import 'package:buzzer/screens/settings/settings.dart';
 import 'package:buzzer/screens/tasks/add_task_screen.dart';
 import 'package:buzzer/screens/tasks/edit_task_screen.dart';
@@ -16,11 +17,13 @@ import 'package:buzzer/screens/timetable/timetable.dart';
 import 'package:buzzer/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   await Hive.initFlutter();
   Hive.registerAdapter(BuzzUserAdapter());
@@ -62,12 +65,13 @@ class MyApp extends ConsumerWidget {
         },
         loading: () {
           return Scaffold(
-              backgroundColor: Colors.white,
-              body: Center(
-                widthFactor: 50.0,
-                heightFactor: 50.0,
-                child: Image.asset('assets/media/buzzer_icon.png'),
-              ));
+            backgroundColor: Colors.white,
+            body: Center(
+              widthFactor: 50.0,
+              heightFactor: 50.0,
+              child: Image.asset('assets/media/buzzer_icon.png'),
+            ),
+          );
         },
       ),
       routes: {
@@ -83,6 +87,7 @@ class MyApp extends ConsumerWidget {
         '/timetable': (context) => const TimetableScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/account_settings': (context) => const AccountSettings(),
+        '/general_settings': (context) => const GeneralSettings(),
       },
     );
   }

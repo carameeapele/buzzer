@@ -32,7 +32,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       drawer: const MenuDrawer(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -41,10 +43,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 text: 'Account',
                 icon: false,
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const AccountSettings(),
-                  ));
+                  Navigator.of(context).pushNamed('/account_settings');
                 },
+                backgroundColor: BuzzerColors.lightGrey,
+                textColor: Colors.black,
+              ),
+              const SizedBox(
+                height: 5.0,
+              ),
+              FilledTextButtonWidget(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/general_settings');
+                },
+                text: 'General',
+                icon: false,
                 backgroundColor: BuzzerColors.lightGrey,
                 textColor: Colors.black,
               ),

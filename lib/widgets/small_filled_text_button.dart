@@ -30,6 +30,7 @@ class SmallFilledTextButton extends StatelessWidget {
               style: TextStyle(
                 color: textColor,
                 fontFamily: 'Roboto',
+                fontSize: 14.0,
               ),
             ),
             icon
@@ -46,6 +47,10 @@ class SmallFilledTextButton extends StatelessWidget {
           ],
         ),
         style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(
+            vertical: 10.0,
+            horizontal: 10.0,
+          ),
           primary: BuzzerColors.darkGrey,
           backgroundColor: backgroundColor,
         ));
