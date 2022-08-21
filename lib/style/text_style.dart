@@ -10,7 +10,7 @@ TextStyle subtitleTextStyle = const TextStyle(
 TextStyle appBarTextStyle = const TextStyle(
   color: Colors.black,
   fontFamily: 'Roboto',
-  fontSize: 20.0,
+  fontSize: 22.0,
   fontWeight: FontWeight.w700,
   wordSpacing: 3.0,
 );

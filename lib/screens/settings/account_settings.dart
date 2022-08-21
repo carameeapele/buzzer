@@ -40,7 +40,8 @@ class _AccountSettingsState extends State<AccountSettings> {
             children: <Widget>[
               FilledTextButtonWidget(
                 text: 'Sign out',
-                function: () {
+                icon: false,
+                onPressed: () {
                   // Sign out
                   _auth.signout();
 

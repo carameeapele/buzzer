@@ -50,7 +50,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
             extendBodyBehindAppBar: false,
             appBar: AddAppBarWidget(
                 title: 'Tasks',
-                addFunction: () {
+                onPressed: () {
                   Navigator.of(context).pushNamed('/add_task');
                 }),
             drawer: const MenuDrawer(),

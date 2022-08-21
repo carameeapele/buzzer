@@ -39,7 +39,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: <Widget>[
               FilledTextButtonWidget(
                 text: 'Account',
-                function: () {
+                icon: false,
+                onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const AccountSettings(),
                   ));

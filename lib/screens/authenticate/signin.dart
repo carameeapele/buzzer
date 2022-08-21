@@ -95,7 +95,7 @@ class _SignInState extends State<SignIn> {
                         height: 60.0,
                       ),
                       FilledTextButtonWidget(
-                        function: () async {
+                        onPressed: () async {
                           if (validateFields()) {
                             setState(() {
                               loading = true;
@@ -115,6 +115,7 @@ class _SignInState extends State<SignIn> {
                           }
                         },
                         text: 'Login',
+                        icon: false,
                         backgroundColor: BuzzerColors.orange,
                         textColor: Colors.white,
                       ),

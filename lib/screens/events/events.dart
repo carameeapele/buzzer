@@ -67,7 +67,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
             extendBodyBehindAppBar: false,
             appBar: AddAppBarWidget(
               title: 'Events',
-              addFunction: () {},
+              onPressed: () {},
             ),
             drawer: const MenuDrawer(),
             body: SingleChildScrollView(

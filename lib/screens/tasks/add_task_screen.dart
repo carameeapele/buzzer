@@ -144,7 +144,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     Expanded(
                       child: FilledTextButtonWidget(
                         text: 'Save',
-                        function: () {},
+                        icon: false,
+                        onPressed: () {},
                         backgroundColor: BuzzerColors.orange,
                         textColor: Colors.white,
                       ),

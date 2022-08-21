@@ -34,7 +34,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
         dynamic userData = snapshot.data();
         name = userData['name'];
       } else {
-        error = 'Could not connect to databse';
+        error = 'Could not connect to the databse';
         name = 'Name';
       }
     });
@@ -59,50 +59,90 @@ class _MenuDrawerState extends State<MenuDrawer> {
             Column(
               children: <Widget>[
                 FutureBuilder(
-                    future: getUserData(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<dynamic> snapshot) {
-                      return buidHeader(
-                        name: name,
-                        email: email,
-                        onClicked: () =>
-                            Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const SettingsScreen(),
-                        )),
-                      );
-                    }),
+                  future: getUserData(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    return buidHeader(
+                      name: name,
+                      email: email,
+                      onTap: () {
+                        Navigator.of(context).popAndPushNamed('/settings');
+                      },
+                    );
+                  },
+                ),
                 const SizedBox(
                   height: 40.0,
                 ),
-                buildMenuItem(
-                  text: 'Today',
-                  icon: Icons.home_rounded,
-                  onClicked: () => selectedItem(context, 'today'),
-                ),
+                (ModalRoute.of(context)!.settings.name == '/home')
+                    ? menuItem(
+                        text: 'Today',
+                        icon: Icons.home_rounded,
+                        enabled: false,
+                        onTap: () {},
+                      )
+                    : menuItem(
+                        text: 'Today',
+                        icon: Icons.home_rounded,
+                        enabled: true,
+                        onTap: () {
+                          Navigator.of(context).popAndPushNamed('/home');
+                        },
+                      ),
                 const SizedBox(
                   height: 20.0,
                 ),
-                buildMenuItem(
-                  text: 'Tasks',
-                  icon: Icons.check_box_outlined,
-                  onClicked: () => selectedItem(context, 'tasks'),
-                ),
+                (ModalRoute.of(context)!.settings.name == '/tasks')
+                    ? menuItem(
+                        text: 'Tasks',
+                        icon: Icons.check_box_outlined,
+                        enabled: false,
+                        onTap: () {},
+                      )
+                    : menuItem(
+                        text: 'Tasks',
+                        icon: Icons.check_box_outlined,
+                        enabled: true,
+                        onTap: () {
+                          Navigator.of(context).popAndPushNamed('/tasks');
+                        },
+                      ),
                 const SizedBox(
                   height: 20.0,
                 ),
-                buildMenuItem(
-                  text: 'Timetable',
-                  icon: Icons.calendar_view_day_rounded,
-                  onClicked: () => selectedItem(context, 'timetable'),
-                ),
+                (ModalRoute.of(context)!.settings.name == '/timetable')
+                    ? menuItem(
+                        text: 'Timetable',
+                        icon: Icons.calendar_view_day_rounded,
+                        enabled: false,
+                        onTap: () {},
+                      )
+                    : menuItem(
+                        text: 'Timetable',
+                        icon: Icons.calendar_view_day_rounded,
+                        enabled: true,
+                        onTap: () {
+                          Navigator.of(context).popAndPushNamed('/timetable');
+                        },
+                      ),
                 const SizedBox(
                   height: 20.0,
                 ),
-                buildMenuItem(
-                  text: 'Events',
-                  icon: Icons.calendar_today_rounded,
-                  onClicked: () => selectedItem(context, 'calendar'),
-                ),
+                (ModalRoute.of(context)!.settings.name == '/events')
+                    ? menuItem(
+                        text: 'Events',
+                        icon: Icons.calendar_today_rounded,
+                        enabled: false,
+                        onTap: () {},
+                      )
+                    : menuItem(
+                        text: 'Events',
+                        icon: Icons.calendar_today_rounded,
+                        enabled: true,
+                        onTap: () {
+                          Navigator.of(context).popAndPushNamed('/events');
+                        },
+                      ),
               ],
             ),
           ],
@@ -115,10 +155,10 @@ class _MenuDrawerState extends State<MenuDrawer> {
 Widget buidHeader({
   required String name,
   required String email,
-  required VoidCallback onClicked,
+  required VoidCallback onTap,
 }) =>
     InkWell(
-      onTap: onClicked,
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 30.0),
         child: Row(
@@ -151,50 +191,25 @@ Widget buidHeader({
       ),
     );
 
-Widget buildMenuItem({
+Widget menuItem({
   required String text,
   required IconData icon,
-  VoidCallback? onClicked,
+  required bool enabled,
+  void Function()? onTap,
 }) {
   return ListTile(
     contentPadding: const EdgeInsets.symmetric(horizontal: 30.0),
     title: Text(
       text,
-      style: const TextStyle(
-        color: Colors.white,
+      style: TextStyle(
+        color: enabled ? Colors.white : BuzzerColors.lightOrange,
         fontWeight: FontWeight.w700,
         fontSize: 18.0,
         fontFamily: 'Roboto',
       ),
     ),
+    enabled: enabled,
     hoverColor: BuzzerColors.lightOrange,
-    onTap: onClicked,
+    onTap: onTap,
   );
-}
-
-void selectedItem(BuildContext context, String path) {
-  Navigator.of(context).pop();
-
-  switch (path) {
-    case 'today':
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const Home(),
-      ));
-      break;
-    case 'tasks':
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const TasksScreen(),
-      ));
-      break;
-    case 'timetable':
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const TimetableScreen(),
-      ));
-      break;
-    case 'calendar':
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const EventsScreen(),
-      ));
-      break;
-  }
 }

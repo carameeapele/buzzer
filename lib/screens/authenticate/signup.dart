@@ -125,7 +125,8 @@ class _SignUpState extends State<SignUp> {
                       ),
                       FilledTextButtonWidget(
                         text: 'Sign up',
-                        function: () async {
+                        icon: false,
+                        onPressed: () async {
                           if (validateFields()) {
                             setState(() {
                               loading = true;

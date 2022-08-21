@@ -69,7 +69,8 @@ class _AuthenticateState extends State<Authenticate> {
               children: <Widget>[
                 FilledTextButtonWidget(
                   text: 'Sign in to account',
-                  function: () {
+                  icon: false,
+                  onPressed: () {
                     Navigator.of(context).popAndPushNamed('/signin');
                   },
                   backgroundColor: BuzzerColors.orange,

@@ -79,7 +79,7 @@ class MyApp extends ConsumerWidget {
         '/events': (context) => const EventsScreen(),
         '/tasks': (context) => const TasksScreen(),
         '/add_task': (context) => const AddTaskScreen(),
-        '/edt_task': (context) => const EditTaskScreen(),
+        '/edit_task': (context) => const EditTaskScreen(),
         '/timetable': (context) => const TimetableScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/account_settings': (context) => const AccountSettings(),

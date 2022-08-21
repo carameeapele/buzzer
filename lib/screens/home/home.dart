@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
                   color: Colors.black,
                   fontWeight: FontWeight.w400,
                   fontFamily: 'Roboto',
-                  fontSize: 14.0,
+                  fontSize: 12.0,
                 ),
               ),
               const SizedBox(
