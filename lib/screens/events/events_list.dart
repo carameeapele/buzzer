@@ -1,6 +1,3 @@
-import 'package:buzzer/models/exam_model.dart';
-import 'package:buzzer/screens/events/event_tile.dart';
-import 'package:buzzer/widgets/add_app_bar_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

@@ -15,6 +15,11 @@ class _TimetableScreenState extends State<TimetableScreen>
     with TickerProviderStateMixin {
   bool loading = false;
 
+  AddAppBarWidget appBar = AddAppBarWidget(
+    title: 'Timetable',
+    onPressed: () {},
+  );
+
   @override
   void initState() {
     super.initState();
@@ -27,41 +32,45 @@ class _TimetableScreenState extends State<TimetableScreen>
       vsync: this,
     );
 
+    TabBar tabBar = TabBar(
+      controller: _tabController,
+      isScrollable: true,
+      labelColor: Colors.black,
+      labelStyle: const TextStyle(
+        fontSize: 20.0,
+        fontFamily: 'Roboto',
+        fontWeight: FontWeight.w700,
+      ),
+      unselectedLabelColor: BuzzerColors.grey,
+      indicatorColor: Colors.white,
+      tabs: const <Widget>[
+        Tab(text: 'Monday'),
+        Tab(text: 'Tuesday'),
+        Tab(text: 'Wednesday'),
+        Tab(text: 'Thursday'),
+        Tab(text: 'Friday'),
+      ],
+    );
+
+    final double height = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top -
+        68.0;
+
     return Scaffold(
       extendBodyBehindAppBar: false,
-      appBar: AddAppBarWidget(
-        title: 'Timetable',
-        onPressed: () {},
-      ),
+      appBar: appBar,
       drawer: const MenuDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            labelColor: Colors.black,
-            labelStyle: const TextStyle(
-                fontSize: 20.0,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w700),
-            unselectedLabelColor: BuzzerColors.grey,
-            indicatorColor: Colors.white,
-            tabs: const <Widget>[
-              Tab(text: 'Monday'),
-              Tab(text: 'Tuesday'),
-              Tab(text: 'Wednesday'),
-              Tab(text: 'Thursday'),
-              Tab(text: 'Friday'),
-            ],
-          ),
+          tabBar,
           SizedBox(
-            height: 300,
+            height: height,
             width: double.maxFinite,
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 18.0,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
               child: TabBarView(
                 controller: _tabController,
                 children: const <Widget>[

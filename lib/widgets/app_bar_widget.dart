@@ -1,4 +1,3 @@
-import 'package:buzzer/main.dart';
 import 'package:buzzer/style/text_style.dart';
 import 'package:flutter/material.dart';
 
