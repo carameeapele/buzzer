@@ -83,19 +83,17 @@ class _TodayTasksState extends ConsumerState<TodayTasks> {
                             ),
                             trailing: Text(
                               DateFormat('dd MMM', 'en_US')
-                                  .format(task.dueDate.toDate()),
+                                  .format(task.date.toDate()),
                               style: TextStyle(
                                 fontSize: 16.0,
-                                color: task.dueDate
-                                        .toDate()
-                                        .isAfter(DateTime.now())
-                                    ? Colors.black
-                                    : BuzzerColors.orange,
-                                fontWeight: task.dueDate
-                                        .toDate()
-                                        .isAfter(DateTime.now())
-                                    ? null
-                                    : FontWeight.bold,
+                                color:
+                                    task.date.toDate().isAfter(DateTime.now())
+                                        ? Colors.black
+                                        : BuzzerColors.orange,
+                                fontWeight:
+                                    task.date.toDate().isAfter(DateTime.now())
+                                        ? null
+                                        : FontWeight.bold,
                               ),
                             ),
                             onTap: () {

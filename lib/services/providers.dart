@@ -1,4 +1,5 @@
 import 'package:buzzer/models/exam_model.dart';
+import 'package:buzzer/models/project_model.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/services/auth_service.dart';
@@ -37,7 +38,7 @@ final tasksFetchProvider = FutureProvider<List<Task>>((ref) async {
       ref.read(tasksProvider.notifier).state.add(Task(
             id: doc.id,
             title: taskData['title'],
-            dueDate: taskData['dueDate'],
+            date: taskData['dueDate'],
             time: taskData['time'],
             category: taskData['tag'],
             details: taskData['notes'],
@@ -47,7 +48,7 @@ final tasksFetchProvider = FutureProvider<List<Task>>((ref) async {
       ref
           .read(tasksProvider.notifier)
           .state
-          .sort((a, b) => a.dueDate.compareTo(b.dueDate));
+          .sort((a, b) => a.date.compareTo(b.date));
     }
   }
 
@@ -81,21 +82,21 @@ final examsFetchProvider = FutureProvider<List<Exam>>((ref) async {
       .doc('events')
       .collection('exams');
 
-  final docSnap = await collectionRef.get();
-  List<DocumentSnapshot> examsDocs = docSnap.docs.toList();
+  final snap = await collectionRef.get();
+  List<DocumentSnapshot> docs = snap.docs.toList();
 
-  for (var doc in examsDocs) {
+  for (var doc in docs) {
     if (doc.data() != null) {
-      dynamic examData = doc.data();
+      dynamic data = doc.data();
 
       ref.read(examsProvider.notifier).state.add(
             Exam(
               id: doc.id,
-              title: examData['title'],
-              date: examData['date'],
-              tag: examData['tag'],
-              reminders: examData['remindes'] ?? 0,
-              notes: examData['notes'],
+              title: data['title'],
+              date: data['date'],
+              tag: data['tag'],
+              reminders: data['remindes'] ?? 0,
+              notes: data['notes'],
             ),
           );
 
@@ -106,4 +107,42 @@ final examsFetchProvider = FutureProvider<List<Exam>>((ref) async {
     }
   }
   return ref.watch(examsProvider);
+});
+
+// Projects Provider
+
+final projectsProvider = StateProvider<List<Project>>((ref) => <Project>[]);
+
+final projectsFetchProvider = FutureProvider<List<Project>>((ref) async {
+  final AuthService _auth = AuthService();
+  final collectionRef = FirebaseFirestore.instance
+      .collection(_auth.toString())
+      .doc('events')
+      .collection('projects');
+
+  final docSnap = await collectionRef.get();
+  List<DocumentSnapshot> projectDocs = docSnap.docs.toList();
+
+  for (var doc in projectDocs) {
+    if (doc.data() != null) {
+      dynamic data = doc.data();
+
+      ref.read(projectsProvider.notifier).state.add(
+            Project(
+              id: doc.id,
+              title: data['title'],
+              category: data['category'],
+              date: data['date'],
+              time: data['time'],
+              complete: data['complete'],
+            ),
+          );
+
+      ref
+          .read(projectsProvider.notifier)
+          .state
+          .sort((a, b) => a.date.compareTo(b.date));
+    }
+  }
+  return ref.watch(projectsProvider);
 });

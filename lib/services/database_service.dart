@@ -17,7 +17,7 @@ class DatabaseService {
 
     final docData = {
       'title': task.title,
-      'dueDate': task.dueDate,
+      'dueDate': task.date,
       'tag': task.category,
       'notes': task.details,
       'complete': task.complete,

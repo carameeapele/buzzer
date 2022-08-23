@@ -19,7 +19,7 @@ class TaskAdapter extends TypeAdapter<Task> {
     return Task(
       id: fields[0] as String,
       title: fields[1] as String,
-      dueDate: fields[2] as Timestamp,
+      date: fields[2] as Timestamp,
       time: fields[3] as Timestamp,
       category: fields[4] as String,
       details: fields[5] as String,
@@ -36,7 +36,7 @@ class TaskAdapter extends TypeAdapter<Task> {
       ..writeByte(1)
       ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.dueDate)
+      ..write(obj.date)
       ..writeByte(3)
       ..write(obj.time)
       ..writeByte(4)

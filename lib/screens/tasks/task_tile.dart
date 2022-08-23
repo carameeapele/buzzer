@@ -39,7 +39,7 @@ class _TaskTileState extends State<TaskTile> {
           widget.task.complete,
         ),
         subtitle: buildSubtitle(
-          widget.task.dueDate.toDate(),
+          widget.task.date.toDate(),
           widget.task.complete,
         ),
         trailing: Checkbox(

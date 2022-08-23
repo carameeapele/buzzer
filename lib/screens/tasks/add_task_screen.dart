@@ -24,7 +24,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20.0,
-          vertical: 25.0,
+          vertical: 20.0,
         ),
         child: SingleChildScrollView(
           child: ConstrainedBox(
@@ -50,7 +50,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: BuzzerColors.grey,
+                      color: BuzzerColors.lightGrey,
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(7.0)),
                   ),
@@ -89,13 +89,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   height: 20.0,
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5.0,
-                    horizontal: 12.0,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: BuzzerColors.grey,
+                      color: BuzzerColors.lightGrey,
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(7.0)),
                   ),

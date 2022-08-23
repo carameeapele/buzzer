@@ -2,33 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 part 'task_model.g.dart';
 
-@HiveType(typeId: 1)
-class Task extends HiveObject {
-  @HiveField(0)
+class Task {
   late String id;
-
-  @HiveField(1)
   late String title;
-
-  @HiveField(2)
-  late Timestamp dueDate;
-
-  @HiveField(3)
+  late Timestamp date;
   late Timestamp time;
-
-  @HiveField(4)
   late String category;
-
-  @HiveField(5)
   late String details;
-
-  @HiveField(6)
   late bool complete;
 
   Task({
     required this.id,
     required this.title,
-    required this.dueDate,
+    required this.date,
     required this.time,
     required this.category,
     required this.details,
@@ -47,7 +33,7 @@ class Task extends HiveObject {
     return Task(
       id: snapshot.id,
       title: data?['title'],
-      dueDate: data?['dueDate'],
+      date: data?['dueDate'],
       time: data?['time'],
       category: data?['tag'],
       details: data?['notes'],
@@ -58,7 +44,7 @@ class Task extends HiveObject {
   Map<String, dynamic> toFirestore() {
     return {
       'title': title,
-      'dueDate': dueDate,
+      'dueDate': date,
       'tag': category,
       'notes': details,
       'complete': complete,
