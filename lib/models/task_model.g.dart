@@ -18,12 +18,12 @@ class TaskAdapter extends TypeAdapter<Task> {
     };
     return Task(
       id: fields[0] as String,
-      title: fields[1] as String,
-      date: fields[2] as Timestamp,
-      time: fields[3] as Timestamp,
-      category: fields[4] as String,
-      details: fields[5] as String,
-      complete: fields[6] as bool,
+      title: fields[2] as String,
+      date: fields[3] as Timestamp,
+      time: fields[4] as Timestamp,
+      category: fields[5] as String,
+      details: fields[6] as String,
+      complete: fields[7] as bool,
     );
   }
 
@@ -33,17 +33,17 @@ class TaskAdapter extends TypeAdapter<Task> {
       ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
-      ..writeByte(1)
-      ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.date)
+      ..write(obj.title)
       ..writeByte(3)
-      ..write(obj.time)
+      ..write(obj.date)
       ..writeByte(4)
-      ..write(obj.category)
+      ..write(obj.time)
       ..writeByte(5)
-      ..write(obj.details)
+      ..write(obj.category)
       ..writeByte(6)
+      ..write(obj.details)
+      ..writeByte(7)
       ..write(obj.complete);
   }
 

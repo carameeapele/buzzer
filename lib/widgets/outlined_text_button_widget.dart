@@ -22,13 +22,13 @@ class OutlinedTextButtonWidget extends StatelessWidget {
           color: color,
           fontFamily: 'Roboto',
           fontWeight: FontWeight.w500,
-          fontSize: 14.0,
+          fontSize: 15.0,
         ),
       ),
       style: TextButton.styleFrom(
         elevation: 0,
         padding: const EdgeInsets.symmetric(
-          vertical: 10.0,
+          vertical: 12.0,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: const BorderRadius.all(

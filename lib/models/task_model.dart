@@ -2,13 +2,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 part 'task_model.g.dart';
 
-class Task {
+@HiveType(typeId: 1)
+class Task extends HiveObject {
+  @HiveField(0)
   late String id;
+
+  @HiveField(2)
   late String title;
+
+  @HiveField(3)
   late Timestamp date;
+
+  @HiveField(4)
   late Timestamp time;
+
+  @HiveField(5)
   late String category;
+
+  @HiveField(6)
   late String details;
+
+  @HiveField(7)
   late bool complete;
 
   Task({
@@ -20,10 +34,6 @@ class Task {
     required this.details,
     required this.complete,
   });
-
-  void editComplete() async {
-    complete = !complete;
-  }
 
   factory Task.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,

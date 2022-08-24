@@ -33,7 +33,7 @@ class TextFieldWidget extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labetText,
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 10.0,
+          vertical: 5.0,
           horizontal: 12.0,
         ),
         floatingLabelStyle: TextStyle(

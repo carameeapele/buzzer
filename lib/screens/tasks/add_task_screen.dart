@@ -4,6 +4,7 @@ import 'package:buzzer/widgets/filled_text_button_widget.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/outlined_text_button_widget.dart';
 import 'package:buzzer/widgets/text_row.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,6 +16,74 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
+  late String title;
+  late DateTime date = DateTime.now();
+  late TimeOfDay time =
+      TimeOfDay.fromDateTime(DateTime.now().add(const Duration(hours: 1)));
+  late String category;
+  late String details;
+
+  Future selectTime() async {
+    TimeOfDay? selectedTime = await showTimePicker(
+      context: context,
+      initialTime: time,
+      initialEntryMode: TimePickerEntryMode.input,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: BuzzerColors.orange,
+              onPrimary: Colors.white,
+              onSecondary: Colors.black,
+            ),
+          ),
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          ),
+        );
+      },
+    );
+
+    if (selectedTime != null) {
+      setState(() {
+        time = selectedTime;
+      });
+    }
+  }
+
+  Future selectDate() async {
+    DateTime? selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate:
+            DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: BuzzerColors.orange,
+                onPrimary: Colors.white,
+                onSecondary: Colors.black,
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  primary: BuzzerColors.orange,
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        });
+
+    if (selectedDate != null) {
+      setState(() {
+        date = selectedDate;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +93,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20.0,
-          vertical: 20.0,
+          vertical: 10.0,
         ),
         child: SingleChildScrollView(
           child: ConstrainedBox(
@@ -38,7 +107,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   keyboardType: TextInputType.text,
                   obscureText: false,
                   textCapitalization: TextCapitalization.words,
-                  onChannge: (value) {},
+                  onChannge: (value) {
+                    title = value;
+                  },
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -62,19 +133,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         label: 'Date',
                         text: DateFormat(
                           'd MMMM',
-                        ).format(DateTime.now()),
+                        ).format(date),
                         icon: false,
-                        onPressed: () {},
+                        onPressed: selectDate,
                       ),
                       TextRow(
                         label: 'Time',
-                        text: DateFormat.Hm().format(
-                          DateTime.now().add(
-                            const Duration(hours: 1),
-                          ),
-                        ),
+                        text: DateFormat.Hm().format(DateTime(date.year,
+                            date.month, date.day, time.hour, time.minute)),
                         icon: false,
-                        onPressed: () {},
+                        onPressed: selectTime,
                       ),
                       TextRow(
                         label: 'Category',
@@ -89,7 +157,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   height: 20.0,
                 ),
                 Container(
-                  padding: const EdgeInsets.fromLTRB(10.0, 0.0, 5.0, 0.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 3.0, horizontal: 10.0),
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: BuzzerColors.lightGrey,

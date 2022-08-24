@@ -30,7 +30,7 @@ class FilledTextButtonWidget extends StatelessWidget {
               color: textColor,
               fontFamily: 'Roboto',
               fontWeight: FontWeight.w500,
-              fontSize: 14.0,
+              fontSize: 15.0,
             ),
           ),
           icon
@@ -49,7 +49,7 @@ class FilledTextButtonWidget extends StatelessWidget {
       ),
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(
-          vertical: 10.0,
+          vertical: 12.0,
         ),
         backgroundColor: backgroundColor,
         shape: const RoundedRectangleBorder(

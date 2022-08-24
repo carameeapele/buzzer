@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-part 'class_model.g.dart';
+// part 'class_model.g.dart';
 
 @HiveType(typeId: 4)
 class Class extends HiveObject {

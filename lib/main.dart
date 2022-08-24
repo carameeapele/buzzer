@@ -1,12 +1,10 @@
-import 'dart:ui';
-
-import 'package:buzzer/models/user_model.dart';
+import 'package:buzzer/locator.dart';
+import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/authenticate/authenticate.dart';
 import 'package:buzzer/screens/authenticate/signin.dart';
 import 'package:buzzer/screens/authenticate/signup.dart';
 import 'package:buzzer/screens/events/events.dart';
 import 'package:buzzer/screens/home/home.dart';
-import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/screens/settings/account_settings.dart';
 import 'package:buzzer/screens/settings/general_settings.dart';
 import 'package:buzzer/screens/settings/settings.dart';
@@ -26,8 +24,10 @@ Future main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   await Hive.initFlutter();
-  Hive.registerAdapter(BuzzUserAdapter());
-  await Hive.openBox<BuzzUser>('users');
+  Hive.registerAdapter(TaskAdapter());
+  await Hive.openBox('tasks');
+
+  setupLocator();
 
   runApp(const ProviderScope(child: MyApp()));
 }

@@ -86,9 +86,8 @@ class _EventsListState extends ConsumerState<EventsList> {
                       child: Theme(
                         data: data,
                         child: ExpansionTile(
-                          tilePadding: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
+                          tilePadding:
+                              const EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 0.0),
                           title: title(exam.title, exam.tag, exam.date),
                           trailing: trailing(exam.date),
                           childrenPadding: const EdgeInsets.symmetric(
