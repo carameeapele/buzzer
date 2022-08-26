@@ -81,7 +81,7 @@ class _AuthenticateState extends State<Authenticate> {
                 ),
                 OutlinedTextButtonWidget(
                   text: 'Create an account',
-                  function: () {
+                  onPressed: () {
                     Navigator.of(context).popAndPushNamed('/signup');
                   },
                   color: BuzzerColors.orange,

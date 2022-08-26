@@ -68,7 +68,7 @@ class TasksService with ReactiveServiceMixin {
 
   bool editTask(String id, String title, Timestamp date, Timestamp time,
       String category, String details) {
-    final index = _tasks.value.indexWhere((todo) => todo.id == id);
+    final index = _tasks.value.indexWhere((task) => task.id == id);
     if (index != -1) {
       _tasks.value[index].title = title;
       _tasks.value[index].date = date;

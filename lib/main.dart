@@ -1,4 +1,5 @@
 import 'package:buzzer/locator.dart';
+import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/authenticate/authenticate.dart';
 import 'package:buzzer/screens/authenticate/signin.dart';
@@ -11,6 +12,7 @@ import 'package:buzzer/screens/settings/settings.dart';
 import 'package:buzzer/screens/tasks/add_task_screen.dart';
 import 'package:buzzer/screens/tasks/edit_task_screen.dart';
 import 'package:buzzer/screens/tasks/tasks.dart';
+import 'package:buzzer/screens/tasks/tasks_categories.dart';
 import 'package:buzzer/screens/timetable/timetable.dart';
 import 'package:buzzer/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,7 +27,10 @@ Future main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapter(TaskAdapter());
+  Hive.registerAdapter(CategoryAdapter());
+  
   await Hive.openBox('tasks');
+  await Hive.openBox('categories');
 
   setupLocator();
 
@@ -84,6 +89,7 @@ class MyApp extends ConsumerWidget {
         '/tasks': (context) => const TasksScreen(),
         '/add_task': (context) => const AddTaskScreen(),
         '/edit_task': (context) => const EditTaskScreen(),
+        '/tasks_category': (context) => const TasksCategories(),
         '/timetable': (context) => const TimetableScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/account_settings': (context) => const AccountSettings(),

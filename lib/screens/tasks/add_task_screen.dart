@@ -148,7 +148,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         label: 'Category',
                         text: 'None',
                         icon: true,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/tasks_category');
+                        },
                       ),
                     ],
                   ),
@@ -186,7 +188,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   keyboardType: TextInputType.text,
                   obscureText: false,
                   textCapitalization: TextCapitalization.none,
-                  onChannge: (value) {},
+                  onChannge: (value) {
+                    details = value;
+                  },
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -198,7 +202,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     Expanded(
                       child: OutlinedTextButtonWidget(
                         text: 'Cancel',
-                        function: () {
+                        onPressed: () {
                           Navigator.of(context).pop();
                         },
                         color: BuzzerColors.orange,

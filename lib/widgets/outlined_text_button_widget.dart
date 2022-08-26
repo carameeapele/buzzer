@@ -4,18 +4,18 @@ class OutlinedTextButtonWidget extends StatelessWidget {
   const OutlinedTextButtonWidget({
     Key? key,
     required this.text,
-    required this.function,
+    required this.onPressed,
     required this.color,
   }) : super(key: key);
 
   final String text;
-  final VoidCallback? function;
+  final VoidCallback? onPressed;
   final Color color;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: function,
+      onPressed: onPressed,
       child: Text(
         text,
         style: TextStyle(

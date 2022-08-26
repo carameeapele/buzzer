@@ -20,6 +20,7 @@ class TextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: keyboardType,
       cursorColor: BuzzerColors.orange,
       validator: (String? value) {
         return (value!.isEmpty)
