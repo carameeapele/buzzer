@@ -1,10 +1,5 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
-part of 'category_model.dart';
-
-// **************************************************************************
-// TypeAdapterGenerator
-// **************************************************************************
+import 'package:buzzer/models/category_model.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class CategoryAdapter extends TypeAdapter<Category> {
   @override
@@ -31,14 +26,4 @@ class CategoryAdapter extends TypeAdapter<Category> {
       ..writeByte(1)
       ..write(obj.uses);
   }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CategoryAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
 }

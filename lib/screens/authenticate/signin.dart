@@ -64,7 +64,7 @@ class _SignInState extends State<SignIn> {
                         child: Column(
                           children: <Widget>[
                             TextFieldWidget(
-                              labetText: 'Email',
+                              labelText: 'Email',
                               keyboardType: TextInputType.emailAddress,
                               obscureText: false,
                               textCapitalization: TextCapitalization.none,
@@ -78,7 +78,7 @@ class _SignInState extends State<SignIn> {
                               height: 30.0,
                             ),
                             TextFieldWidget(
-                              labetText: 'Password',
+                              labelText: 'Password',
                               keyboardType: TextInputType.text,
                               obscureText: true,
                               textCapitalization: TextCapitalization.none,

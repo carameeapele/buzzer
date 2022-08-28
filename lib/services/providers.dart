@@ -94,9 +94,8 @@ final examsFetchProvider = FutureProvider<List<Exam>>((ref) async {
               id: doc.id,
               title: data['title'],
               date: data['date'],
-              tag: data['tag'],
-              reminders: data['remindes'] ?? 0,
-              notes: data['notes'],
+              category: data['tag'],
+              details: data['notes'],
             ),
           );
 

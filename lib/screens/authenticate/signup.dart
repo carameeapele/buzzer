@@ -65,7 +65,7 @@ class _SignUpState extends State<SignUp> {
                         child: Column(
                           children: <Widget>[
                             TextFieldWidget(
-                              labetText: 'Name',
+                              labelText: 'Name',
                               keyboardType: TextInputType.text,
                               obscureText: false,
                               textCapitalization: TextCapitalization.words,
@@ -79,7 +79,7 @@ class _SignUpState extends State<SignUp> {
                               height: 15.0,
                             ),
                             TextFieldWidget(
-                              labetText: 'Email',
+                              labelText: 'Email',
                               keyboardType: TextInputType.emailAddress,
                               obscureText: false,
                               textCapitalization: TextCapitalization.none,
@@ -93,7 +93,7 @@ class _SignUpState extends State<SignUp> {
                               height: 15.0,
                             ),
                             TextFieldWidget(
-                              labetText: 'Password',
+                              labelText: 'Password',
                               keyboardType: TextInputType.text,
                               obscureText: true,
                               textCapitalization: TextCapitalization.none,
@@ -107,7 +107,7 @@ class _SignUpState extends State<SignUp> {
                               height: 15.0,
                             ),
                             TextFieldWidget(
-                              labetText: 'Confirm Password',
+                              labelText: 'Confirm Password',
                               keyboardType: TextInputType.text,
                               obscureText: true,
                               textCapitalization: TextCapitalization.none,

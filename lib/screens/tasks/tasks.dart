@@ -1,17 +1,24 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/screens/tasks/tasks_viewmodel.dart';
+import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/widgets/add_app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
-import 'package:stacked/stacked.dart';
 
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends StatefulWidget {
   const TasksScreen({Key? key}) : super(key: key);
 
   @override
+  State<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+  @override
   Widget build(BuildContext context) {
+    final data = Theme.of(context).copyWith(dividerColor: Colors.transparent);
+
     Widget defaultScreen = Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,9 +41,11 @@ class TasksScreen extends StatelessWidget {
       ],
     );
 
-    return ViewModelBuilder<TasksViewModel>.reactive(
-      viewModelBuilder: () => TasksViewModel(),
-      builder: (context, model, _) {
+    return ValueListenableBuilder<Box<Task>>(
+      valueListenable: Hive.box<Task>('tasks').listenable(),
+      builder: (context, box, widget) {
+        final tasks = box.values.toList().cast<Task>();
+
         return Scaffold(
           appBar: AddAppBarWidget(
             title: 'Tasks',
@@ -45,77 +54,93 @@ class TasksScreen extends StatelessWidget {
             },
           ),
           drawer: const MenuDrawer(),
-          body: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            children: [
-              if (model.tasks.isEmpty) defaultScreen,
-              ...model.tasks.map((task) {
-                return Card(
-                  elevation: 0.0,
-                  color: BuzzerColors.lightGrey,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                  ),
-                  child: ExpansionTile(
-                    title: title(
-                        task.title, task.category, task.date, task.complete),
-                    subtitle: subtitle(task.complete, task.date),
-                    trailing: Checkbox(
-                      value: task.complete,
-                      onChanged: (value) {
-                        model.completeTask(task.id);
-                      },
-                      fillColor: MaterialStateProperty.all(BuzzerColors.orange),
-                      checkColor: Colors.white,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(2.7),
-                        ),
-                      ),
-                    ),
-                    childrenPadding:
-                        const EdgeInsets.symmetric(horizontal: 15.0),
-                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                    expandedAlignment: Alignment.centerLeft,
-                    children: <Widget>[
-                      task.details.isNotEmpty
-                          ? Text(task.details)
-                          : const SizedBox(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Edit',
-                              style: TextStyle(
-                                color: Colors.black,
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                tasks.isEmpty
+                    ? defaultScreen
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: tasks.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final task = tasks[index];
+
+                          return Card(
+                            elevation: 0.0,
+                            color: BuzzerColors.lightGrey,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.0),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 5.0,
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              model.deleteTask(task.id);
-                            },
-                            child: const Text(
-                              'Delete',
-                              style: TextStyle(
-                                color: Colors.black,
+                            child: Theme(
+                              data: data,
+                              child: ExpansionTile(
+                                title: title(task.title, task.category,
+                                    task.date, task.complete),
+                                subtitle: subtitle(task.complete, task.date),
+                                trailing: Checkbox(
+                                  value: task.complete,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      task.complete = value!;
+                                    });
+                                  },
+                                  fillColor: MaterialStateProperty.all(
+                                      BuzzerColors.orange),
+                                  checkColor: Colors.white,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(2.7),
+                                    ),
+                                  ),
+                                ),
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 15.0),
+                                expandedCrossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                expandedAlignment: Alignment.centerLeft,
+                                children: <Widget>[
+                                  task.details.isNotEmpty
+                                      ? Text(task.details)
+                                      : const SizedBox(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: const Text(
+                                          'Edit',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 5.0,
+                                      ),
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: const Text(
+                                          'Delete',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
-                    ],
-                  ),
-                );
-              })
-            ],
+              ],
+            ),
           ),
         );
       },

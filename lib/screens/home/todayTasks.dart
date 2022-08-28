@@ -30,7 +30,7 @@ class _TodayTasksState extends ConsumerState<TodayTasks> {
           return tasks.isEmpty
               ? FilledTextButtonWidget(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/add_task');
+                    Navigator.of(context).pushNamed('/tasks_category');
                   },
                   text: 'Add',
                   icon: true,

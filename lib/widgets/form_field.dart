@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 class TextFieldWidget extends StatelessWidget {
   const TextFieldWidget({
     Key? key,
-    required this.labetText,
+    required this.labelText,
     required this.keyboardType,
     required this.obscureText,
     required this.textCapitalization,
     required this.onChannge,
   }) : super(key: key);
 
-  final String labetText;
+  final String labelText;
   final TextInputType keyboardType;
   final bool obscureText;
   final TextCapitalization textCapitalization;
@@ -24,7 +24,7 @@ class TextFieldWidget extends StatelessWidget {
       cursorColor: BuzzerColors.orange,
       validator: (String? value) {
         return (value!.isEmpty)
-            ? 'Please enter your ${labetText.toLowerCase()}'
+            ? 'Please enter your ${labelText.toLowerCase()}'
             : null;
       },
       style: const TextStyle(
@@ -32,7 +32,7 @@ class TextFieldWidget extends StatelessWidget {
         fontSize: 15.0,
       ),
       decoration: InputDecoration(
-        labelText: labetText,
+        labelText: labelText,
         contentPadding: const EdgeInsets.symmetric(
           vertical: 5.0,
           horizontal: 12.0,

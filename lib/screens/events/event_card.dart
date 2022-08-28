@@ -28,7 +28,7 @@ class _EventTileState extends State<EventTile> {
       child: ExpansionTile(
         title: RichText(
           text: TextSpan(
-            text: widget.exam.tag,
+            text: widget.exam.category,
             style: TextStyle(
               color: widget.exam.date.toDate().isAfter(DateTime.now())
                   ? Colors.black

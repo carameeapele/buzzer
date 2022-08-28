@@ -6,33 +6,21 @@ import 'package:buzzer/services/database_service.dart';
 import 'package:buzzer/services/providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
-class EventsList extends ConsumerStatefulWidget {
+class EventsList extends StatefulWidget {
   const EventsList({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _EventsListState();
+  State<EventsList> createState() => _EventsListState();
 }
 
-class _EventsListState extends ConsumerState<EventsList> {
-  final AuthService _auth = AuthService();
-
-  void addExam(Exam exam) {
-    ref.read(examsProvider.notifier).state.add(exam);
-    DatabaseService(uid: _auth.toString()).addExam(exam);
-  }
-
-  void deleteExam(Exam exam) {
-    ref.read(examsProvider.notifier).state.remove(exam);
-    DatabaseService(uid: _auth.toString()).deleteExam(exam.id);
-  }
-
-  void editExam(Exam exam) {}
-
+class _EventsListState extends State<EventsList> {
   @override
   Widget build(BuildContext context) {
+    final data = Theme.of(context).copyWith(dividerColor: Colors.transparent);
+
     Widget defaultScreen = Container(
       padding: const EdgeInsets.symmetric(
         vertical: 50.0,
@@ -50,7 +38,7 @@ class _EventsListState extends ConsumerState<EventsList> {
           ),
           const SizedBox(height: 5.0),
           Text(
-            'Click + to add a task',
+            'Click + to add an event',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Roboto',
@@ -62,92 +50,79 @@ class _EventsListState extends ConsumerState<EventsList> {
       ),
     );
 
-    final data = Theme.of(context).copyWith(dividerColor: Colors.transparent);
+    return ValueListenableBuilder<Box<Exam>>(
+      valueListenable: Hive.box<Exam>('exams').listenable(),
+      builder: (context, box, widget) {
+        final exams = box.values.toList().cast<Exam>();
 
-    final exams = ref.watch(examsFetchProvider);
+        return exams.isEmpty
+            ? defaultScreen
+            : ListView.builder(
+                shrinkWrap: true,
+                itemCount: exams.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Exam exam = exams[index];
 
-    return Container(
-      child: exams.when(
-        data: (List<Exam> exams) {
-          return exams.isEmpty
-              ? defaultScreen
-              : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: exams.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Exam exam = exams[index];
-
-                    return Card(
-                      elevation: 0.0,
-                      color: BuzzerColors.lightGrey,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(7.0)),
-                      ),
-                      child: Theme(
-                        data: data,
-                        child: ExpansionTile(
-                          tilePadding:
-                              const EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 0.0),
-                          title: title(exam.title, exam.tag, exam.date),
-                          trailing: trailing(exam.date),
-                          childrenPadding: const EdgeInsets.symmetric(
-                            horizontal: 15.0,
-                            vertical: 0.0,
-                          ),
-                          expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                          expandedAlignment: Alignment.centerLeft,
-                          children: <Widget>[
-                            exam.notes.isNotEmpty
-                                ? Text(exam.notes)
-                                : const SizedBox(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      editExam(exam);
-                                    });
-                                  },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 5.0,
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      deleteExam(exam);
-                                    });
-                                  },
-                                  child: const Text(
-                                    'Delete',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                  return Card(
+                    elevation: 0.0,
+                    color: BuzzerColors.lightGrey,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                    ),
+                    child: Theme(
+                      data: data,
+                      child: ExpansionTile(
+                        tilePadding:
+                            const EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 0.0),
+                        title: title(exam.title, exam.category, exam.date),
+                        trailing: trailing(exam.date),
+                        childrenPadding: const EdgeInsets.symmetric(
+                          horizontal: 15.0,
+                          vertical: 0.0,
                         ),
+                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                        expandedAlignment: Alignment.centerLeft,
+                        children: <Widget>[
+                          exam.details.isNotEmpty
+                              ? Text(exam.details)
+                              : const SizedBox(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {});
+                                },
+                                child: const Text(
+                                  'Edit',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5.0,
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {});
+                                },
+                                child: const Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                );
-        },
-        error: (Object error, StackTrace? stackTrace) {
-          return Column();
-        },
-        loading: () {
-          return const Loading();
-        },
-      ),
+                    ),
+                  );
+                },
+              );
+      },
     );
   }
 

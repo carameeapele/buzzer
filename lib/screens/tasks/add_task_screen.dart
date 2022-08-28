@@ -1,4 +1,6 @@
 import 'package:buzzer/main.dart';
+import 'package:buzzer/models/task_model.dart';
+import 'package:buzzer/screens/tasks/tasks_categories.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/filled_text_button_widget.dart';
 import 'package:buzzer/widgets/form_field.dart';
@@ -6,6 +8,7 @@ import 'package:buzzer/widgets/outlined_text_button_widget.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -18,15 +21,22 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   late String title;
   late DateTime date = DateTime.now();
-  late TimeOfDay time =
-      TimeOfDay.fromDateTime(DateTime.now().add(const Duration(hours: 1)));
-  late String category;
-  late String details;
+  late DateTime time = date.add(const Duration(hours: 1));
+
+  String category = 'None';
+  String details = '';
+
+  String _id() {
+    final now = DateTime.now();
+    return now.microsecondsSinceEpoch.toString();
+  }
 
   Future selectTime() async {
+    TimeOfDay initialTime = TimeOfDay.fromDateTime(time);
+
     TimeOfDay? selectedTime = await showTimePicker(
       context: context,
-      initialTime: time,
+      initialTime: initialTime,
       initialEntryMode: TimePickerEntryMode.input,
       builder: (context, child) {
         return Theme(
@@ -47,7 +57,23 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     if (selectedTime != null) {
       setState(() {
-        time = selectedTime;
+        time = DateTime(date.year, date.month, date.day, selectedTime.hour,
+            selectedTime.minute);
+      });
+    }
+  }
+
+  Future<void> _getCategory(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const TasksCategories()),
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {
+        category = result;
       });
     }
   }
@@ -103,7 +129,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 TextFieldWidget(
-                  labetText: 'Task Name',
+                  labelText: 'Task Name',
                   keyboardType: TextInputType.text,
                   obscureText: false,
                   textCapitalization: TextCapitalization.words,
@@ -139,17 +165,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       ),
                       TextRow(
                         label: 'Time',
-                        text: DateFormat.Hm().format(DateTime(date.year,
-                            date.month, date.day, time.hour, time.minute)),
+                        text: DateFormat.Hm().format(time),
                         icon: false,
                         onPressed: selectTime,
                       ),
                       TextRow(
                         label: 'Category',
-                        text: 'None',
+                        text: category,
                         icon: true,
                         onPressed: () {
-                          Navigator.pushNamed(context, '/tasks_category');
+                          _getCategory(context);
                         },
                       ),
                     ],
@@ -184,7 +209,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   height: 20.0,
                 ),
                 TextFieldWidget(
-                  labetText: 'Details',
+                  labelText: 'Details',
                   keyboardType: TextInputType.text,
                   obscureText: false,
                   textCapitalization: TextCapitalization.none,
@@ -215,7 +240,24 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       child: FilledTextButtonWidget(
                         text: 'Save',
                         icon: false,
-                        onPressed: () {},
+                        onPressed: () {
+                          if (title.isNotEmpty) {
+                            final task = Task(
+                              id: _id(),
+                              title: title,
+                              date: Timestamp.fromDate(date),
+                              time: Timestamp.fromDate(time),
+                              category: category,
+                              details: details,
+                              complete: false,
+                            );
+
+                            final box = Hive.box<Task>('tasks');
+                            box.add(task);
+                          }
+
+                          Navigator.of(context).pop();
+                        },
                         backgroundColor: BuzzerColors.orange,
                         textColor: Colors.white,
                       ),

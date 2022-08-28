@@ -1,6 +1,10 @@
-import 'package:buzzer/locator.dart';
+import 'package:buzzer/adapters/category.adapter.dart';
+import 'package:buzzer/adapters/exam.adapter.dart';
 import 'package:buzzer/models/category_model.dart';
+import 'package:buzzer/models/exam_model.dart';
 import 'package:buzzer/models/task_model.dart';
+import 'package:buzzer/adapters/task.adapter.dart';
+import 'package:buzzer/adapters/timestamp.adapter.dart';
 import 'package:buzzer/screens/authenticate/authenticate.dart';
 import 'package:buzzer/screens/authenticate/signin.dart';
 import 'package:buzzer/screens/authenticate/signup.dart';
@@ -20,19 +24,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   await Hive.initFlutter();
-  Hive.registerAdapter(TaskAdapter());
-  Hive.registerAdapter(CategoryAdapter());
-  
-  await Hive.openBox('tasks');
-  await Hive.openBox('categories');
 
-  setupLocator();
+  Hive.registerAdapter(TimestampAdapter());
+  Hive.registerAdapter(CategoryAdapter());
+  Hive.registerAdapter(TaskAdapter());
+  Hive.registerAdapter(ExamAdapter());
+
+  await Hive.openBox<Task>('tasks');
+  await Hive.openBox<Category>('categories');
+  await Hive.openBox<Exam>('exams');
 
   runApp(const ProviderScope(child: MyApp()));
 }
