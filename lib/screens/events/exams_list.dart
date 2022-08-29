@@ -1,10 +1,5 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/exam_model.dart';
-import 'package:buzzer/screens/loading.dart';
-import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/services/database_service.dart';
-import 'package:buzzer/services/providers.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
@@ -105,7 +100,7 @@ class _EventsListState extends State<EventsList> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  setState(() {});
+                                  _deleteExam(exam);
                                 },
                                 child: const Text(
                                   'Delete',
@@ -126,23 +121,25 @@ class _EventsListState extends State<EventsList> {
     );
   }
 
+  void _deleteExam(Exam exam) {
+    exam.delete();
+  }
+
   RichText title(
     String title,
     String tag,
-    Timestamp date,
+    DateTime date,
   ) {
     return RichText(
       text: TextSpan(
         text: tag,
         style: TextStyle(
-          color: date.toDate().isAfter(DateTime.now())
-              ? Colors.black
-              : BuzzerColors.grey,
+          color:
+              date.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
           fontSize: 17.0,
           fontStyle: FontStyle.italic,
-          decoration: date.toDate().isAfter(DateTime.now())
-              ? null
-              : TextDecoration.lineThrough,
+          decoration:
+              date.isAfter(DateTime.now()) ? null : TextDecoration.lineThrough,
           decorationThickness: 2.0,
         ),
         children: <TextSpan>[
@@ -159,13 +156,11 @@ class _EventsListState extends State<EventsList> {
     );
   }
 
-  Text trailing(Timestamp date) {
+  Text trailing(DateTime date) {
     return Text(
-      '${DateFormat('dd.MM', 'en_US').format(date.toDate())}  ',
+      '${DateFormat('dd MMM', 'en_US').format(date)}  ',
       style: TextStyle(
-        color: date.toDate().isAfter(DateTime.now())
-            ? Colors.black
-            : BuzzerColors.grey,
+        color: date.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
         fontSize: 16.0,
       ),
     );

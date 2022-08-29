@@ -1,4 +1,3 @@
-import 'package:buzzer/models/exam_model.dart';
 import 'package:buzzer/models/project_model.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/models/user_model.dart';
@@ -73,40 +72,41 @@ final completeTasksFetchProvider = FutureProvider<List<Task>>((ref) {
 
 // Events Providers
 
-final examsProvider = StateProvider<List<Exam>>((ref) => <Exam>[]);
+// final examsProvider = StateProvider<List<Exam>>((ref) => <Exam>[]);
 
-final examsFetchProvider = FutureProvider<List<Exam>>((ref) async {
-  final AuthService _auth = AuthService();
-  final collectionRef = FirebaseFirestore.instance
-      .collection(_auth.toString())
-      .doc('events')
-      .collection('exams');
+// final examsFetchProvider = FutureProvider<List<Exam>>((ref) async {
+//   final AuthService _auth = AuthService();
+//   final collectionRef = FirebaseFirestore.instance
+//       .collection(_auth.toString())
+//       .doc('events')
+//       .collection('exams');
 
-  final snap = await collectionRef.get();
-  List<DocumentSnapshot> docs = snap.docs.toList();
+//   final snap = await collectionRef.get();
+//   List<DocumentSnapshot> docs = snap.docs.toList();
 
-  for (var doc in docs) {
-    if (doc.data() != null) {
-      dynamic data = doc.data();
+//   for (var doc in docs) {
+//     if (doc.data() != null) {
+//       dynamic data = doc.data();
 
-      ref.read(examsProvider.notifier).state.add(
-            Exam(
-              id: doc.id,
-              title: data['title'],
-              date: data['date'],
-              category: data['tag'],
-              details: data['notes'],
-            ),
-          );
+//       ref.read(examsProvider.notifier).state.add(
+//             Exam(
+//               id: doc.id,
+//               title: data['title'],
+//               date: data['date'],
+//               time: data['time'],
+//               category: data['tag'],
+//               details: data['notes'],
+//             ),
+//           );
 
-      ref
-          .read(examsProvider.notifier)
-          .state
-          .sort((a, b) => a.date.compareTo(b.date));
-    }
-  }
-  return ref.watch(examsProvider);
-});
+//       ref
+//           .read(examsProvider.notifier)
+//           .state
+//           .sort((a, b) => a.date.compareTo(b.date));
+//     }
+//   }
+//   return ref.watch(examsProvider);
+// });
 
 // Projects Provider
 

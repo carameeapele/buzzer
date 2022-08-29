@@ -1,8 +1,11 @@
 import 'package:buzzer/main.dart';
+import 'package:buzzer/models/class_model.dart';
+import 'package:buzzer/screens/timetable/class_list.dart';
 import 'package:buzzer/widgets/add_app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 
 class TimetableScreen extends StatefulWidget {
   const TimetableScreen({Key? key}) : super(key: key);
@@ -74,11 +77,11 @@ class _TimetableScreenState extends State<TimetableScreen>
               child: TabBarView(
                 controller: _tabController,
                 children: const <Widget>[
-                  Text('monday'),
-                  Text('tuesday'),
-                  Text('wednesday'),
-                  Text('thursday'),
-                  Text('friday'),
+                  ClassList(day: 'Monday'),
+                  ClassList(day: 'Tuesday'),
+                  ClassList(day: 'Wednesday'),
+                  ClassList(day: 'Thursday'),
+                  ClassList(day: 'Friday'),
                 ],
               ),
             ),

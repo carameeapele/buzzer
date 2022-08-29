@@ -1,6 +1,6 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/task_model.dart';
-import 'package:buzzer/screens/tasks/tasks_categories.dart';
+import 'package:buzzer/screens/categories.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/filled_text_button_widget.dart';
 import 'package:buzzer/widgets/form_field.dart';
@@ -20,7 +20,7 @@ class AddTaskScreen extends StatefulWidget {
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   late String title;
-  late DateTime date = DateTime.now();
+  DateTime date = DateTime.now();
   late DateTime time = date.add(const Duration(hours: 1));
 
   String category = 'None';
@@ -57,8 +57,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     if (selectedTime != null) {
       setState(() {
-        time = DateTime(date.year, date.month, date.day, selectedTime.hour,
-            selectedTime.minute);
+        time = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
       });
     }
   }
@@ -66,7 +71,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Future<void> _getCategory(BuildContext context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const TasksCategories()),
+      MaterialPageRoute(builder: (context) => const Categories()),
     );
 
     if (!mounted) return;
@@ -155,7 +160,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      TextRow(
+                      TextButtonRow(
                         label: 'Date',
                         text: DateFormat(
                           'd MMMM',
@@ -163,13 +168,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         icon: false,
                         onPressed: selectDate,
                       ),
-                      TextRow(
+                      TextButtonRow(
                         label: 'Time',
                         text: DateFormat.Hm().format(time),
                         icon: false,
                         onPressed: selectTime,
                       ),
-                      TextRow(
+                      TextButtonRow(
                         label: 'Category',
                         text: category,
                         icon: true,
@@ -196,7 +201,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      TextRow(
+                      TextButtonRow(
                         label: 'Reminder',
                         text: '1 hour before',
                         icon: true,
@@ -245,8 +250,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             final task = Task(
                               id: _id(),
                               title: title,
-                              date: Timestamp.fromDate(date),
-                              time: Timestamp.fromDate(time),
+                              date: date,
+                              time: time,
                               category: category,
                               details: details,
                               complete: false,

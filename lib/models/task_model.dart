@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
 @HiveType(typeId: 1)
@@ -10,10 +9,10 @@ class Task extends HiveObject {
   late String title;
 
   @HiveField(3)
-  late Timestamp date;
+  late DateTime date;
 
   @HiveField(4)
-  late Timestamp time;
+  late DateTime time;
 
   @HiveField(5)
   late String category;

@@ -6,14 +6,14 @@ import 'package:buzzer/widgets/outlined_text_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
-class TasksCategories extends StatefulWidget {
-  const TasksCategories({Key? key}) : super(key: key);
+class Categories extends StatefulWidget {
+  const Categories({Key? key}) : super(key: key);
 
   @override
-  State<TasksCategories> createState() => _TasksCategoriesState();
+  State<Categories> createState() => _CategoriesState();
 }
 
-class _TasksCategoriesState extends State<TasksCategories> {
+class _CategoriesState extends State<Categories> {
   late String newCategoryName;
   late String selectedCategory = 'None';
 
@@ -115,6 +115,8 @@ class _TasksCategoriesState extends State<TasksCategories> {
               final category = Category(name: newCategoryName, uses: 1);
               final box = Hive.box<Category>('categories');
               box.add(category);
+
+              Navigator.of(context, rootNavigator: true).pop();
             },
             child: Text(
               'Add',

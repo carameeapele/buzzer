@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: 8)
 class Exam extends HiveObject {
   @HiveField(0)
   late String id;
@@ -10,19 +9,27 @@ class Exam extends HiveObject {
   late String title;
 
   @HiveField(2)
-  late Timestamp date;
+  late DateTime date;
 
   @HiveField(3)
-  late String category;
+  late DateTime time;
 
   @HiveField(4)
-  late String details;
+  late String category;
+
+  @HiveField(5)
+  String details = '';
+
+  @HiveField(6)
+  String room = '';
 
   Exam({
     required this.id,
     required this.title,
     required this.date,
+    required this.time,
     required this.category,
     required this.details,
+    required this.room,
   });
 }

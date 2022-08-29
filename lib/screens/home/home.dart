@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: 20.0,
+            horizontal: 18.0,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

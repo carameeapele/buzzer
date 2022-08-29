@@ -1,15 +1,24 @@
-import 'package:buzzer/models/task_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 
-class Project {
+@HiveType(typeId: 4)
+class Project extends HiveObject {
+  @HiveField(0)
   late String id;
+
+  @HiveField(1)
   late String title;
+
+  @HiveField(2)
   late String category;
-  late Timestamp date;
-  late TimeOfDay time;
+
+  @HiveField(3)
+  late DateTime date;
+
+  @HiveField(4)
+  late DateTime time;
+
+  @HiveField(5)
   late bool complete;
-  late List<Task> tasks;
 
   Project({
     required this.id,

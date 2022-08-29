@@ -1,59 +1,39 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/models/exam_model.dart';
-import 'package:buzzer/screens/events/events_list.dart';
+import 'package:buzzer/screens/events/exams_list.dart';
 import 'package:buzzer/screens/events/projects_list.dart';
-import 'package:buzzer/screens/loading.dart';
-import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/services/database_service.dart';
-import 'package:buzzer/services/providers.dart';
 import 'package:buzzer/widgets/add_app_bar_widget.dart';
 import 'package:buzzer/widgets/menu_drawer_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EventsScreen extends ConsumerStatefulWidget {
+class EventsScreen extends StatefulWidget {
   const EventsScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _EventsScreenState();
+  State<EventsScreen> createState() => _EventsScreenState();
 }
 
-class _EventsScreenState extends ConsumerState<EventsScreen>
+class _EventsScreenState extends State<EventsScreen>
     with TickerProviderStateMixin {
-  final AuthService _auth = AuthService();
-
-  @override
-  void initState() {
-    super.initState();
-    ref.read(examsFetchProvider);
-  }
-
-  void addExam(Exam exam) {
-    ref.read(examsProvider.notifier).state.add(exam);
-    DatabaseService(uid: _auth.toString()).addExam(exam);
-  }
-
-  void deleteExam(Exam exam) {
-    ref.read(examsProvider.notifier).state.remove(exam);
-    DatabaseService(uid: _auth.toString()).deleteExam(exam.id);
-  }
-
-  void editExam(Exam exam) {}
-
   @override
   Widget build(BuildContext context) {
-    AddAppBarWidget appBar = AddAppBarWidget(
-      title: 'Events',
-      onPressed: () {},
-    );
-
-    TabController _tabController = TabController(
+    TabController _controller = TabController(
       length: 2,
       vsync: this,
     );
 
+    AddAppBarWidget appBar = AddAppBarWidget(
+      title: 'Events',
+      onPressed: () {
+        if (_controller.index == 0) {
+          Navigator.of(context).pushNamed('/add_exam');
+        } else {
+          Navigator.of(context).pushNamed('/add_project');
+        }
+      },
+    );
+
     TabBar tabBar = TabBar(
-      controller: _tabController,
+      controller: _controller,
       isScrollable: true,
       labelColor: Colors.black,
       labelStyle: const TextStyle(
@@ -93,7 +73,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen>
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: TabBarView(
-                controller: _tabController,
+                controller: _controller,
                 children: const [
                   EventsList(),
                   ProjectsList(),

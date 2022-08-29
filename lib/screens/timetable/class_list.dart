@@ -1,20 +1,25 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/models/project_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:buzzer/models/class_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
-class ProjectsList extends StatefulWidget {
-  const ProjectsList({Key? key}) : super(key: key);
+class ClassList extends StatefulWidget {
+  const ClassList({
+    Key? key,
+    required this.day,
+  }) : super(key: key);
+
+  final String day;
 
   @override
-  State<ProjectsList> createState() => _ProjectsListState();
+  State<ClassList> createState() => _ClassListState();
 }
 
-class _ProjectsListState extends State<ProjectsList> {
+class _ClassListState extends State<ClassList> {
   @override
   Widget build(BuildContext context) {
+    final String day = widget.day;
     final data = Theme.of(context).copyWith(dividerColor: Colors.transparent);
 
     Widget defaultScreen = Container(
@@ -23,41 +28,30 @@ class _ProjectsListState extends State<ProjectsList> {
         horizontal: 20.0,
       ),
       width: MediaQuery.of(context).size.width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Icon(
-            Icons.list_alt_rounded,
-            size: 50.0,
-            color: Colors.grey[300],
-          ),
-          const SizedBox(height: 5.0),
-          Text(
-            'Click + to add an event',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Roboto',
-              color: Colors.grey[300],
-              fontSize: 16.0,
-            ),
-          ),
-        ],
+      child: Text(
+        'Click + to add a class',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: 'Roboto',
+          color: Colors.grey[300],
+          fontSize: 16.0,
+        ),
       ),
     );
 
-    return ValueListenableBuilder<Box<Project>>(
-      valueListenable: Hive.box<Project>('projects').listenable(),
+    return ValueListenableBuilder<Box<Class>>(
+      valueListenable: Hive.box<Class>('classes').listenable(),
       builder: (context, box, widget) {
-        final projects = box.values.toList().cast<Project>();
+        final classes = box.values.toList().cast<Class>();
+        classes.removeWhere((element) => element.day.compareTo(day) != 0);
 
-        return projects.isEmpty
+        return classes.isEmpty
             ? defaultScreen
             : ListView.builder(
                 shrinkWrap: true,
-                itemCount: projects.length,
+                itemCount: classes.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Project project = projects[index];
+                  Class dayClass = classes[index];
 
                   return Card(
                     elevation: 0.0,
@@ -70,9 +64,8 @@ class _ProjectsListState extends State<ProjectsList> {
                       child: ExpansionTile(
                         tilePadding:
                             const EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 0.0),
-                        title: title(
-                            project.title, project.category, project.date),
-                        trailing: trailing(project.date),
+                        title: title(dayClass.title, dayClass.type),
+                        trailing: trailing(dayClass.startTime),
                         childrenPadding: const EdgeInsets.symmetric(
                           horizontal: 15.0,
                           vertical: 0.0,
@@ -80,6 +73,9 @@ class _ProjectsListState extends State<ProjectsList> {
                         expandedCrossAxisAlignment: CrossAxisAlignment.start,
                         expandedAlignment: Alignment.centerLeft,
                         children: <Widget>[
+                          dayClass.details.isNotEmpty
+                              ? Text(dayClass.details)
+                              : const SizedBox(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
@@ -99,7 +95,7 @@ class _ProjectsListState extends State<ProjectsList> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  setState(() {});
+                                  _deleteClass(dayClass);
                                 },
                                 child: const Text(
                                   'Delete',
@@ -120,22 +116,21 @@ class _ProjectsListState extends State<ProjectsList> {
     );
   }
 
+  void _deleteClass(Class dayClass) {
+    dayClass.delete();
+  }
+
   RichText title(
     String title,
     String tag,
-    DateTime date,
   ) {
     return RichText(
       text: TextSpan(
         text: tag,
-        style: TextStyle(
-          color:
-              date.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
+        style: const TextStyle(
+          color: Colors.black,
           fontSize: 17.0,
           fontStyle: FontStyle.italic,
-          decoration:
-              date.isAfter(DateTime.now()) ? null : TextDecoration.lineThrough,
-          decorationThickness: 2.0,
         ),
         children: <TextSpan>[
           TextSpan(
@@ -153,9 +148,9 @@ class _ProjectsListState extends State<ProjectsList> {
 
   Text trailing(DateTime date) {
     return Text(
-      '${DateFormat('dd.MM', 'en_US').format(date)}  ',
-      style: TextStyle(
-        color: date.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
+      '${DateFormat('dd MMM', 'en_US').format(date)}  ',
+      style: const TextStyle(
+        color: Colors.black,
         fontSize: 16.0,
       ),
     );

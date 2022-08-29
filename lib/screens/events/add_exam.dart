@@ -1,5 +1,5 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/models/task_model.dart';
+import 'package:buzzer/models/exam_model.dart';
 import 'package:buzzer/screens/categories.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/filled_text_button_widget.dart';
@@ -7,26 +7,29 @@ import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/outlined_text_button_widget.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
-class EditTaskScreen extends StatefulWidget {
-  const EditTaskScreen({
-    Key? key,
-    required this.task,
-  }) : super(key: key);
-
-  final Task task;
+class AddExamScreen extends StatefulWidget {
+  const AddExamScreen({Key? key}) : super(key: key);
 
   @override
-  State<EditTaskScreen> createState() => _EditTaskScreenState();
+  State<AddExamScreen> createState() => _AddExamScreenState();
 }
 
-class _EditTaskScreenState extends State<EditTaskScreen> {
-  late String title = widget.task.title;
-  late DateTime date = widget.task.date;
-  late DateTime time = widget.task.time;
-  late String category = widget.task.category;
-  late String details = widget.task.details;
+class _AddExamScreenState extends State<AddExamScreen> {
+  late String title;
+  DateTime date = DateTime.now();
+  late DateTime time = date.add(const Duration(hours: 1));
+
+  String category = 'None';
+  String details = '';
+  String room = '';
+
+  String _id() {
+    final now = DateTime.now();
+    return now.microsecondsSinceEpoch.toString();
+  }
 
   Future selectTime() async {
     TimeOfDay initialTime = TimeOfDay.fromDateTime(time);
@@ -65,21 +68,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     }
   }
 
-  Future<void> _getCategory(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Categories()),
-    );
-
-    if (!mounted) return;
-
-    if (result != null) {
-      setState(() {
-        category = result;
-      });
-    }
-  }
-
   Future selectDate() async {
     DateTime? selectedDate = await showDatePicker(
         context: context,
@@ -112,12 +100,27 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     }
   }
 
+  Future<void> _getCategory(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Categories()),
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {
+        category = result;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
-      appBar: const AppBarWidget(title: 'Add Task'),
+      appBar: const AppBarWidget(title: 'Add Exam'),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20.0,
@@ -130,10 +133,10 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                ValueTextFieldWidget(
-                  labelText: 'Task Name',
-                  defaultValue: title,
+                TextFieldWidget(
+                  labelText: 'Exam Name',
                   keyboardType: TextInputType.text,
+                  obscureText: false,
                   textCapitalization: TextCapitalization.words,
                   onChannge: (value) {
                     title = value;
@@ -177,6 +180,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                         icon: true,
                         onPressed: () {
                           _getCategory(context);
+                        },
+                      ),
+                      TextFieldRow(
+                        label: 'Room',
+                        onChannge: (value) {
+                          room = value;
                         },
                       ),
                     ],
@@ -243,7 +252,21 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                         text: 'Save',
                         icon: false,
                         onPressed: () {
-                          _editTransaction();
+                          if (title.isNotEmpty) {
+                            final exam = Exam(
+                              id: _id(),
+                              title: title,
+                              date: date,
+                              time: time,
+                              category: category,
+                              details: details,
+                              room: room,
+                            );
+
+                            final box = Hive.box<Exam>('exams');
+                            box.add(exam);
+                          }
+
                           Navigator.of(context).pop();
                         },
                         backgroundColor: BuzzerColors.orange,
@@ -258,15 +281,5 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         ),
       ),
     );
-  }
-
-  void _editTransaction() {
-    widget.task.title = title;
-    widget.task.date = date;
-    widget.task.time = time;
-    widget.task.category = category;
-    widget.task.details = details;
-
-    widget.task.save();
   }
 }

@@ -1,24 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-// part 'class_model.g.dart';
 
-@HiveType(typeId: 4)
+@HiveType(typeId: 5)
 class Class extends HiveObject {
   @HiveField(0)
-  late String title;
+  late String id;
 
   @HiveField(1)
-  late String type;
+  late String title;
 
   @HiveField(2)
-  late TimeOfDay startTime;
-
-  @HiveField(3)
-  late TimeOfDay endTime;
-
-  @HiveField(4)
   late String day;
 
+  @HiveField(3)
+  late String type;
+
+  @HiveField(4)
+  late DateTime startTime;
+
   @HiveField(5)
-  late String details;
+  late DateTime endTime;
+
+  @HiveField(6)
+  String room = '';
+
+  @HiveField(7)
+  String professorEmail = '';
+
+  @HiveField(8)
+  String details = '';
+
+  Class({
+    required this.id,
+    required this.title,
+    required this.day,
+    required this.type,
+    required this.startTime,
+    required this.endTime,
+    required this.room,
+    required this.professorEmail,
+    required this.details,
+  });
 }

@@ -1,32 +1,34 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/models/task_model.dart';
+import 'package:buzzer/models/project_model.dart';
 import 'package:buzzer/screens/categories.dart';
 import 'package:buzzer/widgets/app_bar_widget.dart';
 import 'package:buzzer/widgets/filled_text_button_widget.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/outlined_text_button_widget.dart';
 import 'package:buzzer/widgets/text_row.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
-class EditTaskScreen extends StatefulWidget {
-  const EditTaskScreen({
-    Key? key,
-    required this.task,
-  }) : super(key: key);
-
-  final Task task;
+class AddProjectScreen extends StatefulWidget {
+  const AddProjectScreen({Key? key}) : super(key: key);
 
   @override
-  State<EditTaskScreen> createState() => _EditTaskScreenState();
+  State<AddProjectScreen> createState() => _AddProjectScreenState();
 }
 
-class _EditTaskScreenState extends State<EditTaskScreen> {
-  late String title = widget.task.title;
-  late DateTime date = widget.task.date;
-  late DateTime time = widget.task.time;
-  late String category = widget.task.category;
-  late String details = widget.task.details;
+class _AddProjectScreenState extends State<AddProjectScreen> {
+  late String title;
+  DateTime date = DateTime.now();
+  late DateTime time = date.add(const Duration(hours: 1));
+
+  String category = 'None';
+
+  String _id() {
+    final now = DateTime.now();
+    return now.microsecondsSinceEpoch.toString();
+  }
 
   Future selectTime() async {
     TimeOfDay initialTime = TimeOfDay.fromDateTime(time);
@@ -65,21 +67,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     }
   }
 
-  Future<void> _getCategory(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Categories()),
-    );
-
-    if (!mounted) return;
-
-    if (result != null) {
-      setState(() {
-        category = result;
-      });
-    }
-  }
-
   Future selectDate() async {
     DateTime? selectedDate = await showDatePicker(
         context: context,
@@ -112,12 +99,27 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     }
   }
 
+  Future<void> _getCategory(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Categories()),
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {
+        category = result;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
-      appBar: const AppBarWidget(title: 'Add Task'),
+      appBar: const AppBarWidget(title: 'Add Project'),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20.0,
@@ -130,10 +132,10 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                ValueTextFieldWidget(
-                  labelText: 'Task Name',
-                  defaultValue: title,
+                TextFieldWidget(
+                  labelText: 'Project Name',
                   keyboardType: TextInputType.text,
+                  obscureText: false,
                   textCapitalization: TextCapitalization.words,
                   onChannge: (value) {
                     title = value;
@@ -210,18 +212,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 const SizedBox(
                   height: 20.0,
                 ),
-                TextFieldWidget(
-                  labelText: 'Details',
-                  keyboardType: TextInputType.text,
-                  obscureText: false,
-                  textCapitalization: TextCapitalization.none,
-                  onChannge: (value) {
-                    details = value;
-                  },
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -243,7 +233,19 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                         text: 'Save',
                         icon: false,
                         onPressed: () {
-                          _editTransaction();
+                          if (title.isNotEmpty) {
+                            final project = Project(
+                                id: _id(),
+                                title: title,
+                                category: category,
+                                date: date,
+                                time: time,
+                                complete: false);
+
+                            final box = Hive.box<Project>('projects');
+                            box.add(project);
+                          }
+
                           Navigator.of(context).pop();
                         },
                         backgroundColor: BuzzerColors.orange,
@@ -258,15 +260,5 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         ),
       ),
     );
-  }
-
-  void _editTransaction() {
-    widget.task.title = title;
-    widget.task.date = date;
-    widget.task.time = time;
-    widget.task.category = category;
-    widget.task.details = details;
-
-    widget.task.save();
   }
 }

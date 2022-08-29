@@ -1,44 +1,42 @@
-import 'package:buzzer/models/task_model.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:buzzer/models/project_model.dart';
+import 'package:hive_flutter/adapters.dart';
 
-class TaskAdapter extends TypeAdapter<Task> {
+class ProjectAdapter extends TypeAdapter<Project> {
   @override
-  final int typeId = 1;
+  final int typeId = 4;
 
   @override
-  Task read(BinaryReader reader) {
+  Project read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Task(
+
+    return Project(
       id: fields[0] as String,
-      title: fields[2] as String,
+      title: fields[1] as String,
+      category: fields[2] as String,
       date: fields[3] as DateTime,
       time: fields[4] as DateTime,
-      category: fields[5] as String,
-      details: fields[6] as String,
-      complete: fields[7] as bool,
+      complete: fields[5] as bool,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Task obj) {
+  void write(BinaryWriter writer, Project obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
-      ..writeByte(2)
+      ..writeByte(1)
       ..write(obj.title)
+      ..writeByte(2)
+      ..write(obj.category)
       ..writeByte(3)
       ..write(obj.date)
       ..writeByte(4)
       ..write(obj.time)
       ..writeByte(5)
-      ..write(obj.category)
-      ..writeByte(6)
-      ..write(obj.details)
-      ..writeByte(7)
       ..write(obj.complete);
   }
 
@@ -48,7 +46,7 @@ class TaskAdapter extends TypeAdapter<Task> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TaskAdapter &&
+      other is ProjectAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
