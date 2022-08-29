@@ -6,7 +6,6 @@ import 'package:buzzer/widgets/filled_text_button_widget.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/outlined_text_button_widget.dart';
 import 'package:buzzer/widgets/text_row.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
