@@ -1,6 +1,6 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/project_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:buzzer/screens/events/projects/edit_project.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
@@ -58,21 +58,32 @@ class _ProjectsListState extends State<ProjectsList> {
                 itemCount: projects.length,
                 itemBuilder: (BuildContext context, int index) {
                   Project project = projects[index];
+                  DateTime now = DateTime.now();
+                  bool _isToday = (project.date.day == now.day &&
+                      project.date.month == now.month &&
+                      project.date.year == now.year);
 
                   return Card(
                     elevation: 0.0,
-                    color: BuzzerColors.lightGrey,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                    color: _isToday ? Colors.white : BuzzerColors.lightGrey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(7.0),
+                      ),
+                      side: BorderSide(
+                        color:
+                            _isToday ? BuzzerColors.orange : Colors.transparent,
+                        width: 2.0,
+                      ),
                     ),
                     child: Theme(
                       data: data,
                       child: ExpansionTile(
                         tilePadding:
-                            const EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 0.0),
+                            const EdgeInsets.symmetric(horizontal: 20.0),
                         title: title(
-                            project.title, project.category, project.date),
-                        trailing: trailing(project.date),
+                            project.title, project.category, project.time),
+                        trailing: trailing(project.date, project.time),
                         childrenPadding: const EdgeInsets.symmetric(
                           horizontal: 15.0,
                           vertical: 0.0,
@@ -80,36 +91,7 @@ class _ProjectsListState extends State<ProjectsList> {
                         expandedCrossAxisAlignment: CrossAxisAlignment.start,
                         expandedAlignment: Alignment.centerLeft,
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {});
-                                },
-                                child: const Text(
-                                  'Edit',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 5.0,
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {});
-                                },
-                                child: const Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          options(project),
                         ],
                       ),
                     ),
@@ -122,19 +104,19 @@ class _ProjectsListState extends State<ProjectsList> {
 
   RichText title(
     String title,
-    String tag,
-    DateTime date,
+    String category,
+    DateTime time,
   ) {
     return RichText(
       text: TextSpan(
-        text: tag,
+        text: (category.compareTo('None') == 0) ? '' : category,
         style: TextStyle(
           color:
-              date.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
+              time.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
           fontSize: 17.0,
           fontStyle: FontStyle.italic,
           decoration:
-              date.isAfter(DateTime.now()) ? null : TextDecoration.lineThrough,
+              time.isAfter(DateTime.now()) ? null : TextDecoration.lineThrough,
           decorationThickness: 2.0,
         ),
         children: <TextSpan>[
@@ -151,13 +133,62 @@ class _ProjectsListState extends State<ProjectsList> {
     );
   }
 
-  Text trailing(DateTime date) {
+  Text trailing(DateTime date, DateTime time) {
+    DateTime now = DateTime.now();
+
     return Text(
-      '${DateFormat('dd.MM', 'en_US').format(date)}  ',
+      (date.day == now.day && date.month == now.month && date.year == now.year)
+          ? DateFormat('Hm', 'en_US').format(time)
+          : DateFormat('dd MMM', 'en_US').format(date),
       style: TextStyle(
-        color: date.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
+        color: time.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
         fontSize: 16.0,
       ),
+    );
+  }
+
+  void _deleteProject(Project project) {
+    project.delete();
+  }
+
+  Row options(Project project) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EditProject(
+                  project: project,
+                ),
+              ),
+            );
+          },
+          child: const Text(
+            'Edit',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          style: TextButton.styleFrom(primary: BuzzerColors.grey),
+        ),
+        const SizedBox(
+          width: 5.0,
+        ),
+        TextButton(
+          onPressed: () {
+            _deleteProject(project);
+          },
+          child: const Text(
+            'Delete',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          style: TextButton.styleFrom(primary: BuzzerColors.grey),
+        ),
+      ],
     );
   }
 }

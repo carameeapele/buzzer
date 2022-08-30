@@ -1,12 +1,76 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/screens/events/events.dart';
-import 'package:buzzer/screens/home/home.dart';
-import 'package:buzzer/screens/settings/settings.dart';
-import 'package:buzzer/screens/tasks/tasks.dart';
-import 'package:buzzer/screens/timetable/timetable.dart';
 import 'package:buzzer/services/auth_service.dart';
+import 'package:buzzer/style/text_style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+class AddAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+  final VoidCallback? onPressed;
+
+  const AddAppBarWidget({
+    Key? key,
+    required this.title,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Size get preferredSize => const Size.fromHeight(60.0);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      iconTheme: const IconThemeData(
+        color: Colors.black,
+      ),
+      title: Text(
+        title,
+        style: appBarTextStyle,
+      ),
+      titleSpacing: 0.0,
+      actions: <Widget>[
+        IconButton(
+          iconSize: 30.0,
+          icon: Icon(
+            Icons.add_box_rounded,
+            color: BuzzerColors.orange,
+          ),
+          onPressed: onPressed,
+        ),
+      ],
+    );
+  }
+}
+
+class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+
+  const AppBarWidget({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+
+  @override
+  Size get preferredSize => const Size.fromHeight(60.0);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      iconTheme: const IconThemeData(
+        color: Colors.black,
+      ),
+      title: Text(
+        title,
+        style: appBarTextStyle,
+      ),
+      titleSpacing: 0.0,
+    );
+  }
+}
 
 class MenuDrawer extends StatefulWidget {
   const MenuDrawer({

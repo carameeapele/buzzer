@@ -1,9 +1,6 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/screens/settings/account_settings.dart';
-import 'package:buzzer/style/text_style.dart';
-import 'package:buzzer/widgets/app_bar_widget.dart';
-import 'package:buzzer/widgets/menu_drawer_widget.dart';
-import 'package:buzzer/widgets/filled_text_button_widget.dart';
+import 'package:buzzer/widgets/buttons.dart';
+import 'package:buzzer/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {

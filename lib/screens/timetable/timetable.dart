@@ -1,11 +1,7 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/models/class_model.dart';
 import 'package:buzzer/screens/timetable/class_list.dart';
-import 'package:buzzer/widgets/add_app_bar_widget.dart';
-import 'package:buzzer/widgets/menu_drawer_widget.dart';
-
+import 'package:buzzer/widgets/navigation.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 
 class TimetableScreen extends StatefulWidget {
   const TimetableScreen({Key? key}) : super(key: key);

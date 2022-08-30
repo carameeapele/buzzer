@@ -1,8 +1,7 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/tasks/edit_task_screen.dart';
-import 'package:buzzer/widgets/add_app_bar_widget.dart';
-import 'package:buzzer/widgets/menu_drawer_widget.dart';
+import 'package:buzzer/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
@@ -172,7 +171,7 @@ class _TasksScreenState extends State<TasksScreen> {
   ) {
     return RichText(
       text: TextSpan(
-        text: category,
+        text: (category.compareTo('None') == 0) ? '' : category,
         style: TextStyle(
           color: complete ? BuzzerColors.grey : Colors.black,
           fontSize: 17.0,

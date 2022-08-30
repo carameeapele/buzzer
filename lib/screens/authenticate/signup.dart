@@ -1,10 +1,8 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/models/user_model.dart';
 import 'package:buzzer/screens/loading.dart';
 import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/widgets/filled_text_button_widget.dart';
+import 'package:buzzer/widgets/buttons.dart';
 import 'package:buzzer/widgets/form_field.dart';
-import 'package:buzzer/widgets/spacer_button.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {

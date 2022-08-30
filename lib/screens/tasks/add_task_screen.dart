@@ -1,12 +1,10 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/categories.dart';
-import 'package:buzzer/widgets/app_bar_widget.dart';
-import 'package:buzzer/widgets/filled_text_button_widget.dart';
+import 'package:buzzer/widgets/buttons.dart';
 import 'package:buzzer/widgets/form_field.dart';
-import 'package:buzzer/widgets/outlined_text_button_widget.dart';
+import 'package:buzzer/widgets/navigation.dart';
 import 'package:buzzer/widgets/text_row.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';

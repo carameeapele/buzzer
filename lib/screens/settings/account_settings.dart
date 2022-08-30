@@ -1,7 +1,7 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/services/auth_service.dart';
-import 'package:buzzer/widgets/app_bar_widget.dart';
-import 'package:buzzer/widgets/filled_text_button_widget.dart';
+import 'package:buzzer/widgets/buttons.dart';
+import 'package:buzzer/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 
 class AccountSettings extends StatefulWidget {
