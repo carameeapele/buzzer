@@ -1,5 +1,6 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/models/class_model.dart';
+import 'package:buzzer/models/course_model.dart';
+import 'package:buzzer/screens/timetable/edit_class.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
@@ -39,11 +40,14 @@ class _ClassListState extends State<ClassList> {
       ),
     );
 
-    return ValueListenableBuilder<Box<Class>>(
-      valueListenable: Hive.box<Class>('classes').listenable(),
+    return ValueListenableBuilder<Box<Course>>(
+      valueListenable: Hive.box<Course>('classes').listenable(),
       builder: (context, box, widget) {
-        final classes = box.values.toList().cast<Class>();
+        final classes = box.values.toList().cast<Course>();
         classes.removeWhere((element) => element.day.compareTo(day) != 0);
+        if (classes.isNotEmpty) {
+          classes.sort((a, b) => a.startTime.compareTo(b.startTime));
+        }
 
         return classes.isEmpty
             ? defaultScreen
@@ -51,7 +55,7 @@ class _ClassListState extends State<ClassList> {
                 shrinkWrap: true,
                 itemCount: classes.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Class dayClass = classes[index];
+                  Course dayClass = classes[index];
 
                   return Card(
                     elevation: 0.0,
@@ -63,49 +67,25 @@ class _ClassListState extends State<ClassList> {
                       data: data,
                       child: ExpansionTile(
                         tilePadding:
-                            const EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 0.0),
-                        title: title(dayClass.title, dayClass.type),
-                        trailing: trailing(dayClass.startTime),
+                            const EdgeInsets.symmetric(horizontal: 20.0),
+                        title: _title(dayClass.title, dayClass.type),
+                        trailing:
+                            _trailing(dayClass.startTime, dayClass.endTime),
                         childrenPadding: const EdgeInsets.symmetric(
-                          horizontal: 15.0,
+                          horizontal: 20.0,
                           vertical: 0.0,
                         ),
                         expandedCrossAxisAlignment: CrossAxisAlignment.start,
                         expandedAlignment: Alignment.centerLeft,
                         children: <Widget>[
+                          _details(dayClass),
+                          dayClass.details.isNotEmpty
+                              ? const SizedBox(height: 10.0)
+                              : const SizedBox(),
                           dayClass.details.isNotEmpty
                               ? Text(dayClass.details)
                               : const SizedBox(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {});
-                                },
-                                child: const Text(
-                                  'Edit',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 5.0,
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  _deleteClass(dayClass);
-                                },
-                                child: const Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          _options(dayClass),
                         ],
                       ),
                     ),
@@ -116,17 +96,17 @@ class _ClassListState extends State<ClassList> {
     );
   }
 
-  void _deleteClass(Class dayClass) {
+  void _deleteClass(Course dayClass) {
     dayClass.delete();
   }
 
-  RichText title(
+  RichText _title(
     String title,
-    String tag,
+    String type,
   ) {
     return RichText(
       text: TextSpan(
-        text: tag,
+        text: (type.compareTo('None') == 0) ? '' : type,
         style: const TextStyle(
           color: Colors.black,
           fontSize: 17.0,
@@ -134,7 +114,7 @@ class _ClassListState extends State<ClassList> {
         ),
         children: <TextSpan>[
           TextSpan(
-            text: ' $title',
+            text: '  $title',
             style: const TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
@@ -146,13 +126,75 @@ class _ClassListState extends State<ClassList> {
     );
   }
 
-  Text trailing(DateTime date) {
+  Text _trailing(DateTime startTime, DateTime endTime) {
     return Text(
-      '${DateFormat('dd MMM', 'en_US').format(date)}  ',
+      '${DateFormat('Hm', 'en_US').format(startTime)}\n${DateFormat('Hm').format(endTime)}',
       style: const TextStyle(
         color: Colors.black,
         fontSize: 16.0,
       ),
+    );
+  }
+
+  Row _details(Course classs) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Icon(
+          Icons.meeting_room,
+          size: 18.0,
+          color: BuzzerColors.orange,
+        ),
+        const SizedBox(width: 5.0),
+        classs.room.isNotEmpty ? Text(classs.room) : const SizedBox(),
+        const SizedBox(width: 10.0),
+        Icon(
+          Icons.alternate_email_rounded,
+          size: 18.0,
+          color: BuzzerColors.orange,
+        ),
+        const SizedBox(width: 5.0),
+        classs.professorEmail.isNotEmpty
+            ? Text(classs.professorEmail)
+            : const Text(''),
+      ],
+    );
+  }
+
+  Row _options(Course dayClass) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EditClass(classs: dayClass),
+              ),
+            );
+          },
+          child: const Text(
+            'Edit',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 5.0,
+        ),
+        TextButton(
+          onPressed: () {
+            _deleteClass(dayClass);
+          },
+          child: const Text(
+            'Delete',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -34,7 +34,7 @@ class _ProjectsListState extends State<ProjectsList> {
           ),
           const SizedBox(height: 5.0),
           Text(
-            'Click + to add an event',
+            'Click + to add a project',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Roboto',
@@ -50,6 +50,7 @@ class _ProjectsListState extends State<ProjectsList> {
       valueListenable: Hive.box<Project>('projects').listenable(),
       builder: (context, box, widget) {
         final projects = box.values.toList().cast<Project>();
+        projects.sort((a, b) => a.date.compareTo(b.date));
 
         return projects.isEmpty
             ? defaultScreen
@@ -57,7 +58,7 @@ class _ProjectsListState extends State<ProjectsList> {
                 shrinkWrap: true,
                 itemCount: projects.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Project project = projects[index];
+                  final project = projects[index];
                   DateTime now = DateTime.now();
                   bool _isToday = (project.date.day == now.day &&
                       project.date.month == now.month &&
@@ -81,8 +82,8 @@ class _ProjectsListState extends State<ProjectsList> {
                       child: ExpansionTile(
                         tilePadding:
                             const EdgeInsets.symmetric(horizontal: 20.0),
-                        title: title(
-                            project.title, project.category, project.time),
+                        title: title(project.title, project.category,
+                            project.date, project.time),
                         trailing: trailing(project.date, project.time),
                         childrenPadding: const EdgeInsets.symmetric(
                           horizontal: 15.0,
@@ -105,18 +106,24 @@ class _ProjectsListState extends State<ProjectsList> {
   RichText title(
     String title,
     String category,
+    DateTime date,
     DateTime time,
   ) {
+    DateTime now = DateTime.now();
+    bool _isBefore = (date.isBefore(now));
+
     return RichText(
       text: TextSpan(
         text: (category.compareTo('None') == 0) ? '' : category,
         style: TextStyle(
-          color:
-              time.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
+          color: (_isBefore && time.isBefore(now))
+              ? BuzzerColors.grey
+              : Colors.black,
           fontSize: 17.0,
           fontStyle: FontStyle.italic,
-          decoration:
-              time.isAfter(DateTime.now()) ? null : TextDecoration.lineThrough,
+          decoration: (_isBefore && time.isBefore(now))
+              ? TextDecoration.lineThrough
+              : null,
           decorationThickness: 2.0,
         ),
         children: <TextSpan>[
@@ -135,13 +142,18 @@ class _ProjectsListState extends State<ProjectsList> {
 
   Text trailing(DateTime date, DateTime time) {
     DateTime now = DateTime.now();
+    bool _isToday = (date.day == now.day &&
+        date.month == now.month &&
+        date.year == now.year);
 
     return Text(
-      (date.day == now.day && date.month == now.month && date.year == now.year)
+      _isToday
           ? DateFormat('Hm', 'en_US').format(time)
           : DateFormat('dd MMM', 'en_US').format(date),
       style: TextStyle(
-        color: time.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
+        color: ((date.isBefore(now) && time.isBefore(now)))
+            ? BuzzerColors.grey
+            : Colors.black,
         fontSize: 16.0,
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:buzzer/main.dart';
+import 'package:buzzer/screens/timetable/add_class.dart';
 import 'package:buzzer/screens/timetable/class_list.dart';
 import 'package:buzzer/widgets/navigation.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +15,6 @@ class _TimetableScreenState extends State<TimetableScreen>
     with TickerProviderStateMixin {
   bool loading = false;
 
-  AddAppBarWidget appBar = AddAppBarWidget(
-    title: 'Timetable',
-    onPressed: () {},
-  );
-
   @override
   void initState() {
     super.initState();
@@ -26,13 +22,19 @@ class _TimetableScreenState extends State<TimetableScreen>
 
   @override
   Widget build(BuildContext context) {
-    TabController _tabController = TabController(
+    DateTime now = DateTime.now();
+    late int initialIndex = now.weekday - 1;
+
+    TabController _controller = TabController(
+      initialIndex: initialIndex,
       length: 5,
       vsync: this,
     );
 
+    AppBarWidget appBar = const AppBarWidget(title: 'Timetable');
+
     TabBar tabBar = TabBar(
-      controller: _tabController,
+      controller: _controller,
       isScrollable: true,
       labelColor: Colors.black,
       labelStyle: const TextStyle(
@@ -59,7 +61,7 @@ class _TimetableScreenState extends State<TimetableScreen>
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: appBar,
-      drawer: const MenuDrawer(),
+      endDrawer: const MenuDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -69,9 +71,9 @@ class _TimetableScreenState extends State<TimetableScreen>
             height: height,
             width: double.maxFinite,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: TabBarView(
-                controller: _tabController,
+                controller: _controller,
                 children: const <Widget>[
                   ClassList(day: 'Monday'),
                   ClassList(day: 'Tuesday'),
@@ -83,6 +85,43 @@ class _TimetableScreenState extends State<TimetableScreen>
             ),
           ),
         ],
+      ),
+      floatingActionButton: IconButton(
+        icon: Icon(
+          Icons.add_box,
+          color: BuzzerColors.orange,
+        ),
+        iconSize: 35.0,
+        padding: const EdgeInsets.all(0.0),
+        onPressed: () {
+          switch (_controller.index) {
+            case 0:
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AddClass(day: 'Monday'),
+              ));
+              break;
+            case 1:
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AddClass(day: 'Tuesday'),
+              ));
+              break;
+            case 2:
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AddClass(day: 'Wednesday'),
+              ));
+              break;
+            case 3:
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AddClass(day: 'Thursday'),
+              ));
+              break;
+            case 4:
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AddClass(day: 'Friday'),
+              ));
+              break;
+          }
+        },
       ),
     );
   }

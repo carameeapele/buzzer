@@ -20,6 +20,7 @@ class _TodayTasksState extends State<TodayTasks> {
         builder: (context, box, widget) {
           final tasks = box.values.toList().cast<Task>();
           tasks.removeWhere((task) => task.complete == true);
+          tasks.sort((a, b) => a.date.compareTo(b.date));
 
           return tasks.isEmpty
               ? FilledTextButtonWidget(
@@ -40,12 +41,23 @@ class _TodayTasksState extends State<TodayTasks> {
                       itemCount: tasks.length > 3 ? 3 : tasks.length,
                       itemBuilder: (BuildContext context, int index) {
                         Task task = tasks[index];
+                        DateTime now = DateTime.now();
+                        bool _isToday = (task.date.day == now.day &&
+                            task.date.month == now.month &&
+                            task.date.year == now.year);
+
                         return Card(
                           elevation: 0.0,
-                          color: BuzzerColors.lightGrey,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
+                          color:
+                              _isToday ? Colors.white : BuzzerColors.lightGrey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10.0)),
+                            side: BorderSide(
+                              color: _isToday
+                                  ? BuzzerColors.orange
+                                  : Colors.transparent,
+                              width: 2.0,
                             ),
                           ),
                           child: ListTile(
@@ -79,7 +91,10 @@ class _TodayTasksState extends State<TodayTasks> {
                               ),
                             ),
                             trailing: Text(
-                              DateFormat('dd MMM', 'en_US').format(task.date),
+                              _isToday
+                                  ? DateFormat('Hm').format(task.time)
+                                  : DateFormat('dd MMM', 'en_US')
+                                      .format(task.date),
                               style: TextStyle(
                                 fontSize: 16.0,
                                 color: task.date.isAfter(DateTime.now())

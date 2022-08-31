@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 TextStyle subtitleTextStyle = const TextStyle(
   color: Colors.black,
   fontFamily: 'Roboto',
-  fontWeight: FontWeight.w700,
-  fontSize: 18.0,
+  fontWeight: FontWeight.w600,
+  fontSize: 16.0,
 );
 
 TextStyle appBarTextStyle = const TextStyle(

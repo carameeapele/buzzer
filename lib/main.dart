@@ -1,17 +1,14 @@
 import 'package:buzzer/adapters/category.adapter.dart';
-import 'package:buzzer/adapters/class.adapter.dart';
+import 'package:buzzer/adapters/course.adapter.dart';
 import 'package:buzzer/adapters/datetime.adapter.dart';
 import 'package:buzzer/adapters/exam.adapter.dart';
 import 'package:buzzer/adapters/project.adapter.dart';
 import 'package:buzzer/models/category_model.dart';
-import 'package:buzzer/models/class_model.dart';
+import 'package:buzzer/models/course_model.dart';
 import 'package:buzzer/models/exam_model.dart';
 import 'package:buzzer/models/project_model.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/adapters/task.adapter.dart';
-import 'package:buzzer/screens/authenticate/authenticate.dart';
-import 'package:buzzer/screens/authenticate/signin.dart';
-import 'package:buzzer/screens/authenticate/signup.dart';
 import 'package:buzzer/screens/events/exams/add_exam.dart';
 import 'package:buzzer/screens/events/projects/add_project.dart';
 import 'package:buzzer/screens/events/events.dart';
@@ -23,13 +20,11 @@ import 'package:buzzer/screens/tasks/add_task_screen.dart';
 import 'package:buzzer/screens/tasks/tasks.dart';
 import 'package:buzzer/screens/categories.dart';
 import 'package:buzzer/screens/timetable/timetable.dart';
-import 'package:buzzer/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,17 +33,18 @@ Future main() async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(DateTimeAdapter());
-  Hive.registerAdapter(CategoryAdapter());
+  Hive.registerAdapter(TimeOfDayAdapter());
   Hive.registerAdapter(TaskAdapter());
   Hive.registerAdapter(ExamAdapter());
   Hive.registerAdapter(ProjectAdapter());
-  Hive.registerAdapter(ClassAdapter());
+  Hive.registerAdapter(CourseAdapter());
+  Hive.registerAdapter(CategoryAdapter());
 
   await Hive.openBox<Task>('tasks');
   await Hive.openBox<Category>('categories');
   await Hive.openBox<Exam>('exams');
   await Hive.openBox<Project>('projects');
-  await Hive.openBox<Class>('classes');
+  await Hive.openBox<Course>('classes');
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -65,8 +61,6 @@ class MyApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initialize = ref.watch(firebaseInitializerProvider);
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Buzzer',
@@ -77,30 +71,8 @@ class MyApp extends ConsumerWidget {
         fontFamily: 'Roboto',
       ),
       // try adding a splash screen
-      home: initialize.when(
-        data: (data) {
-          return const Wrapper();
-        },
-        error: (Object error, StackTrace? stackTrace) {
-          return Container();
-        },
-        loading: () {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-              widthFactor: 50.0,
-              heightFactor: 50.0,
-              child: Image.asset('assets/media/buzzer_icon.png'),
-            ),
-          );
-        },
-      ),
+      home: const Home(),
       routes: {
-        '/wrapper': (context) => const Wrapper(),
-        '/authenticate': (context) => const Authenticate(),
-        '/signin': (context) => const SignIn(),
-        '/signup': (context) => const SignUp(),
-        '/home': (context) => const Home(),
         '/events': (context) => const EventsScreen(),
         '/add_exam': (context) => const AddExamScreen(),
         '/add_project': (context) => const AddProjectScreen(),

@@ -182,6 +182,7 @@ class _EditExamState extends State<EditExam> {
                       TextFieldRow(
                         label: 'Room',
                         defaultValue: room,
+                        width: 80.0,
                         onChannge: (value) {
                           room = value;
                         },

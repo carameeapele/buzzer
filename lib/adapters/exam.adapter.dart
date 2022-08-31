@@ -13,13 +13,14 @@ class ExamAdapter extends TypeAdapter<Exam> {
     };
 
     return Exam(
-        id: fields[0] as String,
-        title: fields[1] as String,
-        date: fields[2] as DateTime,
-        time: fields[3] as DateTime,
-        category: fields[4] as String,
-        details: fields[5] as String,
-        room: fields[6] as String);
+      id: fields[0] as String,
+      title: fields[1] as String,
+      date: fields[2] as DateTime,
+      time: fields[3] as DateTime,
+      category: fields[4] as String,
+      details: fields[5] as String,
+      room: fields[6] as String,
+    );
   }
 
   @override

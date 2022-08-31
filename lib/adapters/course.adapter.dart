@@ -1,18 +1,18 @@
-import 'package:buzzer/models/class_model.dart';
+import 'package:buzzer/models/course_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class ClassAdapter extends TypeAdapter<Class> {
+class CourseAdapter extends TypeAdapter<Course> {
   @override
-  final int typeId = 5;
+  final int typeId = 9;
 
   @override
-  Class read(BinaryReader reader) {
+  Course read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
 
-    return Class(
+    return Course(
       id: fields[0] as String,
       title: fields[1] as String,
       day: fields[2] as String,
@@ -25,10 +25,11 @@ class ClassAdapter extends TypeAdapter<Class> {
     );
   }
 
-  void write(BinaryWriter writer, Class obj) {
+  @override
+  void write(BinaryWriter writer, Course obj) {
     writer
       ..writeByte(9)
-      ..write(0)
+      ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.title)
@@ -47,4 +48,14 @@ class ClassAdapter extends TypeAdapter<Class> {
       ..writeByte(8)
       ..write(obj.details);
   }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CourseAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

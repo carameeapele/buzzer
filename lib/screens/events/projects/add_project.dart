@@ -233,12 +233,19 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                         onPressed: () {
                           if (title.isNotEmpty) {
                             final project = Project(
-                                id: _id(),
-                                title: title,
-                                category: category,
-                                date: date,
-                                time: time,
-                                complete: false);
+                              id: _id(),
+                              title: title,
+                              category: category,
+                              date: DateTime(
+                                date.year,
+                                date.month,
+                                date.day,
+                                time.hour,
+                                time.minute,
+                              ),
+                              time: time,
+                              complete: false,
+                            );
 
                             final box = Hive.box<Project>('projects');
                             box.add(project);

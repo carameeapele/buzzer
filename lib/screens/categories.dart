@@ -83,7 +83,7 @@ class _CategoriesState extends State<Categories> {
                   OutlinedTextButtonWidget(
                     text: '+ Add Category',
                     onPressed: () {
-                      addCategory();
+                      _addCategory();
                     },
                     color: BuzzerColors.orange,
                   ),
@@ -96,7 +96,7 @@ class _CategoriesState extends State<Categories> {
     );
   }
 
-  Future addCategory() {
+  Future _addCategory() {
     return showDialog(
       context: context,
       builder: (contex) => AlertDialog(
@@ -114,7 +114,16 @@ class _CategoriesState extends State<Categories> {
             onPressed: () {
               final category = Category(name: newCategoryName, uses: 1);
               final box = Hive.box<Category>('categories');
-              box.add(category);
+              final categories = box.values.toList().cast<Category>();
+
+              final index = categories.indexWhere(
+                  (element) => element.name.compareTo(category.name) == 0);
+              if (index == -1) {
+                box.add(category);
+              } else {
+                category.uses++;
+                category.save();
+              }
 
               Navigator.of(context, rootNavigator: true).pop();
             },

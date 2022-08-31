@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 
-@HiveType(typeId: 5)
-class Class extends HiveObject {
+@HiveType(typeId: 9)
+class Course extends HiveObject {
   @HiveField(0)
   late String id;
 
@@ -21,15 +21,15 @@ class Class extends HiveObject {
   late DateTime endTime;
 
   @HiveField(6)
-  String room = '';
+  late String room;
 
   @HiveField(7)
-  String professorEmail = '';
+  late String professorEmail;
 
   @HiveField(8)
-  String details = '';
+  late String details;
 
-  Class({
+  Course({
     required this.id,
     required this.title,
     required this.day,

@@ -248,7 +248,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             final task = Task(
                               id: _id(),
                               title: title,
-                              date: date,
+                              date: DateTime(date.year, date.month, date.day,
+                                  time.hour, time.minute),
                               time: time,
                               category: category,
                               details: details,

@@ -27,90 +27,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   late String category = widget.task.category;
   late String details = widget.task.details;
 
-  Future selectTime() async {
-    TimeOfDay initialTime = TimeOfDay.fromDateTime(time);
-
-    TimeOfDay? selectedTime = await showTimePicker(
-      context: context,
-      initialTime: initialTime,
-      initialEntryMode: TimePickerEntryMode.input,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: BuzzerColors.orange,
-              onPrimary: Colors.white,
-              onSecondary: Colors.black,
-            ),
-          ),
-          child: MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child!,
-          ),
-        );
-      },
-    );
-
-    if (selectedTime != null) {
-      setState(() {
-        time = DateTime(
-          date.year,
-          date.month,
-          date.day,
-          selectedTime.hour,
-          selectedTime.minute,
-        );
-      });
-    }
-  }
-
-  Future<void> _getCategory(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Categories()),
-    );
-
-    if (!mounted) return;
-
-    if (result != null) {
-      setState(() {
-        category = result;
-      });
-    }
-  }
-
-  Future selectDate() async {
-    DateTime? selectedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate:
-            DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.light(
-                primary: BuzzerColors.orange,
-                onPrimary: Colors.white,
-                onSecondary: Colors.black,
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  primary: BuzzerColors.orange,
-                ),
-              ),
-            ),
-            child: child!,
-          );
-        });
-
-    if (selectedDate != null) {
-      setState(() {
-        date = selectedDate;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,13 +78,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                           'd MMMM',
                         ).format(date),
                         icon: false,
-                        onPressed: selectDate,
+                        onPressed: _selectDate,
                       ),
                       TextButtonRow(
                         label: 'Time',
                         text: DateFormat.Hm().format(time),
                         icon: false,
-                        onPressed: selectTime,
+                        onPressed: _selectTime,
                       ),
                       TextButtonRow(
                         label: 'Category',
@@ -257,6 +173,90 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         ),
       ),
     );
+  }
+
+  Future _selectTime() async {
+    TimeOfDay initialTime = TimeOfDay.fromDateTime(time);
+
+    TimeOfDay? selectedTime = await showTimePicker(
+      context: context,
+      initialTime: initialTime,
+      initialEntryMode: TimePickerEntryMode.input,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: BuzzerColors.orange,
+              onPrimary: Colors.white,
+              onSecondary: Colors.black,
+            ),
+          ),
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          ),
+        );
+      },
+    );
+
+    if (selectedTime != null) {
+      setState(() {
+        time = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
+      });
+    }
+  }
+
+  Future<void> _getCategory(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Categories()),
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {
+        category = result;
+      });
+    }
+  }
+
+  Future _selectDate() async {
+    DateTime? selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate:
+            DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: BuzzerColors.orange,
+                onPrimary: Colors.white,
+                onSecondary: Colors.black,
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  primary: BuzzerColors.orange,
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        });
+
+    if (selectedDate != null) {
+      setState(() {
+        date = selectedDate;
+      });
+    }
   }
 
   void _editTransaction() {

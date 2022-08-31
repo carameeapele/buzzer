@@ -50,6 +50,7 @@ class _EventsListState extends State<EventsList> {
       valueListenable: Hive.box<Exam>('exams').listenable(),
       builder: (context, box, widget) {
         final exams = box.values.toList().cast<Exam>();
+        exams.sort((a, b) => a.date.compareTo(b.date));
 
         return exams.isEmpty
             ? defaultScreen
@@ -80,47 +81,22 @@ class _EventsListState extends State<EventsList> {
                       child: ExpansionTile(
                         tilePadding:
                             const EdgeInsets.symmetric(horizontal: 20.0),
-                        title: title(exam.title, exam.category, exam.date),
-                        trailing: trailing(exam.date, exam.time),
+                        title: _title(
+                            exam.title, exam.category, exam.date, exam.time),
+                        trailing: _trailing(exam.date, exam.time),
                         childrenPadding:
                             const EdgeInsets.fromLTRB(20.0, 0.0, 12.0, 0.0),
                         expandedCrossAxisAlignment: CrossAxisAlignment.start,
                         expandedAlignment: Alignment.centerLeft,
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Icon(
-                                Icons.access_time_filled,
-                                size: 18.0,
-                                color: BuzzerColors.orange,
-                              ),
-                              const SizedBox(width: 5.0),
-                              Text(
-                                DateFormat('Hm', 'en_US').format(exam.time),
-                                style: const TextStyle(
-                                  fontFamily: 'Roboto',
-                                ),
-                              ),
-                              const SizedBox(width: 20.0),
-                              Icon(
-                                Icons.meeting_room,
-                                size: 18.0,
-                                color: BuzzerColors.orange,
-                              ),
-                              const SizedBox(width: 5.0),
-                              exam.room.isNotEmpty
-                                  ? Text(exam.room)
-                                  : const SizedBox(),
-                            ],
-                          ),
+                          _details(exam),
                           exam.details.isNotEmpty
                               ? const SizedBox(height: 10.0)
                               : const SizedBox(),
                           exam.details.isNotEmpty
                               ? Text(exam.details)
                               : const SizedBox(),
-                          options(exam),
+                          _options(exam),
                         ],
                       ),
                     ),
@@ -131,21 +107,27 @@ class _EventsListState extends State<EventsList> {
     );
   }
 
-  RichText title(
+  RichText _title(
     String title,
     String tag,
     DateTime date,
+    DateTime time,
   ) {
+    DateTime now = DateTime.now();
+    bool _isBefore = (date.isBefore(now));
+
     return RichText(
       text: TextSpan(
         text: tag,
         style: TextStyle(
-          color:
-              date.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
+          color: (_isBefore && time.isBefore(now))
+              ? BuzzerColors.grey
+              : Colors.black,
           fontSize: 17.0,
           fontStyle: FontStyle.italic,
-          decoration:
-              date.isAfter(DateTime.now()) ? null : TextDecoration.lineThrough,
+          decoration: (_isBefore && time.isBefore(now))
+              ? TextDecoration.lineThrough
+              : null,
           decorationThickness: 2.0,
         ),
         children: <TextSpan>[
@@ -162,15 +144,20 @@ class _EventsListState extends State<EventsList> {
     );
   }
 
-  Text trailing(DateTime date, DateTime time) {
+  Text _trailing(DateTime date, DateTime time) {
     DateTime now = DateTime.now();
+    bool _isToday = (date.day == now.day &&
+        date.month == now.month &&
+        date.year == now.year);
 
     return Text(
-      (date.day == now.day && date.month == now.month && date.year == now.year)
+      _isToday
           ? DateFormat('Hm', 'en_US').format(time)
           : DateFormat('dd MMM', 'en_US').format(date),
       style: TextStyle(
-        color: time.isAfter(DateTime.now()) ? Colors.black : BuzzerColors.grey,
+        color: ((date.isBefore(now) && time.isBefore(now)))
+            ? BuzzerColors.grey
+            : Colors.black,
         fontSize: 16.0,
       ),
     );
@@ -180,7 +167,35 @@ class _EventsListState extends State<EventsList> {
     exam.delete();
   }
 
-  Row options(Exam exam) {
+  Row _details(Exam exam) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Icon(
+          Icons.access_time_filled,
+          size: 18.0,
+          color: BuzzerColors.orange,
+        ),
+        const SizedBox(width: 5.0),
+        Text(
+          DateFormat('Hm', 'en_US').format(exam.time),
+          style: const TextStyle(
+            fontFamily: 'Roboto',
+          ),
+        ),
+        const SizedBox(width: 20.0),
+        Icon(
+          Icons.meeting_room,
+          size: 18.0,
+          color: BuzzerColors.orange,
+        ),
+        const SizedBox(width: 5.0),
+        exam.room.isNotEmpty ? Text(exam.room) : const SizedBox(),
+      ],
+    );
+  }
+
+  Row _options(Exam exam) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[

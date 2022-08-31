@@ -20,16 +20,7 @@ class _EventsScreenState extends State<EventsScreen>
       vsync: this,
     );
 
-    AddAppBarWidget appBar = AddAppBarWidget(
-      title: 'Events',
-      onPressed: () {
-        if (_controller.index == 0) {
-          Navigator.of(context).pushNamed('/add_exam');
-        } else {
-          Navigator.of(context).pushNamed('/add_project');
-        }
-      },
-    );
+    AppBarWidget appBar = const AppBarWidget(title: 'Events');
 
     TabBar tabBar = TabBar(
       controller: _controller,
@@ -57,7 +48,7 @@ class _EventsScreenState extends State<EventsScreen>
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
       appBar: appBar,
-      drawer: const MenuDrawer(),
+      endDrawer: const MenuDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -70,7 +61,7 @@ class _EventsScreenState extends State<EventsScreen>
             height: height,
             width: double.maxFinite,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: TabBarView(
                 controller: _controller,
                 children: const [
@@ -81,6 +72,21 @@ class _EventsScreenState extends State<EventsScreen>
             ),
           ),
         ],
+      ),
+      floatingActionButton: IconButton(
+        icon: Icon(
+          Icons.add_box,
+          color: BuzzerColors.orange,
+        ),
+        iconSize: 35.0,
+        padding: const EdgeInsets.all(0.0),
+        onPressed: () {
+          if (_controller.index == 0) {
+            Navigator.of(context).pushNamed('/add_exam');
+          } else {
+            Navigator.of(context).pushNamed('/add_project');
+          }
+        },
       ),
     );
   }

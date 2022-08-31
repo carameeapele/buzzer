@@ -17,7 +17,6 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     final data = Theme.of(context).copyWith(dividerColor: Colors.transparent);
-    int index = -1;
 
     Widget defaultScreen = Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -45,17 +44,13 @@ class _TasksScreenState extends State<TasksScreen> {
       valueListenable: Hive.box<Task>('tasks').listenable(),
       builder: (context, box, widget) {
         final tasks = box.values.toList().cast<Task>();
+        tasks.sort((a, b) => a.date.compareTo(b.date));
 
         return Scaffold(
-          appBar: AddAppBarWidget(
-            title: 'Tasks',
-            onPressed: () {
-              Navigator.pushNamed(context, '/add_task');
-            },
-          ),
-          drawer: const MenuDrawer(),
+          appBar: const AppBarWidget(title: 'Tasks'),
+          endDrawer: const MenuDrawer(),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 5.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -81,7 +76,8 @@ class _TasksScreenState extends State<TasksScreen> {
                               child: ExpansionTile(
                                 title: title(task.title, task.category,
                                     task.date, task.complete),
-                                subtitle: subtitle(task.complete, task.date),
+                                subtitle: subtitle(
+                                    task.complete, task.date, task.time),
                                 trailing: Checkbox(
                                   value: task.complete,
                                   onChanged: (value) {
@@ -105,41 +101,7 @@ class _TasksScreenState extends State<TasksScreen> {
                                   task.details.isNotEmpty
                                       ? Text(task.details)
                                       : const SizedBox(),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditTaskScreen(task: task),
-                                            ),
-                                          );
-                                        },
-                                        child: const Text(
-                                          'Edit',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 5.0,
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          _deleteTask(task);
-                                        },
-                                        child: const Text(
-                                          'Delete',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  options(task),
                                 ],
                               ),
                             ),
@@ -196,17 +158,25 @@ class _TasksScreenState extends State<TasksScreen> {
   RichText subtitle(
     bool complete,
     DateTime date,
+    DateTime time,
   ) {
+    DateTime now = DateTime.now();
+    bool _isBefore = (date.isBefore(now));
+    bool _isToday = (date.day == now.day &&
+        date.month == now.month &&
+        date.year == now.year);
+
     return RichText(
       text: TextSpan(
-        text: '${DateFormat('dd MMM', 'en_US').format(date)}  ',
+        text: _isToday
+            ? '${DateFormat('Hm').format(time)}  '
+            : '${DateFormat('dd MMM', 'en_US').format(date)}  ',
         style: TextStyle(
           color: complete ? BuzzerColors.grey : Colors.black,
           fontSize: 13.0,
         ),
-        children: date.isAfter(DateTime.now())
-            ? null
-            : <TextSpan>[
+        children: (_isBefore && time.isBefore(now))
+            ? <TextSpan>[
                 TextSpan(
                   text: 'OVERDUE',
                   style: TextStyle(
@@ -214,8 +184,46 @@ class _TasksScreenState extends State<TasksScreen> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-              ],
+              ]
+            : null,
       ),
+    );
+  }
+
+  Row options(Task task) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EditTaskScreen(task: task),
+              ),
+            );
+          },
+          child: const Text(
+            'Edit',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 5.0,
+        ),
+        TextButton(
+          onPressed: () {
+            _deleteTask(task);
+          },
+          child: const Text(
+            'Delete',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

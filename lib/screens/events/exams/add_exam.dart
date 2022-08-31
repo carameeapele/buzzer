@@ -187,6 +187,7 @@ class _AddExamScreenState extends State<AddExamScreen> {
                       TextFieldRow(
                         label: 'Room',
                         defaultValue: '',
+                        width: 80.0,
                         onChannge: (value) {
                           room = value;
                         },
@@ -235,55 +236,67 @@ class _AddExamScreenState extends State<AddExamScreen> {
                 const SizedBox(
                   height: 20.0,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: OutlinedTextButtonWidget(
-                        text: 'Cancel',
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        color: BuzzerColors.orange,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10.0,
-                    ),
-                    Expanded(
-                      child: FilledTextButtonWidget(
-                        text: 'Save',
-                        icon: false,
-                        onPressed: () {
-                          if (title.isNotEmpty) {
-                            final exam = Exam(
-                              id: _id(),
-                              title: title,
-                              date: date,
-                              time: time,
-                              category: category,
-                              details: details,
-                              room: room,
-                            );
-
-                            final box = Hive.box<Exam>('exams');
-                            box.add(exam);
-                          }
-
-                          Navigator.of(context).pop();
-                        },
-                        backgroundColor: BuzzerColors.orange,
-                        textColor: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+                options(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Row options() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: OutlinedTextButtonWidget(
+            text: 'Cancel',
+            onPressed: () {
+              FocusScope.of(context).unfocus();
+              Navigator.of(context).pop();
+            },
+            color: BuzzerColors.orange,
+          ),
+        ),
+        const SizedBox(
+          width: 10.0,
+        ),
+        Expanded(
+          child: FilledTextButtonWidget(
+            text: 'Save',
+            icon: false,
+            onPressed: () {
+              if (title.isNotEmpty) {
+                final exam = Exam(
+                  id: _id(),
+                  title: title,
+                  date: DateTime(
+                    date.year,
+                    date.month,
+                    date.day,
+                    time.hour,
+                    time.minute,
+                  ),
+                  time: time,
+                  category: category,
+                  details: details,
+                  room: room,
+                );
+
+                final box = Hive.box<Exam>('exams');
+                box.add(exam);
+              }
+
+              FocusScope.of(context).unfocus();
+              Navigator.of(context).pop();
+            },
+            backgroundColor: BuzzerColors.orange,
+            textColor: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 }

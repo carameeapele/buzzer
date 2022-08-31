@@ -47,11 +47,13 @@ class TextFieldRow extends StatelessWidget {
     Key? key,
     required this.label,
     required this.defaultValue,
+    required this.width,
     required this.onChannge,
   }) : super(key: key);
 
   final String label;
   final String defaultValue;
+  final double width;
   final Function(String) onChannge;
 
   @override
@@ -69,7 +71,7 @@ class TextFieldRow extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: 80.0,
+          width: width,
           child: TextFormField(
             textDirection: TextDirection.rtl,
             controller: TextEditingController(text: defaultValue),

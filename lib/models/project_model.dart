@@ -1,4 +1,4 @@
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive/hive.dart';
 
 @HiveType(typeId: 4)
 class Project extends HiveObject {
