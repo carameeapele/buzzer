@@ -4,7 +4,6 @@ import 'package:buzzer/models/course_model.dart';
 import 'package:buzzer/screens/timetable/class_types.dart';
 import 'package:buzzer/widgets/buttons.dart';
 import 'package:buzzer/widgets/form_field.dart';
-import 'package:buzzer/widgets/navigation.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -37,7 +36,7 @@ class _EditClassState extends State<EditClass> {
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
-      appBar: const AppBarWidget(title: 'Add Class'),
+      appBar: AppBar(title: const Text('Add Class')),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20.0,

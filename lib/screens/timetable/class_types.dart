@@ -1,7 +1,5 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/widgets/navigation.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 
 class ClassTypes extends StatefulWidget {
   const ClassTypes({
@@ -22,7 +20,7 @@ class _ClassTypesState extends State<ClassTypes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarWidget(title: 'Categories'),
+      appBar: AppBar(title: const Text('Categories')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: SingleChildScrollView(

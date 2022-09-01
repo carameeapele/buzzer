@@ -25,8 +25,6 @@ class TextButtonRow extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            fontFamily: 'Roboto',
-            color: Colors.black,
             fontSize: 15.0,
           ),
         ),
@@ -65,8 +63,6 @@ class TextFieldRow extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            fontFamily: 'Roboto',
-            color: Colors.black,
             fontSize: 15.0,
           ),
         ),

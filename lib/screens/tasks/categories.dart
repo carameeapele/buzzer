@@ -2,31 +2,36 @@ import 'package:buzzer/main.dart';
 import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/widgets/buttons.dart';
 import 'package:buzzer/widgets/form_field.dart';
-import 'package:buzzer/widgets/navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive_flutter/adapters.dart';
 
-class Categories extends StatefulWidget {
-  const Categories({Key? key}) : super(key: key);
+class CategoryPicker extends StatefulWidget {
+  const CategoryPicker({
+    Key? key,
+    required this.selectedCategory,
+  }) : super(key: key);
+
+  final String selectedCategory;
 
   @override
-  State<Categories> createState() => _CategoriesState();
+  State<CategoryPicker> createState() => _CategoryPickerState();
 }
 
-class _CategoriesState extends State<Categories> {
+class _CategoryPickerState extends State<CategoryPicker> {
   late String newCategoryName;
-  late String selectedCategory = 'None';
+  late String selectedCategory = widget.selectedCategory;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppBarWidget(title: 'Categories'),
-      body: ValueListenableBuilder<Box<Category>>(
-        valueListenable: Hive.box<Category>('categories').listenable(),
-        builder: (context, box, widget) {
-          final categories = box.values.toList().cast<Category>();
+    return ValueListenableBuilder<Box<Category>>(
+      valueListenable: Hive.box<Category>('categories').listenable(),
+      builder: (context, box, widget) {
+        final categories = box.values.toList().cast<Category>();
 
-          return Padding(
+        return Scaffold(
+          appBar: AppBar(title: const Text('Categories')),
+          body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: SingleChildScrollView(
               child: Column(
@@ -90,9 +95,9 @@ class _CategoriesState extends State<Categories> {
                 ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

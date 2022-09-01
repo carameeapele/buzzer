@@ -1,4 +1,3 @@
-import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/home/today_schedule.dart';
 import 'package:buzzer/screens/home/today_tasks.dart';
 import 'package:buzzer/style/text_style.dart';
@@ -16,29 +15,15 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final now = DateTime.now();
   bool loading = false;
-  List<Task> tasks = [];
-
-  void getTaskList() {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
       appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-        title: Text(
-          '${DateFormat('d MMM').format(now)}  ${DateFormat('EEEEE').format(now)}',
-          style: const TextStyle(
-            color: Colors.black,
-            fontFamily: 'Roboto',
-            fontSize: 20.0,
-            fontWeight: FontWeight.w900,
-          ),
+        title: title(
+          '${DateFormat('d MMM').format(now)}  ',
+          DateFormat('EEEEE').format(now),
         ),
       ),
       endDrawer: const MenuDrawer(),
@@ -59,6 +44,29 @@ class _HomeState extends State<Home> {
             const TodaySchedule(),
           ],
         ),
+      ),
+    );
+  }
+
+  RichText title(String firstPart, String secondPart) {
+    return RichText(
+      text: TextSpan(
+        text: firstPart,
+        style: const TextStyle(
+          fontFamily: 'Roboto',
+          fontStyle: FontStyle.italic,
+          color: Colors.black,
+          fontSize: 20.0,
+        ),
+        children: <TextSpan>[
+          TextSpan(
+            text: secondPart,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.normal,
+            ),
+          ),
+        ],
       ),
     );
   }

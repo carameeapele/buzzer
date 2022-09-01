@@ -139,10 +139,9 @@ class SmallFilledTextButton extends StatelessWidget {
           children: <Widget>[
             Text(
               text,
-              style: TextStyle(
-                color: textColor,
+              style: const TextStyle(
                 fontFamily: 'Roboto',
-                fontSize: 14.0,
+                fontSize: 16.0,
               ),
             ),
             icon
@@ -160,11 +159,9 @@ class SmallFilledTextButton extends StatelessWidget {
         ),
         style: TextButton.styleFrom(
           padding: const EdgeInsets.symmetric(
-            vertical: 10.0,
-            horizontal: 10.0,
+            vertical: 0.0,
+            horizontal: 0.0,
           ),
-          primary: BuzzerColors.darkGrey,
-          backgroundColor: backgroundColor,
         ));
   }
 }

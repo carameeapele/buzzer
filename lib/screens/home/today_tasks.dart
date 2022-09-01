@@ -23,14 +23,19 @@ class _TodayTasksState extends State<TodayTasks> {
           tasks.sort((a, b) => a.date.compareTo(b.date));
 
           return tasks.isEmpty
-              ? FilledTextButtonWidget(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/add_task');
-                  },
-                  text: 'Add',
-                  icon: true,
-                  backgroundColor: BuzzerColors.lightGrey,
-                  textColor: Colors.black,
+              ? Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      'No Tasks',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 15.0,
+                        color: BuzzerColors.grey,
+                      ),
+                    ),
+                  ),
                 )
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,

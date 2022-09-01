@@ -1,9 +1,8 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/project_model.dart';
-import 'package:buzzer/screens/categories.dart';
+import 'package:buzzer/screens/tasks/categories.dart';
 import 'package:buzzer/widgets/buttons.dart';
 import 'package:buzzer/widgets/form_field.dart';
-import 'package:buzzer/widgets/navigation.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -36,18 +35,9 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       initialTime: initialTime,
       initialEntryMode: TimePickerEntryMode.input,
       builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: BuzzerColors.orange,
-              onPrimary: Colors.white,
-              onSecondary: Colors.black,
-            ),
-          ),
-          child: MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child!,
-          ),
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
         );
       },
     );
@@ -67,28 +57,12 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
 
   Future selectDate() async {
     DateTime? selectedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate:
-            DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.light(
-                primary: BuzzerColors.orange,
-                onPrimary: Colors.white,
-                onSecondary: Colors.black,
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  primary: BuzzerColors.orange,
-                ),
-              ),
-            ),
-            child: child!,
-          );
-        });
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate:
+          DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),
+    );
 
     if (selectedDate != null) {
       setState(() {
@@ -100,7 +74,10 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   Future<void> _getCategory(BuildContext context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const Categories()),
+      MaterialPageRoute(
+          builder: (context) => CategoryPicker(
+                selectedCategory: category,
+              )),
     );
 
     if (!mounted) return;
@@ -115,9 +92,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
-      appBar: const AppBarWidget(title: 'Add Project'),
+      appBar: AppBar(title: const Text('Add Project')),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20.0,

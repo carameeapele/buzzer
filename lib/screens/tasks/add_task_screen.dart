@@ -1,9 +1,8 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/task_model.dart';
-import 'package:buzzer/screens/categories.dart';
+import 'package:buzzer/screens/tasks/categories.dart';
 import 'package:buzzer/widgets/buttons.dart';
 import 'package:buzzer/widgets/form_field.dart';
-import 'package:buzzer/widgets/navigation.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -37,18 +36,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       initialTime: initialTime,
       initialEntryMode: TimePickerEntryMode.input,
       builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: BuzzerColors.orange,
-              onPrimary: Colors.white,
-              onSecondary: Colors.black,
-            ),
-          ),
-          child: MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child!,
-          ),
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
         );
       },
     );
@@ -69,7 +59,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Future<void> _getCategory(BuildContext context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const Categories()),
+      MaterialPageRoute(
+          builder: (context) => CategoryPicker(selectedCategory: category)),
     );
 
     if (!mounted) return;
@@ -83,28 +74,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   Future selectDate() async {
     DateTime? selectedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate:
-            DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.light(
-                primary: BuzzerColors.orange,
-                onPrimary: Colors.white,
-                onSecondary: Colors.black,
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  primary: BuzzerColors.orange,
-                ),
-              ),
-            ),
-            child: child!,
-          );
-        });
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate:
+          DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),
+    );
 
     if (selectedDate != null) {
       setState(() {
@@ -116,13 +91,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      extendBodyBehindAppBar: false,
-      appBar: const AppBarWidget(title: 'Add Task'),
+      appBar: AppBar(title: const Text('Add Task')),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20.0,
-          vertical: 10.0,
+          vertical: 20.0,
         ),
         child: SingleChildScrollView(
           child: ConstrainedBox(
@@ -140,73 +113,41 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     title = value;
                   },
                 ),
-                const SizedBox(
-                  height: 20.0,
+                const Divider(),
+                TextButtonRow(
+                  label: 'Date',
+                  text: DateFormat(
+                    'd MMMM',
+                  ).format(date),
+                  icon: false,
+                  onPressed: selectDate,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5.0,
-                    horizontal: 12.0,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: BuzzerColors.lightGrey,
+                TextButtonRow(
+                  label: 'Time',
+                  text: DateFormat.Hm().format(time),
+                  icon: false,
+                  onPressed: selectTime,
+                ),
+                TextButtonRow(
+                  label: 'Category',
+                  text: category,
+                  icon: true,
+                  onPressed: () {
+                    _getCategory(context);
+                  },
+                ),
+                const Divider(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    TextButtonRow(
+                      label: 'Reminder',
+                      text: '1 hour before',
+                      icon: true,
+                      onPressed: () {},
                     ),
-                    borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      TextButtonRow(
-                        label: 'Date',
-                        text: DateFormat(
-                          'd MMMM',
-                        ).format(date),
-                        icon: false,
-                        onPressed: selectDate,
-                      ),
-                      TextButtonRow(
-                        label: 'Time',
-                        text: DateFormat.Hm().format(time),
-                        icon: false,
-                        onPressed: selectTime,
-                      ),
-                      TextButtonRow(
-                        label: 'Category',
-                        text: category,
-                        icon: true,
-                        onPressed: () {
-                          _getCategory(context);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 3.0, horizontal: 10.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: BuzzerColors.lightGrey,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      TextButtonRow(
-                        label: 'Reminder',
-                        text: '1 hour before',
-                        icon: true,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
                 const SizedBox(
                   height: 20.0,

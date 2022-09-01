@@ -20,19 +20,17 @@ class _EventsScreenState extends State<EventsScreen>
       vsync: this,
     );
 
-    AppBarWidget appBar = const AppBarWidget(title: 'Events');
+    AppBar appBar = AppBar(title: const Text('Events'));
 
     TabBar tabBar = TabBar(
       controller: _controller,
       isScrollable: true,
-      labelColor: Colors.black,
       labelStyle: const TextStyle(
         fontSize: 20.0,
         fontFamily: 'Roboto',
         fontWeight: FontWeight.w700,
       ),
-      unselectedLabelColor: BuzzerColors.grey,
-      indicatorColor: Colors.white,
+      indicatorColor: Colors.transparent,
       tabs: const <Widget>[
         Tab(text: 'Exams'),
         Tab(text: 'Projects'),
@@ -45,7 +43,6 @@ class _EventsScreenState extends State<EventsScreen>
         68.0;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
       appBar: appBar,
       endDrawer: const MenuDrawer(),

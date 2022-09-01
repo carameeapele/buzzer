@@ -1,10 +1,10 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/tasks/edit_task_screen.dart';
+import 'package:buzzer/style/custom_widgets.dart';
 import 'package:buzzer/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:intl/intl.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({Key? key}) : super(key: key);
@@ -47,7 +47,7 @@ class _TasksScreenState extends State<TasksScreen> {
         tasks.sort((a, b) => a.date.compareTo(b.date));
 
         return Scaffold(
-          appBar: const AppBarWidget(title: 'Tasks'),
+          appBar: AppBar(title: const Text('Tasks')),
           endDrawer: const MenuDrawer(),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -63,34 +63,19 @@ class _TasksScreenState extends State<TasksScreen> {
                         itemBuilder: (BuildContext context, int index) {
                           final task = tasks[index];
 
-                          return Card(
-                            elevation: 0.0,
-                            color: BuzzerColors.lightGrey,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10.0),
-                              ),
-                            ),
-                            child: Theme(
+                          return customCard(
+                            Theme(
                               data: data,
                               child: ExpansionTile(
-                                title: title(task.title, task.category,
+                                title: taskTitle(task.title, task.category,
                                     task.date, task.complete),
-                                subtitle: subtitle(
+                                subtitle: taskSubtitle(
                                     task.complete, task.date, task.time),
                                 trailing: Checkbox(
                                   value: task.complete,
                                   onChanged: (value) {
                                     _completeTask(task, value!);
                                   },
-                                  fillColor: MaterialStateProperty.all(
-                                      BuzzerColors.orange),
-                                  checkColor: Colors.white,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(2.7),
-                                    ),
-                                  ),
                                 ),
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 15.0),
@@ -111,6 +96,17 @@ class _TasksScreenState extends State<TasksScreen> {
               ],
             ),
           ),
+          floatingActionButton: IconButton(
+            icon: Icon(
+              Icons.add_box,
+              color: BuzzerColors.orange,
+            ),
+            iconSize: 35.0,
+            padding: const EdgeInsets.all(0.0),
+            onPressed: () {
+              Navigator.of(context).pushNamed('/add_task');
+            },
+          ),
         );
       },
     );
@@ -123,71 +119,6 @@ class _TasksScreenState extends State<TasksScreen> {
 
   void _deleteTask(Task task) {
     task.delete();
-  }
-
-  RichText title(
-    String title,
-    String category,
-    DateTime date,
-    bool complete,
-  ) {
-    return RichText(
-      text: TextSpan(
-        text: (category.compareTo('None') == 0) ? '' : category,
-        style: TextStyle(
-          color: complete ? BuzzerColors.grey : Colors.black,
-          fontSize: 17.0,
-          decoration: complete ? TextDecoration.lineThrough : null,
-          decorationThickness: 2.0,
-          fontStyle: FontStyle.italic,
-        ),
-        children: <TextSpan>[
-          TextSpan(
-            text: ' $title',
-            style: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.normal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  RichText subtitle(
-    bool complete,
-    DateTime date,
-    DateTime time,
-  ) {
-    DateTime now = DateTime.now();
-    bool _isBefore = (date.isBefore(now));
-    bool _isToday = (date.day == now.day &&
-        date.month == now.month &&
-        date.year == now.year);
-
-    return RichText(
-      text: TextSpan(
-        text: _isToday
-            ? '${DateFormat('Hm').format(time)}  '
-            : '${DateFormat('dd MMM', 'en_US').format(date)}  ',
-        style: TextStyle(
-          color: complete ? BuzzerColors.grey : Colors.black,
-          fontSize: 13.0,
-        ),
-        children: (_isBefore && time.isBefore(now))
-            ? <TextSpan>[
-                TextSpan(
-                  text: 'OVERDUE',
-                  style: TextStyle(
-                    color: complete ? BuzzerColors.grey : BuzzerColors.orange,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ]
-            : null,
-      ),
-    );
   }
 
   Row options(Task task) {
@@ -204,9 +135,6 @@ class _TasksScreenState extends State<TasksScreen> {
           },
           child: const Text(
             'Edit',
-            style: TextStyle(
-              color: Colors.black,
-            ),
           ),
         ),
         const SizedBox(

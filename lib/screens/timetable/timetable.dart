@@ -3,6 +3,7 @@ import 'package:buzzer/screens/timetable/add_class.dart';
 import 'package:buzzer/screens/timetable/class_list.dart';
 import 'package:buzzer/widgets/navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 
 class TimetableScreen extends StatefulWidget {
   const TimetableScreen({Key? key}) : super(key: key);
@@ -25,47 +26,75 @@ class _TimetableScreenState extends State<TimetableScreen>
     DateTime now = DateTime.now();
     late int initialIndex = now.weekday - 1;
 
+    final preferences = Hive.box('preferences');
+    late bool? weekendDays =
+        preferences.get('weekendDays', defaultValue: false);
+
+    final int repeatAfter = preferences.get('repeatAfter', defaultValue: 1);
+    int _week = 1;
+
+    void _toggleWeek() {
+      if (repeatAfter == 2) {
+        if (initialIndex >= 4) {
+          _week = 2;
+        }
+      }
+    }
+
     TabController _controller = TabController(
       initialIndex: initialIndex,
-      length: 5,
+      length: weekendDays! ? 7 : 5,
       vsync: this,
     );
-
-    AppBarWidget appBar = const AppBarWidget(title: 'Timetable');
 
     TabBar tabBar = TabBar(
       controller: _controller,
       isScrollable: true,
-      labelColor: Colors.black,
+      indicatorColor: Colors.transparent,
       labelStyle: const TextStyle(
         fontSize: 20.0,
         fontFamily: 'Roboto',
         fontWeight: FontWeight.w700,
       ),
-      unselectedLabelColor: BuzzerColors.grey,
-      indicatorColor: Colors.white,
-      tabs: const <Widget>[
-        Tab(text: 'Monday'),
-        Tab(text: 'Tuesday'),
-        Tab(text: 'Wednesday'),
-        Tab(text: 'Thursday'),
-        Tab(text: 'Friday'),
+      tabs: <Widget>[
+        const Tab(text: 'Monday'),
+        const Tab(text: 'Tuesday'),
+        const Tab(text: 'Wednesday'),
+        const Tab(text: 'Thursday'),
+        const Tab(text: 'Friday'),
+        if (weekendDays) const Tab(text: 'Saturday'),
+        if (weekendDays) const Tab(text: 'Sunday'),
       ],
     );
 
     final double height = MediaQuery.of(context).size.height -
-        appBar.preferredSize.height -
+        AppBar().preferredSize.height -
         MediaQuery.of(context).padding.top -
         68.0;
 
     return Scaffold(
-      extendBodyBehindAppBar: false,
-      appBar: appBar,
+      appBar: AppBar(title: const Text('Timetable')),
       endDrawer: const MenuDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
+          if (repeatAfter == 2)
+            ButtonBar(
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Week 1',
+                    style: TextStyle(),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text('Week 2'),
+                ),
+              ],
+            ),
           tabBar,
           SizedBox(
             height: height,
@@ -74,12 +103,14 @@ class _TimetableScreenState extends State<TimetableScreen>
               padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: TabBarView(
                 controller: _controller,
-                children: const <Widget>[
-                  ClassList(day: 'Monday'),
-                  ClassList(day: 'Tuesday'),
-                  ClassList(day: 'Wednesday'),
-                  ClassList(day: 'Thursday'),
-                  ClassList(day: 'Friday'),
+                children: <Widget>[
+                  const ClassList(day: 'Monday'),
+                  const ClassList(day: 'Tuesday'),
+                  const ClassList(day: 'Wednesday'),
+                  const ClassList(day: 'Thursday'),
+                  const ClassList(day: 'Friday'),
+                  if (weekendDays) const ClassList(day: 'Saturday'),
+                  if (weekendDays) const ClassList(day: 'Sunday'),
                 ],
               ),
             ),
@@ -97,27 +128,28 @@ class _TimetableScreenState extends State<TimetableScreen>
           switch (_controller.index) {
             case 0:
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const AddClass(day: 'Monday'),
+                builder: (context) =>
+                    AddClass(day: 'Monday', week: repeatAfter),
               ));
               break;
             case 1:
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const AddClass(day: 'Tuesday'),
+                builder: (context) => const AddClass(day: 'Tuesday', week: 1),
               ));
               break;
             case 2:
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const AddClass(day: 'Wednesday'),
+                builder: (context) => const AddClass(day: 'Wednesday', week: 1),
               ));
               break;
             case 3:
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const AddClass(day: 'Thursday'),
+                builder: (context) => const AddClass(day: 'Thursday', week: 1),
               ));
               break;
             case 4:
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const AddClass(day: 'Friday'),
+                builder: (context) => const AddClass(day: 'Friday', week: 1),
               ));
               break;
           }

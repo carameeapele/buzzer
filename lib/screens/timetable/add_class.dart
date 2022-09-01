@@ -4,7 +4,6 @@ import 'package:buzzer/models/course_model.dart';
 import 'package:buzzer/screens/timetable/class_types.dart';
 import 'package:buzzer/widgets/buttons.dart';
 import 'package:buzzer/widgets/form_field.dart';
-import 'package:buzzer/widgets/navigation.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -14,9 +13,11 @@ class AddClass extends StatefulWidget {
   const AddClass({
     Key? key,
     required this.day,
+    required this.week,
   }) : super(key: key);
 
   final String day;
+  final int week;
 
   @override
   State<AddClass> createState() => _AddClassState();
@@ -40,9 +41,7 @@ class _AddClassState extends State<AddClass> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      extendBodyBehindAppBar: false,
-      appBar: const AppBarWidget(title: 'Add Class'),
+      appBar: AppBar(title: const Text('Add Class')),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20.0,
@@ -64,84 +63,51 @@ class _AddClassState extends State<AddClass> {
                     title = value;
                   },
                 ),
-                const SizedBox(
-                  height: 20.0,
+                const Divider(),
+                TextButtonRow(
+                  label: 'Start',
+                  text: DateFormat.Hm().format(startTime),
+                  icon: false,
+                  onPressed: _selectStartTime,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5.0,
-                    horizontal: 12.0,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: BuzzerColors.lightGrey,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      TextButtonRow(
-                        label: 'Start',
-                        text: DateFormat.Hm().format(startTime),
-                        icon: false,
-                        onPressed: _selectStartTime,
-                      ),
-                      TextButtonRow(
-                        label: 'End',
-                        text: DateFormat.Hm().format(endTime),
-                        icon: false,
-                        onPressed: _selectEndTime,
-                      ),
-                      TextButtonRow(
-                        label: 'Class Type',
-                        text: type,
-                        icon: true,
-                        onPressed: () {
-                          _getType(context);
-                        },
-                      ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
-                      TextFieldRow(
-                        label: 'Room',
-                        defaultValue: '',
-                        width: 80.0,
-                        onChannge: (value) {
-                          room = value;
-                        },
-                      ),
-                      const SizedBox(height: 5.0),
-                      const SizedBox(height: 5.0),
-                    ],
-                  ),
+                TextButtonRow(
+                  label: 'End',
+                  text: DateFormat.Hm().format(endTime),
+                  icon: false,
+                  onPressed: _selectEndTime,
+                ),
+                TextButtonRow(
+                  label: 'Class Type',
+                  text: type,
+                  icon: true,
+                  onPressed: () {
+                    _getType(context);
+                  },
                 ),
                 const SizedBox(
-                  height: 20.0,
+                  height: 5.0,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 3.0, horizontal: 10.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: BuzzerColors.lightGrey,
+                TextFieldRow(
+                  label: 'Room',
+                  defaultValue: '',
+                  width: 80.0,
+                  onChannge: (value) {
+                    room = value;
+                  },
+                ),
+                const SizedBox(height: 10.0),
+                const Divider(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    TextButtonRow(
+                      label: 'Reminder',
+                      text: '1 hour before',
+                      icon: true,
+                      onPressed: () {},
                     ),
-                    borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      TextButtonRow(
-                        label: 'Reminder',
-                        text: '1 hour before',
-                        icon: true,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
                 const SizedBox(height: 20.0),
                 TextFieldWidget(
@@ -221,6 +187,7 @@ class _AddClassState extends State<AddClass> {
                   room: room,
                   professorEmail: professorEmail,
                   details: details,
+                  week: 1,
                 );
 
                 final classBox = Hive.box<Course>('classes');

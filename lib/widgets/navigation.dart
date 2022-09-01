@@ -1,72 +1,5 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/style/text_style.dart';
 import 'package:flutter/material.dart';
-
-class AddAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final VoidCallback? onPressed;
-
-  const AddAppBarWidget({
-    Key? key,
-    required this.title,
-    required this.onPressed,
-  }) : super(key: key);
-
-  @override
-  Size get preferredSize => const Size.fromHeight(60.0);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      iconTheme: const IconThemeData(
-        color: Colors.black,
-      ),
-      title: Text(
-        title,
-        style: appBarTextStyle,
-      ),
-      actions: <Widget>[
-        IconButton(
-          iconSize: 30.0,
-          icon: Icon(
-            Icons.add_box_rounded,
-            color: BuzzerColors.orange,
-          ),
-          onPressed: onPressed,
-        ),
-      ],
-    );
-  }
-}
-
-class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-
-  const AppBarWidget({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
-
-  @override
-  Size get preferredSize => const Size.fromHeight(60.0);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      iconTheme: const IconThemeData(
-        color: Colors.black,
-      ),
-      title: Text(
-        title,
-        style: appBarTextStyle,
-      ),
-    );
-  }
-}
 
 class MenuDrawer extends StatefulWidget {
   const MenuDrawer({
@@ -169,7 +102,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
           const SizedBox(
             height: 20.0,
           ),
-          (ModalRoute.of(context)!.settings.name == '/home')
+          (ModalRoute.of(context)!.settings.name == '/')
               ? menuItem(
                   text: 'Today',
                   icon: Icons.home_rounded,
@@ -181,7 +114,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
                   icon: Icons.home_rounded,
                   enabled: true,
                   onTap: () {
-                    Navigator.of(context).popAndPushNamed('/home');
+                    Navigator.of(context).popAndPushNamed('/');
                   },
                 ),
           const SizedBox(
