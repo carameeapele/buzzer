@@ -1,6 +1,5 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/task_model.dart';
-import 'package:buzzer/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
