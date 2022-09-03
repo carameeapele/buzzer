@@ -20,6 +20,8 @@ class _TodayScheduleState extends State<TodaySchedule> {
       'Wednesday',
       'Thursday',
       'Friday',
+      'Saturday',
+      'Sunday',
     ];
     final String weekday = weekdays[DateTime.now().weekday - 1];
 
@@ -35,8 +37,6 @@ class _TodayScheduleState extends State<TodaySchedule> {
         todayClasses.removeWhere((todayClass) =>
             (todayClass.endTime.hour < DateTime.now().hour &&
                 todayClass.endTime.minute < DateTime.now().minute));
-
-        int remaining = todayClasses.length - 3;
 
         return todayClasses.isEmpty
             ? Column(
@@ -89,11 +89,11 @@ class _TodayScheduleState extends State<TodaySchedule> {
                       );
                     },
                   ),
-                  remaining > 0
+                  (todayClasses.length - 3) > 0
                       ? ListTile(
                           dense: true,
                           title: Text(
-                            '+ $remaining more',
+                            '+ ${todayClasses.length - 3} more',
                             textAlign: TextAlign.end,
                             style: TextStyle(
                               color: BuzzerColors.orange,

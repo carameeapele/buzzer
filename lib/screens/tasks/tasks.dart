@@ -63,34 +63,31 @@ class _TasksScreenState extends State<TasksScreen> {
                         itemBuilder: (BuildContext context, int index) {
                           final task = tasks[index];
 
-                          return Opacity(
-                            opacity: task.complete ? 0.4 : 1.0,
-                            child: Card(
-                              child: Theme(
-                                data: data,
-                                child: ExpansionTile(
-                                  title: taskTitle(task.title, task.category,
-                                      task.date, task.complete),
-                                  subtitle: taskSubtitle(
-                                      task.complete, task.date, task.time),
-                                  trailing: Checkbox(
-                                    value: task.complete,
-                                    onChanged: (value) {
-                                      _completeTask(task, value!);
-                                    },
-                                  ),
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 15.0),
-                                  expandedCrossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  expandedAlignment: Alignment.centerLeft,
-                                  children: <Widget>[
-                                    task.details.isNotEmpty
-                                        ? Text(task.details)
-                                        : const SizedBox(),
-                                    options(task),
-                                  ],
+                          return customCard(
+                            Theme(
+                              data: data,
+                              child: ExpansionTile(
+                                title: taskTitle(task.title, task.category,
+                                    task.date, task.complete),
+                                subtitle: taskSubtitle(
+                                    task.complete, task.date, task.time),
+                                trailing: Checkbox(
+                                  value: task.complete,
+                                  onChanged: (value) {
+                                    _completeTask(task, value!);
+                                  },
                                 ),
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 15.0),
+                                expandedCrossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                expandedAlignment: Alignment.centerLeft,
+                                children: <Widget>[
+                                  task.details.isNotEmpty
+                                      ? Text(task.details)
+                                      : const SizedBox(),
+                                  options(task),
+                                ],
                               ),
                             ),
                           );
