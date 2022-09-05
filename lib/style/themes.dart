@@ -1,9 +1,27 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/style/custom_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 ThemeData darkTheme = ThemeData(
+  cardTheme: CardTheme(
+    color: Colors.grey[800],
+    elevation: 0.0,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(10.0),
+      ),
+    ),
+  ),
+  textTheme: const TextTheme(
+    bodyText1: TextStyle(),
+    bodyText2: TextStyle(),
+  ).apply(
+    bodyColor: Colors.white,
+    displayColor: Colors.white,
+  ),
+  expansionTileTheme: const ExpansionTileThemeData(
+    textColor: Colors.white,
+    collapsedTextColor: Colors.white,
+  ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.transparent,
     elevation: 0.0,
@@ -58,6 +76,26 @@ ThemeData darkTheme = ThemeData(
 );
 
 ThemeData lightTheme = ThemeData(
+  textTheme: const TextTheme(
+    bodyText1: TextStyle(),
+    bodyText2: TextStyle(),
+  ).apply(
+    bodyColor: Colors.black,
+    displayColor: Colors.black,
+  ),
+  expansionTileTheme: const ExpansionTileThemeData(
+    textColor: Colors.black,
+    collapsedTextColor: Colors.black,
+  ),
+  cardTheme: CardTheme(
+    color: BuzzerColors.lightGrey,
+    elevation: 0.0,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(10.0),
+      ),
+    ),
+  ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.transparent,
     elevation: 0.0,

@@ -41,7 +41,11 @@ class _AddClassState extends State<AddClass> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Class')),
+      appBar: AppBar(
+        title: const Text('Add Class'),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20.0,
@@ -57,7 +61,6 @@ class _AddClassState extends State<AddClass> {
                 TextFieldWidget(
                   labelText: 'Class Name',
                   keyboardType: TextInputType.text,
-                  obscureText: false,
                   textCapitalization: TextCapitalization.words,
                   onChannge: (value) {
                     title = value;
@@ -113,7 +116,6 @@ class _AddClassState extends State<AddClass> {
                 TextFieldWidget(
                   labelText: 'Professor Email',
                   keyboardType: TextInputType.emailAddress,
-                  obscureText: false,
                   textCapitalization: TextCapitalization.none,
                   onChannge: (value) {
                     professorEmail = value;
@@ -123,7 +125,6 @@ class _AddClassState extends State<AddClass> {
                 TextFieldWidget(
                   labelText: 'Details',
                   keyboardType: TextInputType.text,
-                  obscureText: false,
                   textCapitalization: TextCapitalization.none,
                   onChannge: (value) {
                     details = value;

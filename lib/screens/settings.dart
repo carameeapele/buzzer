@@ -24,7 +24,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final preferences = Hive.box('preferences');
-    bool? darkMode = preferences.get('darkMode', defaultValue: false);
+    bool? darkMode = preferences.get('darkMode', defaultValue: true);
     bool? weekendDays = preferences.get('weekendDays', defaultValue: false);
     int? repeatAfter = preferences.get('repeatAfter', defaultValue: 1);
 

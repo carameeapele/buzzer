@@ -1,6 +1,8 @@
+import 'package:buzzer/screens/home/today_events.dart';
 import 'package:buzzer/screens/home/today_schedule.dart';
 import 'package:buzzer/screens/home/today_tasks.dart';
 import 'package:buzzer/style/text_style.dart';
+import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -21,8 +23,8 @@ class _HomeState extends State<Home> {
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
-        title: title(
-          '${DateFormat('d MMM').format(now)}  ',
+        title: todayTitle(
+          DateFormat('d MMM').format(now),
           DateFormat('EEEEE').format(now),
         ),
       ),
@@ -44,29 +46,6 @@ class _HomeState extends State<Home> {
             const TodaySchedule(),
           ],
         ),
-      ),
-    );
-  }
-
-  RichText title(String firstPart, String secondPart) {
-    return RichText(
-      text: TextSpan(
-        text: firstPart,
-        style: const TextStyle(
-          fontFamily: 'Roboto',
-          fontStyle: FontStyle.italic,
-          color: Colors.black,
-          fontSize: 20.0,
-        ),
-        children: <TextSpan>[
-          TextSpan(
-            text: secondPart,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.normal,
-            ),
-          ),
-        ],
       ),
     );
   }

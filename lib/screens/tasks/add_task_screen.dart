@@ -1,7 +1,6 @@
-import 'package:buzzer/main.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/tasks/categories.dart';
-import 'package:buzzer/widgets/buttons.dart';
+import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   String _id() {
     final now = DateTime.now();
-    return now.microsecondsSinceEpoch.toString();
+    return now.millisecondsSinceEpoch.toString();
   }
 
   Future selectTime() async {
@@ -33,8 +32,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     TimeOfDay? selectedTime = await showTimePicker(
       context: context,
-      initialTime: initialTime,
+      initialTime: initialTime.replacing(minute: 0),
       initialEntryMode: TimePickerEntryMode.input,
+      hourLabelText: initialTime.hour.toString(),
+      minuteLabelText: initialTime.minute.toString(),
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
@@ -60,7 +61,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => CategoryPicker(selectedCategory: category)),
+        builder: (context) => CategoryPicker(selectedCategory: category),
+      ),
     );
 
     if (!mounted) return;
@@ -91,7 +93,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Task')),
+      appBar: AppBar(title: const Text('New Task')),
+      bottomNavigationBar: bottomOptions(context, onSave),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20.0,
@@ -107,7 +110,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 TextFieldWidget(
                   labelText: 'Task Name',
                   keyboardType: TextInputType.text,
-                  obscureText: false,
                   textCapitalization: TextCapitalization.words,
                   onChannge: (value) {
                     title = value;
@@ -137,25 +139,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   },
                 ),
                 const Divider(),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    TextButtonRow(
-                      label: 'Reminder',
-                      text: '1 hour before',
-                      icon: true,
-                      onPressed: () {},
-                    ),
-                  ],
+                TextButtonRow(
+                  label: 'Reminder',
+                  text: '1 hour before',
+                  icon: true,
+                  onPressed: () {},
                 ),
-                const SizedBox(
-                  height: 20.0,
-                ),
+                const Divider(),
                 TextFieldWidget(
                   labelText: 'Details',
                   keyboardType: TextInputType.text,
-                  obscureText: false,
                   textCapitalization: TextCapitalization.none,
                   onChannge: (value) {
                     details = value;
@@ -164,56 +157,30 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 const SizedBox(
                   height: 20.0,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: OutlinedTextButtonWidget(
-                        text: 'Cancel',
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        color: BuzzerColors.orange,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10.0,
-                    ),
-                    Expanded(
-                      child: FilledTextButtonWidget(
-                        text: 'Save',
-                        icon: false,
-                        onPressed: () {
-                          if (title.isNotEmpty) {
-                            final task = Task(
-                              id: _id(),
-                              title: title,
-                              date: DateTime(date.year, date.month, date.day,
-                                  time.hour, time.minute),
-                              time: time,
-                              category: category,
-                              details: details,
-                              complete: false,
-                            );
-
-                            final box = Hive.box<Task>('tasks');
-                            box.add(task);
-                          }
-
-                          Navigator.of(context).pop();
-                        },
-                        backgroundColor: BuzzerColors.orange,
-                        textColor: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void onSave() {
+    if (title.isNotEmpty) {
+      final task = Task(
+        id: _id(),
+        title: title,
+        date: DateTime(date.year, date.month, date.day, time.hour, time.minute),
+        time: time,
+        category: category,
+        details: details,
+        complete: false,
+      );
+
+      final box = Hive.box<Task>('tasks');
+      box.add(task);
+    }
+
+    Navigator.of(context).pop();
   }
 }

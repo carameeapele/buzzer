@@ -7,13 +7,17 @@ import 'package:intl/intl.dart';
 final preferences = Hive.box('preferences');
 final darkMode = preferences.get('darkMode', defaultValue: false);
 
-Card customCard(Widget child) {
+Card customCard(Widget child, bool border) {
   return Card(
     color: darkMode ? Colors.grey[800] : BuzzerColors.lightGrey,
     elevation: 0.0,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(
+    shape: RoundedRectangleBorder(
+      borderRadius: const BorderRadius.all(
         Radius.circular(10.0),
+      ),
+      side: BorderSide(
+        color: border ? BuzzerColors.orange : Colors.transparent,
+        width: 2.0,
       ),
     ),
     child: child,
@@ -79,6 +83,7 @@ Widget taskSubtitle(
   bool complete,
   DateTime date,
   DateTime time,
+  String category,
 ) {
   DateTime now = DateTime.now();
   bool _isBefore = (date.isBefore(now));
@@ -86,23 +91,28 @@ Widget taskSubtitle(
       (date.day == now.day && date.month == now.month && date.year == now.year);
 
   return SizedBox(
-    child: Row(
-      children: [
-        Text(
-          _isToday
-              ? '${DateFormat('Hm').format(time)}  '
-              : '${DateFormat('dd MMM', 'en_US').format(date)}  ',
-          style: const TextStyle(fontSize: 13.0),
-        ),
-        if (_isBefore && time.isBefore(now))
+    child: Padding(
+      padding: (category.length > 10)
+          ? const EdgeInsets.only(bottom: 10.0)
+          : const EdgeInsets.only(bottom: 0.0),
+      child: Row(
+        children: [
           Text(
-            'OVERDUE',
-            style: TextStyle(
-              color: BuzzerColors.orange,
-              fontWeight: FontWeight.w700,
+            _isToday
+                ? '${DateFormat('Hm').format(time)}  '
+                : '${DateFormat('dd MMM', 'en_US').format(date)}  ',
+            style: const TextStyle(fontSize: 13.0),
+          ),
+          if (_isBefore && time.isBefore(now))
+            Text(
+              'OVERDUE',
+              style: TextStyle(
+                color: BuzzerColors.orange,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          )
-      ],
+        ],
+      ),
     ),
   );
 }
@@ -138,6 +148,35 @@ Widget bottomOptions(
             },
             backgroundColor: BuzzerColors.orange,
             textColor: Colors.white,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget todayTitle(
+  String firstPart,
+  String secondPart,
+) {
+  return SizedBox(
+    child: Row(
+      children: <Widget>[
+        Text(
+          firstPart,
+          style: const TextStyle(
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.normal,
+            letterSpacing: 0.0,
+          ),
+        ),
+        const SizedBox(
+          width: 10.0,
+        ),
+        Text(
+          secondPart,
+          style: const TextStyle(
+            letterSpacing: 0.0,
           ),
         ),
       ],

@@ -109,7 +109,6 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                 TextFieldWidget(
                   labelText: 'Project Name',
                   keyboardType: TextInputType.text,
-                  obscureText: false,
                   textCapitalization: TextCapitalization.words,
                   onChannge: (value) {
                     title = value;
