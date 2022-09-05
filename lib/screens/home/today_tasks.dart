@@ -1,5 +1,6 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/task_model.dart';
+import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
@@ -50,68 +51,22 @@ class _TodayTasksState extends State<TodayTasks> {
                           task.date.month == now.month &&
                           task.date.year == now.year);
 
-                      return Card(
-                        elevation: 0.0,
-                        color: _isToday ? Colors.white : BuzzerColors.lightGrey,
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10.0)),
-                          side: BorderSide(
-                            color: _isToday
-                                ? BuzzerColors.orange
-                                : Colors.transparent,
-                            width: 2.0,
-                          ),
-                        ),
-                        child: ListTile(
+                      return customCard(
+                        ListTile(
                           dense: true,
-                          title: RichText(
-                            text: TextSpan(
-                              text: task.category.compareTo('None') == 0
-                                  ? ''
-                                  : task.category,
-                              style: TextStyle(
-                                color: task.complete
-                                    ? BuzzerColors.grey
-                                    : Colors.black,
-                                fontSize: 16.0,
-                                decoration: task.complete
-                                    ? TextDecoration.lineThrough
-                                    : null,
-                                decorationThickness: 2.0,
-                                fontStyle: FontStyle.italic,
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: ' ${task.title}',
-                                  style: const TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FontStyle.normal,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          title: taskTitle(task.title, task.category, task.date,
+                              task.complete),
                           trailing: Text(
                             _isToday
                                 ? DateFormat('Hm').format(task.time)
                                 : DateFormat('dd MMM', 'en_US')
                                     .format(task.date),
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: task.date.isAfter(DateTime.now())
-                                  ? Colors.black
-                                  : BuzzerColors.orange,
-                              fontWeight: task.date.isAfter(DateTime.now())
-                                  ? null
-                                  : FontWeight.bold,
-                            ),
                           ),
                           onTap: () {
                             Navigator.of(context).popAndPushNamed('/tasks');
                           },
                         ),
+                        _isToday,
                       );
                     },
                   ),

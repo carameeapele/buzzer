@@ -1,7 +1,7 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/tasks/edit_task_screen.dart';
-import 'package:buzzer/style/custom_widgets.dart';
+import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -63,32 +63,41 @@ class _TasksScreenState extends State<TasksScreen> {
                         itemBuilder: (BuildContext context, int index) {
                           final task = tasks[index];
 
-                          return customCard(
-                            Theme(
-                              data: data,
-                              child: ExpansionTile(
-                                title: taskTitle(task.title, task.category,
-                                    task.date, task.complete),
-                                subtitle: taskSubtitle(
-                                    task.complete, task.date, task.time),
-                                trailing: Checkbox(
-                                  value: task.complete,
-                                  onChanged: (value) {
-                                    _completeTask(task, value!);
-                                  },
+                          DateTime now = DateTime.now();
+                          bool _isToday = (task.date.day == now.day &&
+                              task.date.month == now.month &&
+                              task.date.year == now.year);
+
+                          return Opacity(
+                            opacity: task.complete ? 0.4 : 1.0,
+                            child: customCard(
+                              Theme(
+                                data: data,
+                                child: ExpansionTile(
+                                  title: taskTitle(task.title, task.category,
+                                      task.date, task.complete),
+                                  subtitle: taskSubtitle(task.complete,
+                                      task.date, task.time, task.category),
+                                  trailing: Checkbox(
+                                    value: task.complete,
+                                    onChanged: (value) {
+                                      _completeTask(task, value!);
+                                    },
+                                  ),
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 15.0),
+                                  expandedCrossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  expandedAlignment: Alignment.centerLeft,
+                                  children: <Widget>[
+                                    task.details.isNotEmpty
+                                        ? Text(task.details)
+                                        : const SizedBox(),
+                                    options(task),
+                                  ],
                                 ),
-                                childrenPadding: const EdgeInsets.symmetric(
-                                    horizontal: 15.0),
-                                expandedCrossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                expandedAlignment: Alignment.centerLeft,
-                                children: <Widget>[
-                                  task.details.isNotEmpty
-                                      ? Text(task.details)
-                                      : const SizedBox(),
-                                  options(task),
-                                ],
                               ),
+                              _isToday,
                             ),
                           );
                         },

@@ -126,7 +126,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 TextFieldWidget(
                   labelText: 'Details',
                   keyboardType: TextInputType.text,
-                  obscureText: false,
                   textCapitalization: TextCapitalization.none,
                   onChannge: (value) {
                     details = value;
@@ -180,6 +179,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       context: context,
       initialTime: initialTime,
       initialEntryMode: TimePickerEntryMode.input,
+      hourLabelText: initialTime.hour.toString(),
+      minuteLabelText: initialTime.minute.toString(),
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),

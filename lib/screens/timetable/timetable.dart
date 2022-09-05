@@ -42,8 +42,8 @@ class _TimetableScreenState extends State<TimetableScreen>
     }
 
     TabController _controller = TabController(
-      initialIndex: initialIndex,
-      length: weekendDays! ? 7 : 5,
+      initialIndex: weekendDays! ? initialIndex : 0,
+      length: weekendDays ? 7 : 5,
       vsync: this,
     );
 
@@ -79,22 +79,6 @@ class _TimetableScreenState extends State<TimetableScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          if (repeatAfter == 2)
-            ButtonBar(
-              children: <Widget>[
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Week 1',
-                    style: TextStyle(),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text('Week 2'),
-                ),
-              ],
-            ),
           tabBar,
           SizedBox(
             height: height,

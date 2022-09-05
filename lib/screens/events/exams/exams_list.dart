@@ -1,6 +1,7 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/exam_model.dart';
 import 'package:buzzer/screens/events/exams/edit_exam.dart';
+import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
@@ -59,46 +60,40 @@ class _EventsListState extends State<EventsList> {
                 itemCount: exams.length,
                 itemBuilder: (BuildContext context, int index) {
                   Exam exam = exams[index];
+
                   DateTime now = DateTime.now();
                   bool _isToday = (exam.date.day == now.day &&
                       exam.date.month == now.month &&
                       exam.date.year == now.year);
 
-                  return Card(
-                    elevation: 0.0,
-                    color: _isToday ? Colors.white : BuzzerColors.lightGrey,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(7.0)),
-                      side: BorderSide(
-                        color:
-                            _isToday ? BuzzerColors.orange : Colors.transparent,
-                        width: 2.0,
+                  return Opacity(
+                    opacity: exam.date.isAfter(now) ? 0.4 : 1.0,
+                    child: customCard(
+                      Theme(
+                        data: data,
+                        child: ExpansionTile(
+                          tilePadding:
+                              const EdgeInsets.symmetric(horizontal: 20.0),
+                          title: _title(
+                              exam.title, exam.category, exam.date, exam.time),
+                          trailing: _trailing(exam.date, exam.time),
+                          childrenPadding:
+                              const EdgeInsets.fromLTRB(20.0, 0.0, 12.0, 0.0),
+                          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                          expandedAlignment: Alignment.centerLeft,
+                          children: <Widget>[
+                            _details(exam),
+                            exam.details.isNotEmpty
+                                ? const SizedBox(height: 10.0)
+                                : const SizedBox(),
+                            exam.details.isNotEmpty
+                                ? Text(exam.details)
+                                : const SizedBox(),
+                            _options(exam),
+                          ],
+                        ),
                       ),
-                    ),
-                    child: Theme(
-                      data: data,
-                      child: ExpansionTile(
-                        tilePadding:
-                            const EdgeInsets.symmetric(horizontal: 20.0),
-                        title: _title(
-                            exam.title, exam.category, exam.date, exam.time),
-                        trailing: _trailing(exam.date, exam.time),
-                        childrenPadding:
-                            const EdgeInsets.fromLTRB(20.0, 0.0, 12.0, 0.0),
-                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                        expandedAlignment: Alignment.centerLeft,
-                        children: <Widget>[
-                          _details(exam),
-                          exam.details.isNotEmpty
-                              ? const SizedBox(height: 10.0)
-                              : const SizedBox(),
-                          exam.details.isNotEmpty
-                              ? Text(exam.details)
-                              : const SizedBox(),
-                          _options(exam),
-                        ],
-                      ),
+                      _isToday,
                     ),
                   );
                 },

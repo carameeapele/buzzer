@@ -108,7 +108,6 @@ class _CategoryPickerState extends State<CategoryPicker> {
         content: TextFieldWidget(
           keyboardType: TextInputType.text,
           labelText: 'Category Name',
-          obscureText: false,
           textCapitalization: TextCapitalization.words,
           onChannge: (value) {
             newCategoryName = value;
@@ -125,6 +124,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                   (element) => element.name.compareTo(category.name) == 0);
               if (index == -1) {
                 box.add(category);
+                selectedCategory = category.name;
               } else {
                 category.uses++;
                 category.save();

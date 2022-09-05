@@ -6,14 +6,12 @@ class TextFieldWidget extends StatelessWidget {
     Key? key,
     required this.labelText,
     required this.keyboardType,
-    required this.obscureText,
     required this.textCapitalization,
     required this.onChannge,
   }) : super(key: key);
 
   final String labelText;
   final TextInputType keyboardType;
-  final bool obscureText;
   final TextCapitalization textCapitalization;
   final Function(String) onChannge;
 
@@ -67,7 +65,6 @@ class TextFieldWidget extends StatelessWidget {
         ),
       ),
       onChanged: onChannge,
-      obscureText: obscureText,
       textCapitalization: textCapitalization,
     );
   }

@@ -84,7 +84,8 @@ class _EditExamState extends State<EditExam> {
 
     if (selectedDate != null) {
       setState(() {
-        date = selectedDate;
+        date = DateTime(selectedDate.year, selectedDate.month, selectedDate.day,
+            time.hour, time.minute);
       });
     }
   }

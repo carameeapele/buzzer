@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
     return ValueListenableBuilder<Box>(
       valueListenable: Hive.box('preferences').listenable(),
       builder: (context, box, widget) {
-        final darkMode = box.get('darkMode', defaultValue: false);
+        final darkMode = box.get('darkMode', defaultValue: true);
 
         return MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
 class BuzzerColors {
   static var lightGrey = const Color(0xffF0F0F0);
   static var grey = const Color.fromARGB(255, 160, 160, 160);
-  static var darkGrey = const Color.fromARGB(255, 49, 49, 49);
+  static var darkGrey = const Color.fromARGB(255, 29, 29, 29);
   static var lightOrange = const Color(0xffFFB58B);
   static var orange = const Color(0xffFF823C);
 }

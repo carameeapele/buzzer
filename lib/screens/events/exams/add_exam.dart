@@ -111,7 +111,6 @@ class _AddExamScreenState extends State<AddExamScreen> {
                 TextFieldWidget(
                   labelText: 'Exam Name',
                   keyboardType: TextInputType.text,
-                  obscureText: false,
                   textCapitalization: TextCapitalization.words,
                   onChannge: (value) {
                     title = value;
@@ -203,7 +202,6 @@ class _AddExamScreenState extends State<AddExamScreen> {
                 TextFieldWidget(
                   labelText: 'Details',
                   keyboardType: TextInputType.text,
-                  obscureText: false,
                   textCapitalization: TextCapitalization.none,
                   onChannge: (value) {
                     details = value;
