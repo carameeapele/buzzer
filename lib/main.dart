@@ -20,7 +20,6 @@ import 'package:buzzer/screens/timetable/timetable.dart';
 import 'package:buzzer/style/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive_flutter/adapters.dart';
 
 Future main() async {
