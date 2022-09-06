@@ -33,18 +33,23 @@ class _HomeState extends State<Home> {
         padding: const EdgeInsets.symmetric(
           horizontal: 18.0,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Text('Tasks', style: subtitleTextStyle),
-            const SizedBox(height: 10.0),
-            const TodayTasks(),
-            const SizedBox(height: 10.0),
-            Text('Schedule', style: subtitleTextStyle),
-            const SizedBox(height: 10.0),
-            const TodaySchedule(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text('Tasks', style: subtitleTextStyle),
+              const SizedBox(height: 10.0),
+              const TodayTasks(),
+              const SizedBox(height: 10.0),
+              Text('Schedule', style: subtitleTextStyle),
+
+              // adauga examenele
+
+              const SizedBox(height: 10.0),
+              const TodaySchedule(),
+            ],
+          ),
         ),
       ),
     );

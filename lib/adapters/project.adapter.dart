@@ -11,21 +11,20 @@ class ProjectAdapter extends TypeAdapter<Project> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-
     return Project(
-      id: fields[0] as String,
-      title: fields[1] as String,
-      category: fields[2] as String,
-      date: fields[3] as DateTime,
-      time: fields[4] as DateTime,
-      complete: fields[5] as bool,
-    );
+      fields[0] as String,
+      fields[1] as String,
+      fields[2] as String,
+      fields[3] as DateTime,
+      fields[4] as DateTime,
+      fields[5] as bool,
+    )..tasks = (fields[6] as HiveList).castHiveList();
   }
 
   @override
   void write(BinaryWriter writer, Project obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -37,7 +36,9 @@ class ProjectAdapter extends TypeAdapter<Project> {
       ..writeByte(4)
       ..write(obj.time)
       ..writeByte(5)
-      ..write(obj.complete);
+      ..write(obj.complete)
+      ..writeByte(6)
+      ..write(obj.tasks);
   }
 
   @override

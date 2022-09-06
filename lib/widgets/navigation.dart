@@ -40,7 +40,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
                   text: 'Settings',
                   enabled: true,
                   onTap: () {
-                    Navigator.of(context).popAndPushNamed('/settings');
+                    Navigator.of(context).pushReplacementNamed('/settings');
                   },
                 ),
           const SizedBox(
@@ -56,7 +56,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
                   text: 'Events',
                   enabled: true,
                   onTap: () {
-                    Navigator.of(context).popAndPushNamed('/events');
+                    Navigator.of(context).pushReplacementNamed('/events');
                   },
                 ),
           const SizedBox(
@@ -72,7 +72,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
                   text: 'Timetable',
                   enabled: true,
                   onTap: () {
-                    Navigator.of(context).popAndPushNamed('/timetable');
+                    Navigator.of(context).pushReplacementNamed('/timetable');
                   },
                 ),
           const SizedBox(
@@ -88,7 +88,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
                   text: 'Tasks',
                   enabled: true,
                   onTap: () {
-                    Navigator.of(context).popAndPushNamed('/tasks');
+                    Navigator.of(context).pushReplacementNamed('/tasks');
                   },
                 ),
           const SizedBox(
@@ -104,7 +104,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
                   text: 'Today',
                   enabled: true,
                   onTap: () {
-                    Navigator.of(context).popAndPushNamed('/');
+                    Navigator.of(context).pushReplacementNamed('/');
                   },
                 ),
           const SizedBox(height: 100.0),

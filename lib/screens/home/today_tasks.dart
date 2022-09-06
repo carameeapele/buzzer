@@ -37,40 +37,50 @@ class _TodayTasksState extends State<TodayTasks> {
                   ),
                 ),
               )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: tasks.length > 3 ? 3 : tasks.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Task task = tasks[index];
-                      DateTime now = DateTime.now();
-                      bool _isToday = (task.date.day == now.day &&
-                          task.date.month == now.month &&
-                          task.date.year == now.year);
+            : SizedBox(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: tasks.length > 3 ? 3 : tasks.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Task task = tasks[index];
+                        DateTime now = DateTime.now();
+                        bool _isToday = (task.date.day == now.day &&
+                            task.date.month == now.month &&
+                            task.date.year == now.year);
 
-                      return customCard(
-                        ListTile(
-                          dense: true,
-                          title: taskTitle(task.title, task.category, task.date,
-                              task.complete),
-                          trailing: Text(
-                            _isToday
-                                ? DateFormat('Hm').format(task.time)
-                                : DateFormat('dd MMM', 'en_US')
-                                    .format(task.date),
+                        return customCard(
+                          ListTile(
+                            dense: true,
+                            title: todayTaskTitle(
+                                task.title, task.category, task.date),
+                            trailing: now.isAfter(task.date)
+                                ? Text(
+                                    'OVERDUE',
+                                    style: TextStyle(
+                                      color: BuzzerColors.orange,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                : Text(
+                                    _isToday
+                                        ? DateFormat('Hm').format(task.time)
+                                        : DateFormat('dd MMM', 'en_US')
+                                            .format(task.date),
+                                  ),
+                            onTap: () {
+                              Navigator.of(context).popAndPushNamed('/tasks');
+                            },
                           ),
-                          onTap: () {
-                            Navigator.of(context).popAndPushNamed('/tasks');
-                          },
-                        ),
-                        _isToday,
-                      );
-                    },
-                  ),
-                ],
+                          _isToday,
+                        );
+                      },
+                    ),
+                  ],
+                ),
               );
       },
     );

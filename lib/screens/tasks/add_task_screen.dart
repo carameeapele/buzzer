@@ -17,7 +17,8 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   late String title;
   DateTime date = DateTime.now();
-  late DateTime time = date.add(const Duration(hours: 1));
+  late DateTime time =
+      DateTime(date.year, date.month, date.day, date.hour + 1, 0);
 
   String category = 'None';
   String details = '';
@@ -27,15 +28,117 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     return now.millisecondsSinceEpoch.toString();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: bottomOptions(context, _onSave),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(20.0, 60.0, 20.0, 20.0),
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextFieldWidget(
+                  labelText: 'Task Name',
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.words,
+                  onChannge: (value) {
+                    title = value;
+                  },
+                  validator: (value) {
+                    if (value != null && value.length > 20) {
+                      return 'Maximum 20 characters';
+                    } else {
+                      return null;
+                    }
+                  },
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(10.0)),
+                ),
+                TextFieldWidget(
+                  labelText: 'Details',
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.none,
+                  onChannge: (value) {
+                    details = value;
+                  },
+                  validator: (value) {
+                    return null;
+                  },
+                  borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(10.0)),
+                ),
+                TextButtonRow(
+                  label: 'Date',
+                  text: DateFormat(
+                    'd MMMM',
+                  ).format(date),
+                  icon: false,
+                  onPressed: selectDate,
+                ),
+                TextButtonRow(
+                  label: 'Time',
+                  text: DateFormat.Hm().format(time),
+                  icon: false,
+                  onPressed: selectTime,
+                ),
+                TextButtonRow(
+                  label: 'Category',
+                  text: category,
+                  icon: true,
+                  onPressed: () {
+                    _getCategory(context);
+                  },
+                ),
+                TextButtonRow(
+                  label: 'Reminder',
+                  text: '1 hour before',
+                  icon: true,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _onSave() {
+    if (title.isNotEmpty) {
+      final task = Task(
+        id: _id(),
+        title: title,
+        date: DateTime(
+          date.year,
+          date.month,
+          date.day,
+          time.hour,
+          time.minute,
+        ),
+        time: time,
+        category: category,
+        details: details,
+        complete: false,
+      );
+
+      final box = Hive.box<Task>('tasks');
+      box.add(task);
+
+      Navigator.of(context).pop();
+    }
+  }
+
   Future selectTime() async {
-    TimeOfDay initialTime = TimeOfDay.fromDateTime(time);
+    TimeOfDay initialTime = TimeOfDay.fromDateTime(time).replacing(minute: 0);
 
     TimeOfDay? selectedTime = await showTimePicker(
       context: context,
-      initialTime: initialTime.replacing(minute: 0),
+      initialTime: initialTime,
       initialEntryMode: TimePickerEntryMode.input,
-      hourLabelText: initialTime.hour.toString(),
-      minuteLabelText: initialTime.minute.toString(),
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
@@ -88,99 +191,5 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         date = selectedDate;
       });
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('New Task')),
-      bottomNavigationBar: bottomOptions(context, onSave),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-          vertical: 20.0,
-        ),
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                TextFieldWidget(
-                  labelText: 'Task Name',
-                  keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.words,
-                  onChannge: (value) {
-                    title = value;
-                  },
-                ),
-                const Divider(),
-                TextButtonRow(
-                  label: 'Date',
-                  text: DateFormat(
-                    'd MMMM',
-                  ).format(date),
-                  icon: false,
-                  onPressed: selectDate,
-                ),
-                TextButtonRow(
-                  label: 'Time',
-                  text: DateFormat.Hm().format(time),
-                  icon: false,
-                  onPressed: selectTime,
-                ),
-                TextButtonRow(
-                  label: 'Category',
-                  text: category,
-                  icon: true,
-                  onPressed: () {
-                    _getCategory(context);
-                  },
-                ),
-                const Divider(),
-                TextButtonRow(
-                  label: 'Reminder',
-                  text: '1 hour before',
-                  icon: true,
-                  onPressed: () {},
-                ),
-                const Divider(),
-                TextFieldWidget(
-                  labelText: 'Details',
-                  keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.none,
-                  onChannge: (value) {
-                    details = value;
-                  },
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void onSave() {
-    if (title.isNotEmpty) {
-      final task = Task(
-        id: _id(),
-        title: title,
-        date: DateTime(date.year, date.month, date.day, time.hour, time.minute),
-        time: time,
-        category: category,
-        details: details,
-        complete: false,
-      );
-
-      final box = Hive.box<Task>('tasks');
-      box.add(task);
-    }
-
-    Navigator.of(context).pop();
   }
 }

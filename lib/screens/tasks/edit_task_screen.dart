@@ -1,7 +1,6 @@
-import 'package:buzzer/main.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/tasks/categories.dart';
-import 'package:buzzer/widgets/buttons.dart';
+import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
@@ -29,13 +28,9 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: false,
-      appBar: AppBar(title: const Text('Edit Task')),
+      bottomNavigationBar: bottomOptions(context, _editTask),
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-          vertical: 10.0,
-        ),
+        padding: const EdgeInsets.fromLTRB(20.0, 60.0, 20.0, 20.0),
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(),
@@ -51,25 +46,34 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   onChannge: (value) {
                     title = value;
                   },
+                  validator: (value) {
+                    if (value != null && value.length > 20) {
+                      return 'Maximum 20 characters';
+                    }
+                    return null;
+                  },
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(10.0),
+                  ),
                 ),
-                const SizedBox(
-                  height: 20.0,
+                ValueTextFieldWidget(
+                  labelText: 'Details',
+                  defaultValue: details,
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.none,
+                  onChannge: (value) {
+                    details = value;
+                  },
+                  validator: (value) {
+                    return null;
+                  },
+                  borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(10.0)),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5.0,
-                    horizontal: 12.0,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: BuzzerColors.lightGrey,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-                  ),
+                  padding: const EdgeInsets.fromLTRB(20.0, 15.0, 5.0, 10.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
+                    children: [
                       TextButtonRow(
                         label: 'Date',
                         text: DateFormat(
@@ -92,25 +96,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                           _getCategory(context);
                         },
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 3.0, horizontal: 10.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: BuzzerColors.lightGrey,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
                       TextButtonRow(
                         label: 'Reminder',
                         text: '1 hour before',
@@ -119,50 +104,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                TextFieldWidget(
-                  labelText: 'Details',
-                  keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.none,
-                  onChannge: (value) {
-                    details = value;
-                  },
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: OutlinedTextButtonWidget(
-                        text: 'Cancel',
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        color: BuzzerColors.orange,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10.0,
-                    ),
-                    Expanded(
-                      child: FilledTextButtonWidget(
-                        text: 'Save',
-                        icon: false,
-                        onPressed: () {
-                          _editTransaction();
-                          Navigator.of(context).pop();
-                        },
-                        backgroundColor: BuzzerColors.orange,
-                        textColor: Colors.white,
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
@@ -234,7 +175,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     }
   }
 
-  void _editTransaction() {
+  void _editTask() {
     widget.task.title = title;
     widget.task.date = date;
     widget.task.time = time;
@@ -242,5 +183,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     widget.task.details = details;
 
     widget.task.save();
+    Navigator.of(context).pop();
   }
 }

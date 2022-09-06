@@ -8,61 +8,35 @@ class TextFieldWidget extends StatelessWidget {
     required this.keyboardType,
     required this.textCapitalization,
     required this.onChannge,
+    required this.validator,
+    required this.borderRadius,
   }) : super(key: key);
 
   final String labelText;
   final TextInputType keyboardType;
   final TextCapitalization textCapitalization;
   final Function(String) onChannge;
+  final String? Function(String? value) validator;
+  final BorderRadius borderRadius;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       keyboardType: keyboardType,
       cursorColor: BuzzerColors.orange,
-      validator: (String? value) {
-        return (value!.isEmpty)
-            ? 'Please enter your ${labelText.toLowerCase()}'
-            : null;
-      },
+      validator: validator,
       style: const TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 15.0,
+        fontSize: 16.0,
       ),
       decoration: InputDecoration(
-        labelText: labelText,
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 5.0,
-          horizontal: 12.0,
-        ),
-        floatingLabelStyle: TextStyle(
-          color: BuzzerColors.orange,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-          borderSide: BorderSide(
-            color: BuzzerColors.grey,
-            width: 2.0,
-          ),
-        ),
-        labelStyle: TextStyle(
-          color: BuzzerColors.grey,
-          fontFamily: 'Roboto',
-        ),
+        hintText: labelText,
+        border: OutlineInputBorder(borderRadius: borderRadius),
         focusedBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-          borderSide: BorderSide(
-            color: BuzzerColors.orange,
-            width: 2.0,
-          ),
+          borderRadius: borderRadius,
+          borderSide: BorderSide(color: BuzzerColors.grey),
         ),
-        errorBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(7.0)),
-          borderSide: BorderSide(
-            color: Color.fromARGB(255, 168, 28, 19),
-            width: 2.0,
-          ),
-        ),
+        errorBorder: OutlineInputBorder(borderRadius: borderRadius),
       ),
       onChanged: onChannge,
       textCapitalization: textCapitalization,
@@ -78,6 +52,8 @@ class ValueTextFieldWidget extends StatelessWidget {
     required this.keyboardType,
     required this.textCapitalization,
     required this.onChannge,
+    required this.validator,
+    required this.borderRadius,
   }) : super(key: key);
 
   final String labelText;
@@ -85,56 +61,28 @@ class ValueTextFieldWidget extends StatelessWidget {
   final TextInputType keyboardType;
   final TextCapitalization textCapitalization;
   final Function(String) onChannge;
+  final String? Function(String?) validator;
+  final BorderRadius borderRadius;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: TextEditingController(text: defaultValue),
       keyboardType: keyboardType,
       cursorColor: BuzzerColors.orange,
-      validator: (String? value) {
-        return (value!.isEmpty)
-            ? 'Please enter your ${labelText.toLowerCase()}'
-            : null;
-      },
+      validator: validator,
       style: const TextStyle(
-        fontFamily: 'Roboto',
         fontSize: 15.0,
       ),
       decoration: InputDecoration(
-        labelText: labelText,
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 5.0,
-          horizontal: 12.0,
-        ),
-        floatingLabelStyle: TextStyle(
-          color: BuzzerColors.orange,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-          borderSide: BorderSide(
-            color: BuzzerColors.grey,
-            width: 2.0,
-          ),
-        ),
-        labelStyle: TextStyle(
-          color: BuzzerColors.grey,
-          fontFamily: 'Roboto',
-        ),
+        hintText: labelText,
+        border: OutlineInputBorder(borderRadius: borderRadius),
         focusedBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-          borderSide: BorderSide(
-            color: BuzzerColors.orange,
-            width: 2.0,
-          ),
+          borderRadius: borderRadius,
+          borderSide: BorderSide(color: BuzzerColors.grey),
         ),
-        errorBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(7.0)),
-          borderSide: BorderSide(
-            color: Color.fromARGB(255, 168, 28, 19),
-            width: 2.0,
-          ),
-        ),
+        errorBorder: OutlineInputBorder(borderRadius: borderRadius),
       ),
       onChanged: onChannge,
       textCapitalization: textCapitalization,

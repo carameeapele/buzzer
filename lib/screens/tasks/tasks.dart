@@ -1,4 +1,5 @@
 import 'package:buzzer/main.dart';
+import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/tasks/edit_task_screen.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
@@ -57,50 +58,53 @@ class _TasksScreenState extends State<TasksScreen> {
               children: <Widget>[
                 tasks.isEmpty
                     ? defaultScreen
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: tasks.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final task = tasks[index];
+                    : SizedBox(
+                        height: MediaQuery.of(context).size.height - 150.0,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: tasks.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final task = tasks[index];
 
-                          DateTime now = DateTime.now();
-                          bool _isToday = (task.date.day == now.day &&
-                              task.date.month == now.month &&
-                              task.date.year == now.year);
+                            DateTime now = DateTime.now();
+                            bool _isToday = (task.date.day == now.day &&
+                                task.date.month == now.month &&
+                                task.date.year == now.year);
 
-                          return Opacity(
-                            opacity: task.complete ? 0.4 : 1.0,
-                            child: customCard(
-                              Theme(
-                                data: data,
-                                child: ExpansionTile(
-                                  title: taskTitle(task.title, task.category,
-                                      task.date, task.complete),
-                                  subtitle: taskSubtitle(task.complete,
-                                      task.date, task.time, task.category),
-                                  trailing: Checkbox(
-                                    value: task.complete,
-                                    onChanged: (value) {
-                                      _completeTask(task, value!);
-                                    },
+                            return Opacity(
+                              opacity: task.complete ? 0.4 : 1.0,
+                              child: customCard(
+                                Theme(
+                                  data: data,
+                                  child: ExpansionTile(
+                                    title: taskTitle(task.title, task.category,
+                                        task.date, task.complete),
+                                    subtitle: taskSubtitle(task.complete,
+                                        task.date, task.time, task.category),
+                                    trailing: Checkbox(
+                                      value: task.complete,
+                                      onChanged: (value) {
+                                        _completeTask(task, value!);
+                                      },
+                                    ),
+                                    childrenPadding: const EdgeInsets.symmetric(
+                                        horizontal: 15.0),
+                                    expandedCrossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    expandedAlignment: Alignment.centerLeft,
+                                    children: <Widget>[
+                                      task.details.isNotEmpty
+                                          ? Text(task.details)
+                                          : const SizedBox(),
+                                      options(task),
+                                    ],
                                   ),
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 15.0),
-                                  expandedCrossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  expandedAlignment: Alignment.centerLeft,
-                                  children: <Widget>[
-                                    task.details.isNotEmpty
-                                        ? Text(task.details)
-                                        : const SizedBox(),
-                                    options(task),
-                                  ],
                                 ),
+                                _isToday,
                               ),
-                              _isToday,
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
               ],
             ),
@@ -142,9 +146,7 @@ class _TasksScreenState extends State<TasksScreen> {
               ),
             );
           },
-          child: const Text(
-            'Edit',
-          ),
+          child: const Text('Edit'),
         ),
         const SizedBox(
           width: 5.0,
@@ -152,13 +154,23 @@ class _TasksScreenState extends State<TasksScreen> {
         TextButton(
           onPressed: () {
             _deleteTask(task);
+
+            final categoryBox = Hive.box<Category>('categories');
+            final categories = categoryBox.values.toList().cast<Category>();
+
+            final index = categories.indexWhere(
+                (category) => category.name.compareTo(task.category) == 0);
+
+            if (index != -1) {
+              categories[index].uses--;
+              categories[index].save();
+
+              if (categories[index].uses < 1) {
+                categories[index].delete();
+              }
+            }
           },
-          child: const Text(
-            'Delete',
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
+          child: const Text('Delete'),
         ),
       ],
     );

@@ -115,20 +115,33 @@ class _AddExamScreenState extends State<AddExamScreen> {
                   onChannge: (value) {
                     title = value;
                   },
+                  validator: (value) {
+                    if (value != null && value.length > 20) {
+                      return 'Maximum 20 characters';
+                    }
+
+                    return null;
+                  },
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(10.0)),
                 ),
-                const SizedBox(
-                  height: 20.0,
+                TextFieldWidget(
+                  labelText: 'Details',
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.none,
+                  onChannge: (value) {
+                    details = value;
+                  },
+                  validator: (value) {
+                    return null;
+                  },
+                  borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(10.0)),
                 ),
-                Container(
+                Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 5.0,
                     horizontal: 12.0,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: BuzzerColors.lightGrey,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(7.0)),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -195,20 +208,6 @@ class _AddExamScreenState extends State<AddExamScreen> {
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                TextFieldWidget(
-                  labelText: 'Details',
-                  keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.none,
-                  onChannge: (value) {
-                    details = value;
-                  },
-                ),
-                const SizedBox(
-                  height: 20.0,
                 ),
                 options(),
               ],

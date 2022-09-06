@@ -2,6 +2,38 @@ import 'package:buzzer/main.dart';
 import 'package:flutter/material.dart';
 
 ThemeData darkTheme = ThemeData(
+  snackBarTheme: SnackBarThemeData(
+    backgroundColor: Colors.white.withOpacity(0.3),
+    contentTextStyle: const TextStyle(color: Colors.white),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    contentPadding: const EdgeInsets.symmetric(
+      vertical: 10.0,
+      horizontal: 15.0,
+    ),
+    filled: true,
+    fillColor: Colors.grey[800],
+    border: const OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.transparent,
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: BuzzerColors.grey,
+      ),
+    ),
+    errorBorder: const OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Color.fromARGB(255, 168, 28, 19),
+      ),
+    ),
+  ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      textStyle: const TextStyle(color: Colors.white),
+    ),
+  ),
   cardTheme: CardTheme(
     color: Colors.grey[800],
     elevation: 0.0,
@@ -44,7 +76,7 @@ ThemeData darkTheme = ThemeData(
   dividerTheme: DividerThemeData(
     color: BuzzerColors.grey,
     thickness: 2.0,
-    space: 40.0,
+    space: 2.0,
   ),
   checkboxTheme: CheckboxThemeData(
     checkColor: MaterialStateProperty.all(BuzzerColors.darkGrey),
@@ -76,6 +108,38 @@ ThemeData darkTheme = ThemeData(
 );
 
 ThemeData lightTheme = ThemeData(
+  snackBarTheme: SnackBarThemeData(
+    backgroundColor: Colors.black.withOpacity(0.3),
+    contentTextStyle: const TextStyle(color: Colors.black),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    contentPadding: const EdgeInsets.symmetric(
+      vertical: 10.0,
+      horizontal: 15.0,
+    ),
+    filled: true,
+    fillColor: BuzzerColors.lightGrey,
+    border: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: BuzzerColors.grey,
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: BuzzerColors.grey,
+      ),
+    ),
+    errorBorder: const OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Color.fromARGB(255, 168, 28, 19),
+      ),
+    ),
+  ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      textStyle: const TextStyle(color: Colors.black),
+    ),
+  ),
   textTheme: const TextTheme(
     bodyText1: TextStyle(),
     bodyText2: TextStyle(),

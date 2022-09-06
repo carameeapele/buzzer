@@ -1,8 +1,7 @@
-import 'package:buzzer/main.dart';
 import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/models/course_model.dart';
 import 'package:buzzer/screens/timetable/class_types.dart';
-import 'package:buzzer/widgets/buttons.dart';
+import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +29,7 @@ class _AddClassState extends State<AddClass> {
   DateTime startTime = DateTime.now().add(const Duration(hours: 1));
   late DateTime endTime = startTime.add(const Duration(hours: 2));
   String room = '';
+  String building = '';
   String professorEmail = '';
   String details = '';
 
@@ -41,16 +41,9 @@ class _AddClassState extends State<AddClass> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Class'),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
+      bottomNavigationBar: bottomOptions(context, _onSave),
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-          vertical: 10.0,
-        ),
+        padding: const EdgeInsets.fromLTRB(20.0, 60.0, 20.0, 20.0),
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(),
@@ -65,63 +58,15 @@ class _AddClassState extends State<AddClass> {
                   onChannge: (value) {
                     title = value;
                   },
-                ),
-                const Divider(),
-                TextButtonRow(
-                  label: 'Start',
-                  text: DateFormat.Hm().format(startTime),
-                  icon: false,
-                  onPressed: _selectStartTime,
-                ),
-                TextButtonRow(
-                  label: 'End',
-                  text: DateFormat.Hm().format(endTime),
-                  icon: false,
-                  onPressed: _selectEndTime,
-                ),
-                TextButtonRow(
-                  label: 'Class Type',
-                  text: type,
-                  icon: true,
-                  onPressed: () {
-                    _getType(context);
+                  validator: (value) {
+                    if (value != null && value.length > 20) {
+                      return 'Maximum 20 characters';
+                    }
+                    return null;
                   },
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(10.0)),
                 ),
-                const SizedBox(
-                  height: 5.0,
-                ),
-                TextFieldRow(
-                  label: 'Room',
-                  defaultValue: '',
-                  width: 80.0,
-                  onChannge: (value) {
-                    room = value;
-                  },
-                ),
-                const SizedBox(height: 10.0),
-                const Divider(),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    TextButtonRow(
-                      label: 'Reminder',
-                      text: '1 hour before',
-                      icon: true,
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20.0),
-                TextFieldWidget(
-                  labelText: 'Professor Email',
-                  keyboardType: TextInputType.emailAddress,
-                  textCapitalization: TextCapitalization.none,
-                  onChannge: (value) {
-                    professorEmail = value;
-                  },
-                ),
-                const SizedBox(height: 20.0),
                 TextFieldWidget(
                   labelText: 'Details',
                   keyboardType: TextInputType.text,
@@ -129,11 +74,74 @@ class _AddClassState extends State<AddClass> {
                   onChannge: (value) {
                     details = value;
                   },
+                  validator: (value) {
+                    return null;
+                  },
+                  borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(10.0)),
                 ),
-                const SizedBox(
-                  height: 20.0,
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20.0, 15.0, 5.0, 10.0),
+                  child: Column(
+                    children: [
+                      TextButtonRow(
+                        label: 'Start',
+                        text: DateFormat.Hm().format(startTime),
+                        icon: false,
+                        onPressed: _selectStartTime,
+                      ),
+                      TextButtonRow(
+                        label: 'End',
+                        text: DateFormat.Hm().format(endTime),
+                        icon: false,
+                        onPressed: _selectEndTime,
+                      ),
+                      TextButtonRow(
+                        label: 'Class Type',
+                        text: type,
+                        icon: true,
+                        onPressed: () {
+                          _getType(context);
+                        },
+                      ),
+                      TextButtonRow(
+                        label: 'Building',
+                        text: building,
+                        icon: true,
+                        onPressed: () {},
+                      ),
+                      TextButtonRow(
+                        label: 'Room',
+                        text: room,
+                        icon: true,
+                        onPressed: () {},
+                      ),
+                      TextButtonRow(
+                        label: 'Reminder',
+                        text: 'None',
+                        icon: true,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
                 ),
-                options(),
+                TextFieldWidget(
+                  labelText: 'Professor Email',
+                  keyboardType: TextInputType.emailAddress,
+                  textCapitalization: TextCapitalization.none,
+                  onChannge: (value) {
+                    professorEmail = value;
+                  },
+                  validator: (value) {
+                    if (value == '' ||
+                        (value!.contains('@') && value.contains('.'))) {
+                      return null;
+                    } else {
+                      return 'Invalid email address';
+                    }
+                  },
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                ),
               ],
             ),
           ),
@@ -142,80 +150,51 @@ class _AddClassState extends State<AddClass> {
     );
   }
 
-  Row options() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Expanded(
-          child: OutlinedTextButtonWidget(
-            text: 'Cancel',
-            onPressed: () {
-              FocusScope.of(context).unfocus();
-              Navigator.of(context).pop();
-            },
-            color: BuzzerColors.orange,
-          ),
+  void _onSave() {
+    if (title != '') {
+      final dayClass = Course(
+        id: _id(),
+        title: title,
+        day: day,
+        type: type,
+        startTime: DateTime(
+          startTime.year,
+          startTime.month,
+          startTime.day,
+          startTime.hour,
+          startTime.minute,
         ),
-        const SizedBox(
-          width: 10.0,
+        endTime: DateTime(
+          endTime.year,
+          endTime.month,
+          endTime.day,
+          endTime.hour,
+          endTime.minute,
         ),
-        Expanded(
-          child: FilledTextButtonWidget(
-            text: 'Save',
-            icon: false,
-            onPressed: () {
-              if (title.isNotEmpty) {
-                final dayClass = Course(
-                  id: _id(),
-                  title: title,
-                  day: day,
-                  type: type,
-                  startTime: DateTime(
-                    startTime.year,
-                    startTime.month,
-                    startTime.day,
-                    startTime.hour,
-                    startTime.minute,
-                  ),
-                  endTime: DateTime(
-                    endTime.year,
-                    endTime.month,
-                    endTime.day,
-                    endTime.hour,
-                    endTime.minute,
-                  ),
-                  room: room,
-                  professorEmail: professorEmail,
-                  details: details,
-                  week: 1,
-                );
+        room: room,
+        professorEmail: professorEmail,
+        details: details,
+        week: 1,
+      );
 
-                final classBox = Hive.box<Course>('classes');
-                classBox.add(dayClass);
+      final classBox = Hive.box<Course>('classes');
+      classBox.add(dayClass);
 
-                final categoryBox = Hive.box<Category>('categories');
-                final categories = categoryBox.values.toList().cast<Category>();
+      final categoryBox = Hive.box<Category>('categories');
+      final categories = categoryBox.values.toList().cast<Category>();
 
-                final index = categories.indexWhere(
-                    (category) => category.name.compareTo(dayClass.title) == 0);
-                if (index == -1) {
-                  categoryBox.add(Category(name: title, uses: 1));
-                } else {
-                  categories[index].uses++;
-                  categories[index].save();
-                }
-              }
+      final index = categories.indexWhere(
+          (category) => category.name.compareTo(dayClass.title) == 0);
+      if (index == -1) {
+        categoryBox.add(Category(name: title, uses: 1));
+      } else {
+        categories[index].uses++;
+        categories[index].save();
+      }
+    }
 
-              FocusScope.of(context).unfocus();
-              Navigator.of(context).pop();
-            },
-            backgroundColor: BuzzerColors.orange,
-            textColor: Colors.white,
-          ),
-        ),
-      ],
-    );
+    FocusScope.of(context).unfocus();
+    Navigator.of(context).pop();
   }
 
   Future<void> _getType(BuildContext context) async {
@@ -242,18 +221,9 @@ class _AddClassState extends State<AddClass> {
       initialTime: initialTime,
       initialEntryMode: TimePickerEntryMode.input,
       builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: BuzzerColors.orange,
-              onPrimary: Colors.white,
-              onSecondary: Colors.black,
-            ),
-          ),
-          child: MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child!,
-          ),
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
         );
       },
     );
@@ -283,18 +253,9 @@ class _AddClassState extends State<AddClass> {
       minuteLabelText: initialTime.minute.toString(),
       initialEntryMode: TimePickerEntryMode.input,
       builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: BuzzerColors.orange,
-              onPrimary: Colors.white,
-              onSecondary: Colors.black,
-            ),
-          ),
-          child: MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child!,
-          ),
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
         );
       },
     );

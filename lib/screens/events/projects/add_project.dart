@@ -113,6 +113,13 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                   onChannge: (value) {
                     title = value;
                   },
+                  validator: (value) {
+                    if (value != null && value.length > 20) {
+                      return 'Maximum 20 characters';
+                    }
+                    return null;
+                  },
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -208,18 +215,18 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                         onPressed: () {
                           if (title.isNotEmpty) {
                             final project = Project(
-                              id: _id(),
-                              title: title,
-                              category: category,
-                              date: DateTime(
+                              _id(),
+                              title,
+                              category,
+                              DateTime(
                                 date.year,
                                 date.month,
                                 date.day,
                                 time.hour,
                                 time.minute,
                               ),
-                              time: time,
-                              complete: false,
+                              time,
+                              false,
                             );
 
                             final box = Hive.box<Project>('projects');

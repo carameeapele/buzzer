@@ -1,3 +1,4 @@
+import 'package:buzzer/models/task_model.dart';
 import 'package:hive/hive.dart';
 
 @HiveType(typeId: 4)
@@ -20,12 +21,15 @@ class Project extends HiveObject {
   @HiveField(5)
   late bool complete;
 
-  Project({
-    required this.id,
-    required this.title,
-    required this.category,
-    required this.date,
-    required this.time,
-    required this.complete,
-  });
+  @HiveField(6)
+  late HiveList<Task> tasks;
+
+  Project(
+    this.id,
+    this.title,
+    this.category,
+    this.date,
+    this.time,
+    this.complete,
+  );
 }

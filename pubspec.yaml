@@ -44,6 +44,7 @@ dependencies:
   build_runner: ^2.2.0
   flutter_launcher_icons: ^0.10.0
   flutter_native_splash: ^2.2.8
+  url_launcher: ^6.1.5
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/widgets/buttons.dart';
+import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -28,6 +29,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
       valueListenable: Hive.box<Category>('categories').listenable(),
       builder: (context, box, widget) {
         final categories = box.values.toList().cast<Category>();
+        categories.removeWhere((category) => category.uses < 1);
 
         return Scaffold(
           appBar: AppBar(title: const Text('Categories')),
@@ -44,27 +46,13 @@ class _CategoryPickerState extends State<CategoryPicker> {
                     itemBuilder: (BuildContext context, int index) {
                       final category = categories[index];
 
-                      return Card(
-                        color: (selectedCategory.compareTo(category.name) == 0)
-                            ? BuzzerColors.orange
-                            : BuzzerColors.lightGrey,
-                        elevation: 0.0,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                        ),
-                        child: ListTile(
+                      return customCard(
+                        ListTile(
                           dense: true,
                           title: Text(
                             category.name,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 15.0,
-                              color:
-                                  (selectedCategory.compareTo(category.name) ==
-                                          0)
-                                      ? Colors.white
-                                      : Colors.black,
                             ),
                           ),
                           trailing:
@@ -82,6 +70,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                             });
                           },
                         ),
+                        false,
                       );
                     },
                   ),
@@ -105,32 +94,42 @@ class _CategoryPickerState extends State<CategoryPicker> {
     return showDialog(
       context: context,
       builder: (contex) => AlertDialog(
-        content: TextFieldWidget(
-          keyboardType: TextInputType.text,
-          labelText: 'Category Name',
-          textCapitalization: TextCapitalization.words,
-          onChannge: (value) {
-            newCategoryName = value;
-          },
+        content: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: TextFieldWidget(
+            keyboardType: TextInputType.text,
+            labelText: 'Category Name',
+            textCapitalization: TextCapitalization.words,
+            onChannge: (value) {
+              newCategoryName = value;
+            },
+            validator: (value) {
+              if (value != null && value.length > 25) {
+                return 'Maximum 25 characters';
+              }
+              return null;
+            },
+            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () {
-              final category = Category(name: newCategoryName, uses: 1);
-              final box = Hive.box<Category>('categories');
-              final categories = box.values.toList().cast<Category>();
+              if (newCategoryName.length < 25) {
+                final category = Category(name: newCategoryName, uses: 1);
+                final box = Hive.box<Category>('categories');
+                final categories = box.values.toList().cast<Category>();
 
-              final index = categories.indexWhere(
-                  (element) => element.name.compareTo(category.name) == 0);
-              if (index == -1) {
-                box.add(category);
-                selectedCategory = category.name;
-              } else {
-                category.uses++;
-                category.save();
+                final index = categories.indexWhere(
+                    (element) => element.name.compareTo(category.name) == 0);
+
+                if (index == -1) {
+                  box.add(category);
+                  selectedCategory = category.name;
+                }
+
+                Navigator.of(context, rootNavigator: true).pop();
               }
-
-              Navigator.of(context, rootNavigator: true).pop();
             },
             child: Text(
               'Add',

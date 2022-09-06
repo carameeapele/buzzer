@@ -41,7 +41,6 @@ Future main() async {
   await Hive.openBox<Exam>('exams');
   await Hive.openBox<Project>('projects');
   await Hive.openBox<Course>('classes');
-
   await Hive.openBox('preferences');
 
   runApp(const MyApp());

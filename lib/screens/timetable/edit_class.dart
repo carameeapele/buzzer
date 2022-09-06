@@ -2,7 +2,6 @@ import 'package:buzzer/main.dart';
 import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/models/course_model.dart';
 import 'package:buzzer/screens/timetable/class_types.dart';
-import 'package:buzzer/widgets/buttons.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
@@ -35,13 +34,8 @@ class _EditClassState extends State<EditClass> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: false,
-      appBar: AppBar(title: const Text('Edit Class')),
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-          vertical: 10.0,
-        ),
+        padding: const EdgeInsets.fromLTRB(20.0, 60.0, 20.0, 20.0),
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(),
@@ -57,57 +51,16 @@ class _EditClassState extends State<EditClass> {
                   onChannge: (value) {
                     title = value;
                   },
-                ),
-                const Divider(),
-                TextButtonRow(
-                  label: 'Start',
-                  text: DateFormat.Hm().format(startTime),
-                  icon: false,
-                  onPressed: _selectStartTime,
-                ),
-                TextButtonRow(
-                  label: 'End',
-                  text: DateFormat.Hm().format(endTime),
-                  icon: false,
-                  onPressed: _selectEndTime,
-                ),
-                TextButtonRow(
-                  label: 'Class Type',
-                  text: type,
-                  icon: true,
-                  onPressed: () {
-                    _getType(context);
+                  validator: (value) {
+                    if (value != null && value.length > 20) {
+                      return 'Maximum 20 characters';
+                    }
+                    return null;
                   },
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(10.0),
+                  ),
                 ),
-                const SizedBox(
-                  height: 5.0,
-                ),
-                TextFieldRow(
-                  label: 'Room',
-                  defaultValue: room,
-                  width: 80.0,
-                  onChannge: (value) {
-                    room = value;
-                  },
-                ),
-                const Divider(),
-                TextButtonRow(
-                  label: 'Reminder',
-                  text: '1 hour before',
-                  icon: true,
-                  onPressed: () {},
-                ),
-                const Divider(),
-                ValueTextFieldWidget(
-                  labelText: 'Professor Email',
-                  defaultValue: professorEmail,
-                  keyboardType: TextInputType.emailAddress,
-                  textCapitalization: TextCapitalization.none,
-                  onChannge: (value) {
-                    professorEmail = value;
-                  },
-                ),
-                const Divider(),
                 ValueTextFieldWidget(
                   labelText: 'Details',
                   defaultValue: details,
@@ -116,6 +69,69 @@ class _EditClassState extends State<EditClass> {
                   onChannge: (value) {
                     details = value;
                   },
+                  validator: (value) {
+                    return null;
+                  },
+                  borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(10.0)),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20.0, 15.0, 5.0, 10.0),
+                  child: Column(
+                    children: [
+                      TextButtonRow(
+                        label: 'Start',
+                        text: DateFormat.Hm().format(startTime),
+                        icon: false,
+                        onPressed: _selectStartTime,
+                      ),
+                      TextButtonRow(
+                        label: 'End',
+                        text: DateFormat.Hm().format(endTime),
+                        icon: false,
+                        onPressed: _selectEndTime,
+                      ),
+                      TextButtonRow(
+                        label: 'Class Type',
+                        text: type,
+                        icon: true,
+                        onPressed: () {
+                          _getType(context);
+                        },
+                      ),
+                      TextFieldRow(
+                        label: 'Room',
+                        defaultValue: room,
+                        width: 80.0,
+                        onChannge: (value) {
+                          room = value;
+                        },
+                      ),
+                      TextButtonRow(
+                        label: 'Reminder',
+                        text: '1 hour before',
+                        icon: true,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ),
+                ValueTextFieldWidget(
+                  labelText: 'Professor Email',
+                  defaultValue: professorEmail,
+                  keyboardType: TextInputType.emailAddress,
+                  textCapitalization: TextCapitalization.none,
+                  onChannge: (value) {
+                    professorEmail = value;
+                  },
+                  validator: (value) {
+                    if (value!.contains('@') && value.contains('.')) {
+                      return null;
+                    } else {
+                      return 'Invalid email address';
+                    }
+                  },
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                 ),
               ],
             ),
@@ -155,6 +171,7 @@ class _EditClassState extends State<EditClass> {
     categoryBox.add(Category(name: title, uses: 1));
 
     widget.classs.save();
+    Navigator.of(context).pop();
   }
 
   Future _selectStartTime() async {

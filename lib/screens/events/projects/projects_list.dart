@@ -1,6 +1,8 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/project_model.dart';
+import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/events/projects/edit_project.dart';
+import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
@@ -59,32 +61,26 @@ class _ProjectsListState extends State<ProjectsList> {
                 itemCount: projects.length,
                 itemBuilder: (BuildContext context, int index) {
                   final project = projects[index];
+                  final List<Task> tasks = [];
+                  final List<Task> completeTasks = [];
+
                   DateTime now = DateTime.now();
                   bool _isToday = (project.date.day == now.day &&
                       project.date.month == now.month &&
                       project.date.year == now.year);
 
-                  return Card(
-                    elevation: 0.0,
-                    color: _isToday ? Colors.white : BuzzerColors.lightGrey,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(7.0),
-                      ),
-                      side: BorderSide(
-                        color:
-                            _isToday ? BuzzerColors.orange : Colors.transparent,
-                        width: 2.0,
-                      ),
-                    ),
-                    child: Theme(
+                  return customCard(
+                    Theme(
                       data: data,
                       child: ExpansionTile(
                         tilePadding:
                             const EdgeInsets.symmetric(horizontal: 20.0),
-                        title: title(project.title, project.category,
-                            project.date, project.time),
-                        trailing: trailing(project.date, project.time),
+                        title: classTitle(project.category, project.title),
+                        trailing: CircularProgressIndicator(
+                          value: completeTasks.length *
+                              (100 / completeTasks.length),
+                          color: BuzzerColors.orange,
+                        ),
                         childrenPadding: const EdgeInsets.symmetric(
                           horizontal: 15.0,
                           vertical: 0.0,
@@ -92,10 +88,20 @@ class _ProjectsListState extends State<ProjectsList> {
                         expandedCrossAxisAlignment: CrossAxisAlignment.start,
                         expandedAlignment: Alignment.centerLeft,
                         children: <Widget>[
+                          ListView.builder(
+                            itemBuilder: (context, index) {
+                              return ListTile();
+                            },
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text('Add a task'),
+                          ),
                           options(project),
                         ],
                       ),
                     ),
+                    false,
                   );
                 },
               );

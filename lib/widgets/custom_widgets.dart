@@ -5,12 +5,10 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
 final preferences = Hive.box('preferences');
-final darkMode = preferences.get('darkMode', defaultValue: false);
+final darkMode = preferences.get('darkMode', defaultValue: true);
 
 Card customCard(Widget child, bool border) {
   return Card(
-    color: darkMode ? Colors.grey[800] : BuzzerColors.lightGrey,
-    elevation: 0.0,
     shape: RoundedRectangleBorder(
       borderRadius: const BorderRadius.all(
         Radius.circular(10.0),
@@ -22,6 +20,60 @@ Card customCard(Widget child, bool border) {
     ),
     child: child,
   );
+}
+
+Widget todayTaskTitle(
+  String title,
+  String category,
+  DateTime date,
+) {
+  return (category.length > 10)
+      ? SizedBox(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (category.compareTo('None') != 0)
+                  Text(
+                    category,
+                    style: const TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+      : SizedBox(
+          child: Row(
+            children: [
+              if (category.compareTo('None') != 0)
+                Text(
+                  '$category  ',
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 16.0,
+                  ),
+                ),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
+          ),
+        );
 }
 
 Widget taskTitle(
@@ -64,14 +116,14 @@ Widget taskTitle(
                   '$category  ',
                   style: const TextStyle(
                     fontStyle: FontStyle.italic,
-                    fontSize: 18.0,
+                    fontSize: 16.0,
                   ),
                 ),
               Text(
                 title,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
+                  fontSize: 16.0,
                 ),
               ),
             ],
@@ -117,6 +169,32 @@ Widget taskSubtitle(
   );
 }
 
+Widget todayTitle(
+  String firstPart,
+  String secondPart,
+) {
+  return SizedBox(
+    child: Row(
+      children: <Widget>[
+        Text(
+          firstPart,
+          style: const TextStyle(
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.normal,
+            letterSpacing: 0.0,
+          ),
+        ),
+        const SizedBox(
+          width: 10.0,
+        ),
+        Text(
+          secondPart,
+        ),
+      ],
+    ),
+  );
+}
+
 Widget bottomOptions(
   BuildContext context,
   void Function() onSave,
@@ -143,9 +221,7 @@ Widget bottomOptions(
           child: FilledTextButtonWidget(
             text: 'Save',
             icon: false,
-            onPressed: () {
-              onSave();
-            },
+            onPressed: onSave,
             backgroundColor: BuzzerColors.orange,
             textColor: Colors.white,
           ),
@@ -155,31 +231,85 @@ Widget bottomOptions(
   );
 }
 
-Widget todayTitle(
-  String firstPart,
-  String secondPart,
-) {
-  return SizedBox(
+Widget classTitle(String title, String type) {
+  return Row(
+    children: <Widget>[
+      if (type.compareTo('None') != 0)
+        Text(
+          '$type ',
+          style: const TextStyle(
+            fontSize: 18.0,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ],
+  );
+}
+
+Widget tileOptions(
+    BuildContext context, Widget editPage, void Function()? deleteFunction) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: <Widget>[
+      TextButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => editPage,
+            ),
+          );
+        },
+        child: const Text('Edit'),
+      ),
+      const SizedBox(
+        width: 5.0,
+      ),
+      TextButton(
+        onPressed: deleteFunction,
+        child: const Text('Delete'),
+      ),
+    ],
+  );
+}
+
+Widget classRow(String tag, Widget value) {
+  return Container(
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(
-          firstPart,
-          style: const TextStyle(
-            fontStyle: FontStyle.italic,
-            fontWeight: FontWeight.normal,
-            letterSpacing: 0.0,
+          tag,
+          style: TextStyle(
+            color: BuzzerColors.grey,
           ),
         ),
-        const SizedBox(
-          width: 10.0,
-        ),
-        Text(
-          secondPart,
-          style: const TextStyle(
-            letterSpacing: 0.0,
-          ),
-        ),
+        value,
       ],
+    ),
+  );
+}
+
+Widget defaultScreen(BuildContext context, Icon icon, String text) {
+  return Container(
+    padding: const EdgeInsets.symmetric(
+      vertical: 50.0,
+      horizontal: 20.0,
+    ),
+    width: MediaQuery.of(context).size.width,
+    child: Text(
+      text,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: Colors.grey[300],
+        fontSize: 16.0,
+      ),
     ),
   );
 }
