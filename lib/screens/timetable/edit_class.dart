@@ -72,49 +72,44 @@ class _EditClassState extends State<EditClass> {
                   validator: (value) {
                     return null;
                   },
-                  borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(10.0)),
+                  borderRadius: const BorderRadius.all(Radius.zero),
                 ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20.0, 15.0, 5.0, 10.0),
-                  child: Column(
-                    children: [
-                      TextButtonRow(
-                        label: 'Start',
-                        text: DateFormat.Hm().format(startTime),
-                        icon: false,
-                        onPressed: _selectStartTime,
-                      ),
-                      TextButtonRow(
-                        label: 'End',
-                        text: DateFormat.Hm().format(endTime),
-                        icon: false,
-                        onPressed: _selectEndTime,
-                      ),
-                      TextButtonRow(
-                        label: 'Class Type',
-                        text: type,
-                        icon: true,
-                        onPressed: () {
-                          _getType(context);
-                        },
-                      ),
-                      TextFieldRow(
-                        label: 'Room',
-                        defaultValue: room,
-                        width: 80.0,
-                        onChannge: (value) {
-                          room = value;
-                        },
-                      ),
-                      TextButtonRow(
-                        label: 'Reminder',
-                        text: '1 hour before',
-                        icon: true,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+                TextButtonRow(
+                  label: 'Start',
+                  text: DateFormat.Hm().format(startTime),
+                  icon: false,
+                  onPressed: _selectStartTime,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'End',
+                  text: DateFormat.Hm().format(endTime),
+                  icon: false,
+                  onPressed: _selectEndTime,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Class Type',
+                  text: type,
+                  icon: true,
+                  onPressed: () {
+                    _getType(context);
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Room',
+                  text: room,
+                  icon: true,
+                  onPressed: () {},
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Reminder',
+                  text: '1 hour before',
+                  icon: true,
+                  onPressed: () {},
+                  borderRadius: const BorderRadius.all(Radius.zero),
                 ),
                 ValueTextFieldWidget(
                   labelText: 'Professor Email',
@@ -131,7 +126,8 @@ class _EditClassState extends State<EditClass> {
                       return 'Invalid email address';
                     }
                   },
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(10.0)),
                 ),
               ],
             ),

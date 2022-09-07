@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class ClassList extends StatefulWidget {
   const ClassList({
@@ -161,5 +160,15 @@ class _ClassListState extends State<ClassList> {
       scheme: 'mailto',
       path: professor,
     );
+
+    if (await canLaunchUrl(url)) {
+      launchUrl(url);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Could not acces email'),
+        ),
+      );
+    }
   }
 }

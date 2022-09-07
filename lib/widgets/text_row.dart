@@ -9,33 +9,44 @@ class TextButtonRow extends StatelessWidget {
     required this.text,
     required this.icon,
     required this.onPressed,
+    required this.borderRadius,
   }) : super(key: key);
 
   final String label;
   final String text;
   final bool icon;
   final void Function() onPressed;
+  final BorderRadius borderRadius;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 15.0,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: BuzzerColors.grey,
+        ),
+        borderRadius: borderRadius,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 15.0,
+            ),
           ),
-        ),
-        SmallFilledTextButton(
-          onPressed: onPressed,
-          text: text,
-          icon: icon,
-          backgroundColor: BuzzerColors.lightGrey,
-          textColor: Colors.black,
-        ),
-      ],
+          SmallFilledTextButton(
+            onPressed: onPressed,
+            text: text,
+            icon: icon,
+            backgroundColor: BuzzerColors.lightGrey,
+            textColor: Colors.black,
+          ),
+        ],
+      ),
     );
   }
 }

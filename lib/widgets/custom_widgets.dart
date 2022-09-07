@@ -14,7 +14,7 @@ Card customCard(Widget child, bool border) {
         Radius.circular(10.0),
       ),
       side: BorderSide(
-        color: border ? BuzzerColors.orange : Colors.transparent,
+        color: border ? BuzzerColors.orange : Colors.grey,
         width: 2.0,
       ),
     ),
@@ -80,7 +80,6 @@ Widget taskTitle(
   String title,
   String category,
   DateTime date,
-  bool complete,
 ) {
   return (category.length > 10)
       ? SizedBox(
@@ -116,14 +115,14 @@ Widget taskTitle(
                   '$category  ',
                   style: const TextStyle(
                     fontStyle: FontStyle.italic,
-                    fontSize: 16.0,
+                    fontSize: 18.0,
                   ),
                 ),
               Text(
                 title,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
+                  fontSize: 18.0,
                 ),
               ),
             ],
@@ -132,7 +131,6 @@ Widget taskTitle(
 }
 
 Widget taskSubtitle(
-  bool complete,
   DateTime date,
   DateTime time,
   String category,
@@ -195,12 +193,82 @@ Widget todayTitle(
   );
 }
 
+Widget examTitle(
+  String title,
+  String category,
+  DateTime date,
+) {
+  return (category.length > 10 && title.length > 5)
+      ? SizedBox(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (category.compareTo('None') != 0)
+                  Text(
+                    category,
+                    style: const TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+      : SizedBox(
+          child: Row(
+            children: [
+              if (category.compareTo('None') != 0)
+                Text(
+                  '$category  ',
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 18.0,
+                  ),
+                ),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                ),
+              ),
+            ],
+          ),
+        );
+}
+
+Widget examTrailing(
+  DateTime date,
+  DateTime time,
+) {
+  DateTime now = DateTime.now();
+  bool _isToday =
+      (date.day == now.day && date.month == now.month && date.year == now.year);
+
+  return Text(
+    _isToday
+        ? '${DateFormat('Hm').format(time)}  '
+        : '${DateFormat('dd MMM', 'en_US').format(date)}  ',
+    style: const TextStyle(fontSize: 13.0),
+  );
+}
+
 Widget bottomOptions(
   BuildContext context,
   void Function() onSave,
 ) {
   return Padding(
-    padding: const EdgeInsets.all(10.0),
+    padding: const EdgeInsets.all(20.0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -215,7 +283,7 @@ Widget bottomOptions(
           ),
         ),
         const SizedBox(
-          width: 10.0,
+          width: 20.0,
         ),
         Expanded(
           child: FilledTextButtonWidget(

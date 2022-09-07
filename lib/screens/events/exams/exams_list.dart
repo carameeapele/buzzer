@@ -1,4 +1,5 @@
 import 'package:buzzer/main.dart';
+import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/models/exam_model.dart';
 import 'package:buzzer/screens/events/exams/edit_exam.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
@@ -57,6 +58,7 @@ class _EventsListState extends State<EventsList> {
             ? defaultScreen
             : ListView.builder(
                 shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
                 itemCount: exams.length,
                 itemBuilder: (BuildContext context, int index) {
                   Exam exam = exams[index];
@@ -67,16 +69,14 @@ class _EventsListState extends State<EventsList> {
                       exam.date.year == now.year);
 
                   return Opacity(
-                    opacity: exam.date.isAfter(now) ? 0.4 : 1.0,
+                    opacity: now.isAfter(exam.date) ? 0.4 : 1.0,
                     child: customCard(
                       Theme(
                         data: data,
                         child: ExpansionTile(
-                          tilePadding:
-                              const EdgeInsets.symmetric(horizontal: 20.0),
-                          title: _title(
-                              exam.title, exam.category, exam.date, exam.time),
-                          trailing: _trailing(exam.date, exam.time),
+                          title:
+                              examTitle(exam.title, exam.category, exam.date),
+                          trailing: examTrailing(exam.date, exam.time),
                           childrenPadding:
                               const EdgeInsets.fromLTRB(20.0, 0.0, 12.0, 0.0),
                           expandedCrossAxisAlignment: CrossAxisAlignment.start,
@@ -160,6 +160,21 @@ class _EventsListState extends State<EventsList> {
 
   void _deleteExam(Exam exam) {
     exam.delete();
+
+    final categoryBox = Hive.box<Category>('categories');
+    final categories = categoryBox.values.toList().cast<Category>();
+
+    final index = categories
+        .indexWhere((category) => category.name.compareTo(exam.category) == 0);
+
+    if (index != -1) {
+      categories[index].uses--;
+      categories[index].save();
+
+      if (categories[index].uses < 1) {
+        categories[index].delete();
+      }
+    }
   }
 
   Row _details(Exam exam) {

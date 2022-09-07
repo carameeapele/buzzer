@@ -1,7 +1,8 @@
 import 'package:buzzer/main.dart';
+import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/models/exam_model.dart';
-import 'package:buzzer/screens/tasks/categories.dart';
-import 'package:buzzer/widgets/buttons.dart';
+import 'package:buzzer/screens/categories.dart';
+import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,133 @@ class _AddExamScreenState extends State<AddExamScreen> {
   String _id() {
     final now = DateTime.now();
     return now.microsecondsSinceEpoch.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: bottomOptions(context, _onSave),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(20.0, 60.0, 20.0, 20.0),
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextFieldWidget(
+                  labelText: 'Exam Name',
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.words,
+                  onChannge: (value) {
+                    title = value;
+                  },
+                  validator: (value) {
+                    if (value != null && value.length > 20) {
+                      return 'Maximum 20 characters';
+                    }
+
+                    return null;
+                  },
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(10.0)),
+                ),
+                TextFieldWidget(
+                  labelText: 'Details',
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.none,
+                  onChannge: (value) {
+                    details = value;
+                  },
+                  validator: (value) {
+                    return null;
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Date',
+                  text: DateFormat(
+                    'd MMMM',
+                  ).format(date),
+                  icon: false,
+                  onPressed: selectDate,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Time',
+                  text: DateFormat.Hm().format(time),
+                  icon: false,
+                  onPressed: selectTime,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Category',
+                  text: category,
+                  icon: true,
+                  onPressed: () {
+                    _getCategory(context);
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Room',
+                  text: '',
+                  icon: true,
+                  onPressed: () {},
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Reminder',
+                  text: '1 hour before',
+                  icon: true,
+                  onPressed: () {},
+                  borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(10.0)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _onSave() {
+    if (title.isNotEmpty) {
+      final exam = Exam(
+        id: _id(),
+        title: title,
+        date: DateTime(
+          date.year,
+          date.month,
+          date.day,
+          time.hour,
+          time.minute,
+        ),
+        time: time,
+        category: category,
+        details: details,
+        room: room,
+      );
+
+      final box = Hive.box<Exam>('exams');
+      box.add(exam);
+
+      final categoryBox = Hive.box<Category>('categories');
+      final categories = categoryBox.values.toList().cast<Category>();
+
+      final index = categories.indexWhere(
+          (category) => category.name.compareTo(exam.category) == 0);
+
+      if (index != -1) {
+        categories[index].uses++;
+        categories[index].save();
+      }
+
+      FocusScope.of(context).unfocus();
+      Navigator.of(context).pop();
+    }
   }
 
   Future selectTime() async {
@@ -89,187 +217,5 @@ class _AddExamScreenState extends State<AddExamScreen> {
         category = result;
       });
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: false,
-      appBar: AppBar(title: const Text('Add Exam')),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-          vertical: 10.0,
-        ),
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                TextFieldWidget(
-                  labelText: 'Exam Name',
-                  keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.words,
-                  onChannge: (value) {
-                    title = value;
-                  },
-                  validator: (value) {
-                    if (value != null && value.length > 20) {
-                      return 'Maximum 20 characters';
-                    }
-
-                    return null;
-                  },
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(10.0)),
-                ),
-                TextFieldWidget(
-                  labelText: 'Details',
-                  keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.none,
-                  onChannge: (value) {
-                    details = value;
-                  },
-                  validator: (value) {
-                    return null;
-                  },
-                  borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(10.0)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5.0,
-                    horizontal: 12.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      TextButtonRow(
-                        label: 'Date',
-                        text: DateFormat(
-                          'd MMMM',
-                        ).format(date),
-                        icon: false,
-                        onPressed: selectDate,
-                      ),
-                      TextButtonRow(
-                        label: 'Time',
-                        text: DateFormat.Hm().format(time),
-                        icon: false,
-                        onPressed: selectTime,
-                      ),
-                      TextButtonRow(
-                        label: 'Category',
-                        text: category,
-                        icon: true,
-                        onPressed: () {
-                          _getCategory(context);
-                        },
-                      ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
-                      TextFieldRow(
-                        label: 'Room',
-                        defaultValue: '',
-                        width: 80.0,
-                        onChannge: (value) {
-                          room = value;
-                        },
-                      ),
-                      const SizedBox(height: 5.0),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 3.0, horizontal: 10.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: BuzzerColors.lightGrey,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(7.0)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      TextButtonRow(
-                        label: 'Reminder',
-                        text: '1 hour before',
-                        icon: true,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ),
-                options(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Row options() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Expanded(
-          child: OutlinedTextButtonWidget(
-            text: 'Cancel',
-            onPressed: () {
-              FocusScope.of(context).unfocus();
-              Navigator.of(context).pop();
-            },
-            color: BuzzerColors.orange,
-          ),
-        ),
-        const SizedBox(
-          width: 10.0,
-        ),
-        Expanded(
-          child: FilledTextButtonWidget(
-            text: 'Save',
-            icon: false,
-            onPressed: () {
-              if (title.isNotEmpty) {
-                final exam = Exam(
-                  id: _id(),
-                  title: title,
-                  date: DateTime(
-                    date.year,
-                    date.month,
-                    date.day,
-                    time.hour,
-                    time.minute,
-                  ),
-                  time: time,
-                  category: category,
-                  details: details,
-                  room: room,
-                );
-
-                final box = Hive.box<Exam>('exams');
-                box.add(exam);
-              }
-
-              FocusScope.of(context).unfocus();
-              Navigator.of(context).pop();
-            },
-            backgroundColor: BuzzerColors.orange,
-            textColor: Colors.white,
-          ),
-        ),
-      ],
-    );
   }
 }

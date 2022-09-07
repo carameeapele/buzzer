@@ -1,11 +1,11 @@
-import 'package:buzzer/main.dart';
 import 'package:buzzer/models/project_model.dart';
-import 'package:buzzer/screens/tasks/categories.dart';
-import 'package:buzzer/widgets/buttons.dart';
+import 'package:buzzer/screens/categories.dart';
+import 'package:buzzer/screens/reminders.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
 class EditProject extends StatefulWidget {
@@ -25,6 +25,8 @@ class _EditProjectState extends State<EditProject> {
   late DateTime date = widget.project.date;
   late DateTime time = widget.project.time;
   late String category = widget.project.category;
+  late HiveList tasks = widget.project.tasks;
+  late String reminder;
 
   @override
   Widget build(BuildContext context) {
@@ -53,40 +55,45 @@ class _EditProjectState extends State<EditProject> {
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(10.0)),
                 ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20.0, 15.0, 5.0, 10.0),
-                  child: Column(
-                    children: [
-                      TextButtonRow(
-                        label: 'Date',
-                        text: DateFormat(
-                          'd MMMM',
-                        ).format(date),
-                        icon: false,
-                        onPressed: selectDate,
-                      ),
-                      TextButtonRow(
-                        label: 'Time',
-                        text: DateFormat.Hm().format(time),
-                        icon: false,
-                        onPressed: selectTime,
-                      ),
-                      TextButtonRow(
-                        label: 'Category',
-                        text: category,
-                        icon: true,
-                        onPressed: () {
-                          _getCategory(context);
-                        },
-                      ),
-                      TextButtonRow(
-                        label: 'Reminder',
-                        text: '1 hour before',
-                        icon: true,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+                TextButtonRow(
+                  label: 'Date',
+                  text: DateFormat(
+                    'd MMMM',
+                  ).format(date),
+                  icon: false,
+                  onPressed: selectDate,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Time',
+                  text: DateFormat.Hm().format(time),
+                  icon: false,
+                  onPressed: selectTime,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Category',
+                  text: category,
+                  icon: true,
+                  onPressed: () {
+                    _getCategory(context);
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Reminder',
+                  text: '1 hour before',
+                  icon: true,
+                  onPressed: () {},
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Tasks',
+                  text: 'Add',
+                  icon: true,
+                  onPressed: () {},
+                  borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(10.0)),
                 ),
               ],
             ),
@@ -94,6 +101,22 @@ class _EditProjectState extends State<EditProject> {
         ),
       ),
     );
+  }
+
+  Future<void> _setReminder(BuildContext context) async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ReminderPicker(selectedReminder: reminder),
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {
+        reminder = result;
+      });
+    }
   }
 
   void _editProject() {

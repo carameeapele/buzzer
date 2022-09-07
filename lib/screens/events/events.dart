@@ -40,7 +40,7 @@ class _EventsScreenState extends State<EventsScreen>
     final double height = MediaQuery.of(context).size.height -
         appBar.preferredSize.height -
         MediaQuery.of(context).padding.top -
-        68.0;
+        120.0;
 
     return Scaffold(
       extendBodyBehindAppBar: false,

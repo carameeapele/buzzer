@@ -32,56 +32,54 @@ class _CategoryPickerState extends State<CategoryPicker> {
         categories.removeWhere((category) => category.uses < 1);
 
         return Scaffold(
-          appBar: AppBar(title: const Text('Categories')),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: OutlinedTextButtonWidget(
+              text: '+ Add Category',
+              onPressed: () {
+                _addCategory();
+              },
+              color: BuzzerColors.orange,
+            ),
+          ),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 60.0, 20.0, 20.0),
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: categories.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final category = categories[index];
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: categories.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final category = categories[index];
 
-                      return customCard(
-                        ListTile(
-                          dense: true,
-                          title: Text(
-                            category.name,
-                            style: const TextStyle(
-                              fontSize: 15.0,
-                            ),
-                          ),
-                          trailing:
-                              (selectedCategory.compareTo(category.name) == 0)
-                                  ? const Icon(
-                                      Icons.check,
-                                      size: 20.0,
-                                      color: Colors.white,
-                                    )
-                                  : null,
-                          onTap: () {
-                            setState(() {
-                              selectedCategory = category.name;
-                              Navigator.pop(context, selectedCategory);
-                            });
-                          },
+                  return customCard(
+                    ListTile(
+                      selected:
+                          (selectedCategory.compareTo(category.name) == 0),
+                      selectedColor: BuzzerColors.orange,
+                      dense: true,
+                      title: Text(
+                        category.name,
+                        style: const TextStyle(
+                          fontSize: 15.0,
                         ),
-                        false,
-                      );
-                    },
-                  ),
-                  OutlinedTextButtonWidget(
-                    text: '+ Add Category',
-                    onPressed: () {
-                      _addCategory();
-                    },
-                    color: BuzzerColors.orange,
-                  ),
-                ],
+                      ),
+                      trailing: (selectedCategory.compareTo(category.name) == 0)
+                          ? Icon(
+                              Icons.check,
+                              size: 20.0,
+                              color: BuzzerColors.orange,
+                            )
+                          : null,
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = category.name;
+                          Navigator.pop(context, selectedCategory);
+                        });
+                      },
+                    ),
+                    false,
+                  );
+                },
               ),
             ),
           ),
@@ -101,7 +99,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
             labelText: 'Category Name',
             textCapitalization: TextCapitalization.words,
             onChannge: (value) {
-              newCategoryName = value;
+              newCategoryName = value.trim();
             },
             validator: (value) {
               if (value != null && value.length > 25) {
@@ -125,7 +123,6 @@ class _CategoryPickerState extends State<CategoryPicker> {
 
                 if (index == -1) {
                   box.add(category);
-                  selectedCategory = category.name;
                 }
 
                 Navigator.of(context, rootNavigator: true).pop();

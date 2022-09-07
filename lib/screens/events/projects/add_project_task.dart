@@ -8,20 +8,25 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
-class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({Key? key}) : super(key: key);
+class AddProjectTask extends StatefulWidget {
+  const AddProjectTask({
+    Key? key,
+    required this.category,
+  }) : super(key: key);
+
+  final String category;
 
   @override
-  State<AddTaskScreen> createState() => _AddTaskScreenState();
+  State<AddProjectTask> createState() => _AddProjectTaskState();
 }
 
-class _AddTaskScreenState extends State<AddTaskScreen> {
+class _AddProjectTaskState extends State<AddProjectTask> {
   late String title = '';
   DateTime date = DateTime.now();
   late DateTime time =
       DateTime(date.year, date.month, date.day, date.hour + 1, 0);
 
-  String category = 'None';
+  late String category = widget.category;
   String details = '';
 
   String _id() {
@@ -47,7 +52,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.words,
                   onChannge: (value) {
-                    title = value;
+                    title = value.trim();
                   },
                   validator: (value) {
                     if (value != null && value.length > 20) {
@@ -89,15 +94,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
                 TextButtonRow(
-                  label: 'Category',
-                  text: category,
-                  icon: true,
-                  onPressed: () {
-                    _getCategory(context);
-                  },
-                  borderRadius: const BorderRadius.all(Radius.zero),
-                ),
-                TextButtonRow(
                   label: 'Reminder',
                   text: '1 hour before',
                   icon: true,
@@ -131,21 +127,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         complete: false,
       );
 
-      final box = Hive.box<Task>('tasks');
-      box.add(task);
-
-      final categoryBox = Hive.box<Category>('categories');
-      final categories = categoryBox.values.toList().cast<Category>();
-
-      final index = categories.indexWhere(
-          (category) => category.name.compareTo(task.category) == 0);
-
-      if (index != -1) {
-        categories[index].uses++;
-        categories[index].save();
-      }
-
-      Navigator.of(context).pop();
+      Navigator.of(context).pop<Task>(task);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

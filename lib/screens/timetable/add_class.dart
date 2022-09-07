@@ -56,7 +56,7 @@ class _AddClassState extends State<AddClass> {
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.words,
                   onChannge: (value) {
-                    title = value;
+                    title = value.trim();
                   },
                   validator: (value) {
                     if (value != null && value.length > 20) {
@@ -77,53 +77,51 @@ class _AddClassState extends State<AddClass> {
                   validator: (value) {
                     return null;
                   },
-                  borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(10.0)),
+                  borderRadius: const BorderRadius.all(Radius.zero),
                 ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20.0, 15.0, 5.0, 10.0),
-                  child: Column(
-                    children: [
-                      TextButtonRow(
-                        label: 'Start',
-                        text: DateFormat.Hm().format(startTime),
-                        icon: false,
-                        onPressed: _selectStartTime,
-                      ),
-                      TextButtonRow(
-                        label: 'End',
-                        text: DateFormat.Hm().format(endTime),
-                        icon: false,
-                        onPressed: _selectEndTime,
-                      ),
-                      TextButtonRow(
-                        label: 'Class Type',
-                        text: type,
-                        icon: true,
-                        onPressed: () {
-                          _getType(context);
-                        },
-                      ),
-                      TextButtonRow(
-                        label: 'Building',
-                        text: building,
-                        icon: true,
-                        onPressed: () {},
-                      ),
-                      TextButtonRow(
-                        label: 'Room',
-                        text: room,
-                        icon: true,
-                        onPressed: () {},
-                      ),
-                      TextButtonRow(
-                        label: 'Reminder',
-                        text: 'None',
-                        icon: true,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+                TextButtonRow(
+                  label: 'Start',
+                  text: DateFormat.Hm().format(startTime),
+                  icon: false,
+                  onPressed: _selectStartTime,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'End',
+                  text: DateFormat.Hm().format(endTime),
+                  icon: false,
+                  onPressed: _selectEndTime,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Class Type',
+                  text: type,
+                  icon: true,
+                  onPressed: () {
+                    _getType(context);
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Building',
+                  text: building,
+                  icon: true,
+                  onPressed: () {},
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Room',
+                  text: room,
+                  icon: true,
+                  onPressed: () {},
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Reminder',
+                  text: 'None',
+                  icon: true,
+                  onPressed: () {},
+                  borderRadius: const BorderRadius.all(Radius.zero),
                 ),
                 TextFieldWidget(
                   labelText: 'Professor Email',
@@ -140,7 +138,8 @@ class _AddClassState extends State<AddClass> {
                       return 'Invalid email address';
                     }
                   },
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(10.0)),
                 ),
               ],
             ),
@@ -185,6 +184,7 @@ class _AddClassState extends State<AddClass> {
 
       final index = categories.indexWhere(
           (category) => category.name.compareTo(dayClass.title) == 0);
+
       if (index == -1) {
         categoryBox.add(Category(name: title, uses: 1));
       } else {
@@ -229,6 +229,36 @@ class _AddClassState extends State<AddClass> {
     );
 
     if (selectedTime != null) {
+      if (selectedTime.hour < endTime.hour) {
+        setState(() {
+          startTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            selectedTime.hour,
+            selectedTime.minute,
+          );
+        });
+      } else if (selectedTime.hour == endTime.hour) {
+        if (selectedTime.minute < endTime.minute) {
+          setState(() {
+            startTime = DateTime(
+              now.year,
+              now.month,
+              now.day,
+              selectedTime.hour,
+              selectedTime.minute,
+            );
+          });
+        }
+      } else {
+        setState(() {
+          endTime.add(const Duration(hours: 2));
+        });
+      }
+    }
+
+    if (selectedTime != null) {
       setState(() {
         startTime = DateTime(
           now.year,
@@ -237,8 +267,6 @@ class _AddClassState extends State<AddClass> {
           selectedTime.hour,
           selectedTime.minute,
         );
-
-        endTime = startTime.add(const Duration(hours: 2));
       });
     }
   }
@@ -249,8 +277,6 @@ class _AddClassState extends State<AddClass> {
     TimeOfDay? selectedTime = await showTimePicker(
       context: context,
       initialTime: initialTime,
-      hourLabelText: initialTime.hour.toString(),
-      minuteLabelText: initialTime.minute.toString(),
       initialEntryMode: TimePickerEntryMode.input,
       builder: (context, child) {
         return MediaQuery(
@@ -271,7 +297,19 @@ class _AddClassState extends State<AddClass> {
             selectedTime.minute,
           );
         });
-      } else {}
+      } else if (selectedTime.hour == startTime.hour) {
+        if (selectedTime.minute > startTime.minute) {
+          setState(() {
+            endTime = DateTime(
+              startTime.year,
+              startTime.month,
+              startTime.day,
+              selectedTime.hour,
+              selectedTime.minute,
+            );
+          });
+        }
+      }
     }
   }
 }

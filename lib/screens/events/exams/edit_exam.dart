@@ -1,7 +1,5 @@
-import 'package:buzzer/main.dart';
 import 'package:buzzer/models/exam_model.dart';
-import 'package:buzzer/screens/tasks/categories.dart';
-import 'package:buzzer/widgets/buttons.dart';
+import 'package:buzzer/screens/categories.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
@@ -69,51 +67,47 @@ class _EditExamState extends State<EditExam> {
                   validator: (value) {
                     return null;
                   },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Date',
+                  text: DateFormat(
+                    'd MMMM',
+                  ).format(date),
+                  icon: false,
+                  onPressed: selectDate,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Time',
+                  text: DateFormat.Hm().format(time),
+                  icon: false,
+                  onPressed: selectTime,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Category',
+                  text: category,
+                  icon: true,
+                  onPressed: () {
+                    _getCategory(context);
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Room',
+                  text: room,
+                  icon: true,
+                  onPressed: () {},
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Reminder',
+                  text: '1 hour before',
+                  icon: true,
+                  onPressed: () {},
                   borderRadius: const BorderRadius.vertical(
                       bottom: Radius.circular(10.0)),
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20.0, 15.0, 5.0, 10.0),
-                  child: Column(
-                    children: <Widget>[
-                      TextButtonRow(
-                        label: 'Date',
-                        text: DateFormat(
-                          'd MMMM',
-                        ).format(date),
-                        icon: false,
-                        onPressed: selectDate,
-                      ),
-                      TextButtonRow(
-                        label: 'Time',
-                        text: DateFormat.Hm().format(time),
-                        icon: false,
-                        onPressed: selectTime,
-                      ),
-                      TextButtonRow(
-                        label: 'Category',
-                        text: category,
-                        icon: true,
-                        onPressed: () {
-                          _getCategory(context);
-                        },
-                      ),
-                      TextFieldRow(
-                        label: 'Room',
-                        defaultValue: room,
-                        width: 80.0,
-                        onChannge: (value) {
-                          room = value;
-                        },
-                      ),
-                      TextButtonRow(
-                        label: 'Reminder',
-                        text: '1 hour before',
-                        icon: true,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
                 ),
               ],
             ),

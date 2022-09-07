@@ -1,5 +1,5 @@
 import 'package:buzzer/models/task_model.dart';
-import 'package:buzzer/screens/tasks/categories.dart';
+import 'package:buzzer/screens/categories.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
@@ -67,43 +67,40 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   validator: (value) {
                     return null;
                   },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Date',
+                  text: DateFormat(
+                    'd MMMM',
+                  ).format(date),
+                  icon: false,
+                  onPressed: _selectDate,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Time',
+                  text: DateFormat.Hm().format(time),
+                  icon: false,
+                  onPressed: _selectTime,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Category',
+                  text: category,
+                  icon: true,
+                  onPressed: () {
+                    _getCategory(context);
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
+                  label: 'Reminder',
+                  text: '1 hour before',
+                  icon: true,
+                  onPressed: () {},
                   borderRadius: const BorderRadius.vertical(
                       bottom: Radius.circular(10.0)),
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20.0, 15.0, 5.0, 10.0),
-                  child: Column(
-                    children: [
-                      TextButtonRow(
-                        label: 'Date',
-                        text: DateFormat(
-                          'd MMMM',
-                        ).format(date),
-                        icon: false,
-                        onPressed: _selectDate,
-                      ),
-                      TextButtonRow(
-                        label: 'Time',
-                        text: DateFormat.Hm().format(time),
-                        icon: false,
-                        onPressed: _selectTime,
-                      ),
-                      TextButtonRow(
-                        label: 'Category',
-                        text: category,
-                        icon: true,
-                        onPressed: () {
-                          _getCategory(context);
-                        },
-                      ),
-                      TextButtonRow(
-                        label: 'Reminder',
-                        text: '1 hour before',
-                        icon: true,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
                 ),
               ],
             ),

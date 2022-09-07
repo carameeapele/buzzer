@@ -58,6 +58,7 @@ class _ProjectsListState extends State<ProjectsList> {
             ? defaultScreen
             : ListView.builder(
                 shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
                 itemCount: projects.length,
                 itemBuilder: (BuildContext context, int index) {
                   final project = projects[index];
@@ -75,11 +76,10 @@ class _ProjectsListState extends State<ProjectsList> {
                       child: ExpansionTile(
                         tilePadding:
                             const EdgeInsets.symmetric(horizontal: 20.0),
-                        title: classTitle(project.category, project.title),
-                        trailing: CircularProgressIndicator(
-                          value: completeTasks.length *
-                              (100 / completeTasks.length),
+                        title: classTitle(project.title, project.category),
+                        subtitle: LinearProgressIndicator(
                           color: BuzzerColors.orange,
+                          value: 0.5,
                         ),
                         childrenPadding: const EdgeInsets.symmetric(
                           horizontal: 15.0,
@@ -89,13 +89,24 @@ class _ProjectsListState extends State<ProjectsList> {
                         expandedAlignment: Alignment.centerLeft,
                         children: <Widget>[
                           ListView.builder(
-                            itemBuilder: (context, index) {
-                              return ListTile();
+                            shrinkWrap: true,
+                            itemCount: tasks.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final task = tasks[index];
+
+                              return Text(task.title);
+                              // return ListTile(
+                              //   dense: true,
+                              //   title: Text(task.title),
+                              //   trailing: Checkbox(
+                              //     value: task.complete,
+                              //     onChanged: (value) {
+                              //       task.complete = value!;
+                              //       task.save();
+                              //     },
+                              //   ),
+                              // );
                             },
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text('Add a task'),
                           ),
                           options(project),
                         ],
@@ -108,6 +119,8 @@ class _ProjectsListState extends State<ProjectsList> {
       },
     );
   }
+
+  final projectTiles = <ListTile>[];
 
   RichText title(
     String title,
@@ -183,13 +196,7 @@ class _ProjectsListState extends State<ProjectsList> {
               ),
             );
           },
-          child: const Text(
-            'Edit',
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          style: TextButton.styleFrom(primary: BuzzerColors.grey),
+          child: const Text('Edit'),
         ),
         const SizedBox(
           width: 5.0,
@@ -198,13 +205,7 @@ class _ProjectsListState extends State<ProjectsList> {
           onPressed: () {
             _deleteProject(project);
           },
-          child: const Text(
-            'Delete',
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          style: TextButton.styleFrom(primary: BuzzerColors.grey),
+          child: const Text('Delete'),
         ),
       ],
     );

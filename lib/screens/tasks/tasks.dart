@@ -62,6 +62,7 @@ class _TasksScreenState extends State<TasksScreen> {
                         height: MediaQuery.of(context).size.height - 150.0,
                         child: ListView.builder(
                           shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
                           itemCount: tasks.length,
                           itemBuilder: (BuildContext context, int index) {
                             final task = tasks[index];
@@ -77,9 +78,9 @@ class _TasksScreenState extends State<TasksScreen> {
                                 Theme(
                                   data: data,
                                   child: ExpansionTile(
-                                    title: taskTitle(task.title, task.category,
-                                        task.date, task.complete),
-                                    subtitle: taskSubtitle(task.complete,
+                                    title: taskTitle(
+                                        task.title, task.category, task.date),
+                                    subtitle: taskSubtitle(
                                         task.date, task.time, task.category),
                                     trailing: Checkbox(
                                       value: task.complete,
@@ -130,10 +131,6 @@ class _TasksScreenState extends State<TasksScreen> {
     task.save();
   }
 
-  void _deleteTask(Task task) {
-    task.delete();
-  }
-
   Row options(Task task) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -153,7 +150,7 @@ class _TasksScreenState extends State<TasksScreen> {
         ),
         TextButton(
           onPressed: () {
-            _deleteTask(task);
+            task.delete();
 
             final categoryBox = Hive.box<Category>('categories');
             final categories = categoryBox.values.toList().cast<Category>();
