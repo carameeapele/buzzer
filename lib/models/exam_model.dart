@@ -23,6 +23,9 @@ class Exam extends HiveObject {
   @HiveField(6)
   String room = '';
 
+  @HiveField(7)
+  String building = '';
+
   Exam({
     required this.id,
     required this.title,
@@ -31,5 +34,6 @@ class Exam extends HiveObject {
     required this.category,
     required this.details,
     required this.room,
+    required this.building,
   });
 }

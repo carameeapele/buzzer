@@ -77,7 +77,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                         });
                       },
                     ),
-                    false,
+                    (selectedCategory.compareTo(category.name) == 0),
                   );
                 },
               ),
@@ -92,23 +92,20 @@ class _CategoryPickerState extends State<CategoryPicker> {
     return showDialog(
       context: context,
       builder: (contex) => AlertDialog(
-        content: Form(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: TextFieldWidget(
-            keyboardType: TextInputType.text,
-            labelText: 'Category Name',
-            textCapitalization: TextCapitalization.words,
-            onChannge: (value) {
-              newCategoryName = value.trim();
-            },
-            validator: (value) {
-              if (value != null && value.length > 25) {
-                return 'Maximum 25 characters';
-              }
-              return null;
-            },
-            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-          ),
+        content: TextFieldWidget(
+          keyboardType: TextInputType.text,
+          labelText: 'Category Name',
+          textCapitalization: TextCapitalization.words,
+          onChannge: (value) {
+            newCategoryName = value.trim();
+          },
+          validator: (value) {
+            if (value != null && value.length > 25) {
+              return 'Maximum 25 characters';
+            }
+            return null;
+          },
+          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
         ),
         actions: [
           TextButton(

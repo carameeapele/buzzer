@@ -1,6 +1,9 @@
 import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/models/course_model.dart';
+import 'package:buzzer/models/notifications.dart';
+import 'package:buzzer/screens/class_reminders.dart';
 import 'package:buzzer/screens/timetable/class_types.dart';
+import 'package:buzzer/screens/timetable/week_picker.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
@@ -23,7 +26,9 @@ class AddClass extends StatefulWidget {
 }
 
 class _AddClassState extends State<AddClass> {
-  late String title;
+  late bool countWeeks = preferences.get('countWeeks', defaultValue: false);
+
+  late String title = '';
   late String day = widget.day;
   late String type = 'None';
   DateTime startTime = DateTime.now().add(const Duration(hours: 1));
@@ -32,11 +37,15 @@ class _AddClassState extends State<AddClass> {
   String building = '';
   String professorEmail = '';
   String details = '';
+  int optionIndex = 0;
+  String reminder = 'None';
 
   String _id() {
     final now = DateTime.now();
     return now.microsecondsSinceEpoch.toString();
   }
+
+  List<String> options = ['Every Week', 'Odd Week', 'Even Week'];
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +88,16 @@ class _AddClassState extends State<AddClass> {
                   },
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
+                if (countWeeks)
+                  TextButtonRow(
+                    label: 'Week',
+                    text: options[optionIndex],
+                    icon: false,
+                    onPressed: () {
+                      _weekPicker();
+                    },
+                    borderRadius: const BorderRadius.all(Radius.zero),
+                  ),
                 TextButtonRow(
                   label: 'Start',
                   text: DateFormat.Hm().format(startTime),
@@ -96,31 +115,37 @@ class _AddClassState extends State<AddClass> {
                 TextButtonRow(
                   label: 'Class Type',
                   text: type,
-                  icon: true,
+                  icon: false,
                   onPressed: () {
-                    _getType(context);
+                    _getType();
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextFieldRow(
+                  label: 'Building',
+                  maxLines: 20,
+                  defaultValue: building,
+                  onChannge: (value) {
+                    building = value.trim();
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextFieldRow(
+                  label: 'Room',
+                  maxLines: 6,
+                  defaultValue: room,
+                  onChannge: (value) {
+                    room = value.trim();
                   },
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
                 TextButtonRow(
-                  label: 'Building',
-                  text: building,
-                  icon: true,
-                  onPressed: () {},
-                  borderRadius: const BorderRadius.all(Radius.zero),
-                ),
-                TextButtonRow(
-                  label: 'Room',
-                  text: room,
-                  icon: true,
-                  onPressed: () {},
-                  borderRadius: const BorderRadius.all(Radius.zero),
-                ),
-                TextButtonRow(
                   label: 'Reminder',
-                  text: 'None',
+                  text: reminder,
                   icon: true,
-                  onPressed: () {},
+                  onPressed: () {
+                    _setReminder(context);
+                  },
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
                 TextFieldWidget(
@@ -149,6 +174,22 @@ class _AddClassState extends State<AddClass> {
     );
   }
 
+  Future<void> _setReminder(BuildContext context) async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ClassReminderPicker(selectedReminder: reminder),
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {
+        reminder = result;
+      });
+    }
+  }
+
   void _onSave() {
     if (title != '') {
       final dayClass = Course(
@@ -173,7 +214,8 @@ class _AddClassState extends State<AddClass> {
         room: room,
         professorEmail: professorEmail,
         details: details,
-        week: 1,
+        week: optionIndex,
+        building: building,
       );
 
       final classBox = Hive.box<Course>('classes');
@@ -191,16 +233,43 @@ class _AddClassState extends State<AddClass> {
         categories[index].uses++;
         categories[index].save();
       }
-    }
 
-    FocusScope.of(context).unfocus();
-    Navigator.of(context).pop();
+      switch (reminder) {
+        case 'None':
+          break;
+        case '10 minutes before':
+          NotificationClass().setReminder(dayClass.id.hashCode, type, title,
+              startTime.subtract(const Duration(minutes: 10)));
+          break;
+        case '30 minutes before':
+          NotificationClass().setReminder(dayClass.id.hashCode, type, title,
+              startTime.subtract(const Duration(minutes: 30)));
+          break;
+        case '1 hour before':
+          NotificationClass().setReminder(dayClass.id.hashCode, type, title,
+              startTime.subtract(const Duration(hours: 1)));
+          break;
+      }
+
+      FocusScope.of(context).unfocus();
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Class name must not be empty'),
+        ),
+      );
+    }
   }
 
-  Future<void> _getType(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ClassTypes(selectedType: type)),
+  Future<void> _getType() async {
+    final result = await showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15.0))),
+      context: context,
+      builder: (BuildContext context) {
+        return ClassTypes(selectedType: type);
+      },
     );
 
     if (!mounted) return;
@@ -208,6 +277,25 @@ class _AddClassState extends State<AddClass> {
     if (result != null) {
       setState(() {
         type = result;
+      });
+    }
+  }
+
+  Future<void> _weekPicker() async {
+    final result = await showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15.0))),
+      context: context,
+      builder: (BuildContext context) {
+        return WeekPicker(optionIndex: optionIndex);
+      },
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {
+        optionIndex = result;
       });
     }
   }

@@ -22,6 +22,9 @@ class Project extends HiveObject {
   late bool complete;
 
   @HiveField(6)
+  late double progress;
+
+  @HiveField(7)
   late HiveList<Task> tasks;
 
   Project(
@@ -31,5 +34,6 @@ class Project extends HiveObject {
     this.date,
     this.time,
     this.complete,
+    this.progress,
   );
 }

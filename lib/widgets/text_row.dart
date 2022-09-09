@@ -1,6 +1,7 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/widgets/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TextButtonRow extends StatelessWidget {
   const TextButtonRow({
@@ -56,63 +57,59 @@ class TextFieldRow extends StatelessWidget {
     Key? key,
     required this.label,
     required this.defaultValue,
-    required this.width,
+    required this.maxLines,
     required this.onChannge,
+    required this.borderRadius,
   }) : super(key: key);
 
   final String label;
   final String defaultValue;
-  final double width;
+  final int maxLines;
   final Function(String) onChannge;
+  final BorderRadius borderRadius;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 15.0,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: BuzzerColors.grey,
         ),
-        SizedBox(
-          width: width,
-          child: TextFormField(
-            controller: TextEditingController(text: defaultValue),
+        borderRadius: borderRadius,
+      ),
+      padding: const EdgeInsets.fromLTRB(15.0, 0.0, 20.0, 0.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            label,
             style: const TextStyle(
               fontSize: 15.0,
             ),
-            cursorColor: BuzzerColors.orange,
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 10.0,
-                horizontal: 12.0,
-              ),
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-                borderSide: BorderSide(
-                  color: BuzzerColors.orange,
-                  width: 2.0,
-                ),
-              ),
-              errorBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                borderSide: BorderSide(
-                  color: Color.fromARGB(255, 168, 28, 19),
-                  width: 2.0,
-                ),
-              ),
-            ),
-            onChanged: onChannge,
           ),
-        ),
-      ],
+          SizedBox(
+            width: 150.0,
+            child: TextField(
+              textAlign: TextAlign.end,
+              inputFormatters: [LengthLimitingTextInputFormatter(maxLines)],
+              controller: TextEditingController(text: defaultValue),
+              style: const TextStyle(
+                fontSize: 15.0,
+              ),
+              cursorColor: BuzzerColors.orange,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(0.0),
+                focusedBorder: InputBorder.none,
+                fillColor: Colors.transparent,
+                hintText: label,
+                border: InputBorder.none,
+              ),
+              onChanged: onChannge,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -43,10 +43,7 @@ class _HomeState extends State<Home> {
               const TodayTasks(),
               const SizedBox(height: 10.0),
               Text('Schedule', style: subtitleTextStyle),
-
-              // adauga examenele
-
-              const SizedBox(height: 10.0),
+              const TodayEvents(),
               const TodaySchedule(),
             ],
           ),

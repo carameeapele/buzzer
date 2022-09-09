@@ -24,6 +24,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   late DateTime time = widget.task.time;
   late String category = widget.task.category;
   late String details = widget.task.details;
+  late String reminder;
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +160,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   Future _selectDate() async {
     DateTime? selectedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: date,
       firstDate: DateTime.now(),
       lastDate:
           DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),

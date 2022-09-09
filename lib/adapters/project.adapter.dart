@@ -18,13 +18,14 @@ class ProjectAdapter extends TypeAdapter<Project> {
       fields[3] as DateTime,
       fields[4] as DateTime,
       fields[5] as bool,
-    )..tasks = (fields[6] as HiveList).castHiveList();
+      fields[6] as double,
+    )..tasks = (fields[7] as HiveList).castHiveList();
   }
 
   @override
   void write(BinaryWriter writer, Project obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,6 +39,8 @@ class ProjectAdapter extends TypeAdapter<Project> {
       ..writeByte(5)
       ..write(obj.complete)
       ..writeByte(6)
+      ..write(obj.progress)
+      ..writeByte(7)
       ..write(obj.tasks);
   }
 

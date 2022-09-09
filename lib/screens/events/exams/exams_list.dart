@@ -15,6 +15,14 @@ class EventsList extends StatefulWidget {
 }
 
 class _EventsListState extends State<EventsList> {
+  late bool deleteExams = preferences.get('deleteExams', defaultValue: true);
+
+  @override
+  void initState() {
+    _automaticallyDelete();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final data = Theme.of(context).copyWith(dividerColor: Colors.transparent);
@@ -67,33 +75,78 @@ class _EventsListState extends State<EventsList> {
                   bool _isToday = (exam.date.day == now.day &&
                       exam.date.month == now.month &&
                       exam.date.year == now.year);
+                  bool _isTomorrow = (exam.date.day == (now.day + 1) &&
+                      exam.date.month == now.month &&
+                      exam.date.year == now.year);
 
                   return Opacity(
-                    opacity: now.isAfter(exam.date) ? 0.4 : 1.0,
+                    opacity: now.isBefore(exam.date) ? 1.0 : 0.4,
                     child: customCard(
                       Theme(
                         data: data,
                         child: ExpansionTile(
                           title:
                               examTitle(exam.title, exam.category, exam.date),
+                          tilePadding:
+                              const EdgeInsets.symmetric(horizontal: 20.0),
                           trailing: examTrailing(exam.date, exam.time),
-                          childrenPadding:
-                              const EdgeInsets.fromLTRB(20.0, 0.0, 12.0, 0.0),
+                          childrenPadding: const EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                            vertical: 0.0,
+                          ),
                           expandedCrossAxisAlignment: CrossAxisAlignment.start,
                           expandedAlignment: Alignment.centerLeft,
                           children: <Widget>[
-                            _details(exam),
-                            exam.details.isNotEmpty
-                                ? const SizedBox(height: 10.0)
-                                : const SizedBox(),
-                            exam.details.isNotEmpty
-                                ? Text(exam.details)
-                                : const SizedBox(),
-                            _options(exam),
+                            if (now.isBefore(exam.date))
+                              classRow(
+                                'Time',
+                                Text(
+                                  DateFormat('Hm').format(exam.time),
+                                  style: TextStyle(
+                                    color: BuzzerColors.grey,
+                                  ),
+                                ),
+                              ),
+                            const SizedBox(height: 10.0),
+                            if (exam.building.isNotEmpty)
+                              classRow(
+                                'Building',
+                                Text(
+                                  exam.building,
+                                  style: TextStyle(
+                                    color: BuzzerColors.grey,
+                                  ),
+                                ),
+                              ),
+                            if (exam.building.isNotEmpty)
+                              const SizedBox(height: 10.0),
+                            if (exam.room.isNotEmpty)
+                              classRow(
+                                'Room',
+                                Text(
+                                  exam.room,
+                                  style: TextStyle(
+                                    color: BuzzerColors.grey,
+                                  ),
+                                ),
+                              ),
+                            if (exam.details.isNotEmpty)
+                              Text(
+                                exam.details,
+                                textAlign: TextAlign.end,
+                                style: TextStyle(color: BuzzerColors.grey),
+                              ),
+                            tileOptions(
+                              context,
+                              EditExam(exam: exam),
+                              () {
+                                _deleteExam(exam);
+                              },
+                            ),
                           ],
                         ),
                       ),
-                      _isToday,
+                      _isToday || _isTomorrow,
                     ),
                   );
                 },
@@ -102,60 +155,17 @@ class _EventsListState extends State<EventsList> {
     );
   }
 
-  RichText _title(
-    String title,
-    String tag,
-    DateTime date,
-    DateTime time,
-  ) {
-    DateTime now = DateTime.now();
-    bool _isBefore = (date.isBefore(now));
+  void _automaticallyDelete() {
+    if (deleteExams) {
+      final box = Hive.box<Exam>('exams');
+      final exams = box.values.toList().cast<Exam>();
 
-    return RichText(
-      text: TextSpan(
-        text: tag,
-        style: TextStyle(
-          color: (_isBefore && time.isBefore(now))
-              ? BuzzerColors.grey
-              : Colors.black,
-          fontSize: 17.0,
-          fontStyle: FontStyle.italic,
-          decoration: (_isBefore && time.isBefore(now))
-              ? TextDecoration.lineThrough
-              : null,
-          decorationThickness: 2.0,
-        ),
-        children: <TextSpan>[
-          TextSpan(
-            text: '  $title',
-            style: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.normal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Text _trailing(DateTime date, DateTime time) {
-    DateTime now = DateTime.now();
-    bool _isToday = (date.day == now.day &&
-        date.month == now.month &&
-        date.year == now.year);
-
-    return Text(
-      _isToday
-          ? DateFormat('Hm', 'en_US').format(time)
-          : DateFormat('dd MMM', 'en_US').format(date),
-      style: TextStyle(
-        color: ((date.isBefore(now) && time.isBefore(now)))
-            ? BuzzerColors.grey
-            : Colors.black,
-        fontSize: 16.0,
-      ),
-    );
+      for (var exam in exams) {
+        if (exam.date.add(const Duration(days: 1)).isBefore(DateTime.now())) {
+          _deleteExam(exam);
+        }
+      }
+    }
   }
 
   void _deleteExam(Exam exam) {
@@ -175,71 +185,5 @@ class _EventsListState extends State<EventsList> {
         categories[index].delete();
       }
     }
-  }
-
-  Row _details(Exam exam) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Icon(
-          Icons.access_time_filled,
-          size: 18.0,
-          color: BuzzerColors.orange,
-        ),
-        const SizedBox(width: 5.0),
-        Text(
-          DateFormat('Hm', 'en_US').format(exam.time),
-          style: const TextStyle(
-            fontFamily: 'Roboto',
-          ),
-        ),
-        const SizedBox(width: 20.0),
-        Icon(
-          Icons.meeting_room,
-          size: 18.0,
-          color: BuzzerColors.orange,
-        ),
-        const SizedBox(width: 5.0),
-        exam.room.isNotEmpty ? Text(exam.room) : const SizedBox(),
-      ],
-    );
-  }
-
-  Row _options(Exam exam) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => EditExam(
-                  exam: exam,
-                ),
-              ),
-            );
-          },
-          child: const Text(
-            'Edit',
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          style: TextButton.styleFrom(primary: BuzzerColors.grey),
-        ),
-        TextButton(
-          onPressed: () {
-            _deleteExam(exam);
-          },
-          child: const Text(
-            'Delete',
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          style: TextButton.styleFrom(primary: BuzzerColors.grey),
-        ),
-      ],
-    );
   }
 }

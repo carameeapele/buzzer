@@ -22,6 +22,91 @@ Card customCard(Widget child, bool border) {
   );
 }
 
+Card examCard(Widget child) {
+  return Card(
+    color: BuzzerColors.orange,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(10.0),
+      ),
+    ),
+    child: child,
+  );
+}
+
+Card classCard(Widget child, bool border) {
+  return Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: const BorderRadius.all(
+        Radius.circular(10.0),
+      ),
+      side: BorderSide(
+        color: border ? BuzzerColors.orange : Colors.grey,
+        width: 2.0,
+      ),
+    ),
+    child: child,
+  );
+}
+
+Widget examTodayTitle(
+  String title,
+  String category,
+  DateTime date,
+) {
+  return (category.length > 10)
+      ? SizedBox(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (category.compareTo('None') != 0)
+                  Text(
+                    category,
+                    style: const TextStyle(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+      : SizedBox(
+          child: Row(
+            children: [
+              if (category.compareTo('None') != 0)
+                Text(
+                  '$category  ',
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
+                ),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
+          ),
+        );
+}
+
 Widget todayTaskTitle(
   String title,
   String category,
@@ -257,9 +342,12 @@ Widget examTrailing(
 
   return Text(
     _isToday
-        ? '${DateFormat('Hm').format(time)}  '
-        : '${DateFormat('dd MMM', 'en_US').format(date)}  ',
-    style: const TextStyle(fontSize: 13.0),
+        ? DateFormat('Hm').format(time)
+        : DateFormat('dd MMM', 'en_US').format(date),
+    style: const TextStyle(
+      fontSize: 16.0,
+      fontWeight: FontWeight.bold,
+    ),
   );
 }
 
@@ -348,19 +436,17 @@ Widget tileOptions(
 }
 
 Widget classRow(String tag, Widget value) {
-  return Container(
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          tag,
-          style: TextStyle(
-            color: BuzzerColors.grey,
-          ),
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: <Widget>[
+      Text(
+        tag,
+        style: TextStyle(
+          color: BuzzerColors.grey,
         ),
-        value,
-      ],
-    ),
+      ),
+      value,
+    ],
   );
 }
 

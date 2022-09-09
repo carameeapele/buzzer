@@ -1,6 +1,8 @@
 import 'package:buzzer/models/category_model.dart';
+import 'package:buzzer/models/notifications.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/categories.dart';
+import 'package:buzzer/screens/reminders.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
@@ -22,6 +24,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       DateTime(date.year, date.month, date.day, date.hour + 1, 0);
 
   String category = 'None';
+  late String reminder = 'None';
+  late String secondReminder = 'None';
+
   String details = '';
 
   String _id() {
@@ -99,18 +104,63 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
                 TextButtonRow(
                   label: 'Reminder',
-                  text: '1 hour before',
+                  text: reminder,
                   icon: true,
-                  onPressed: () {},
-                  borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(10.0)),
+                  onPressed: () {
+                    _setFirstReminder(context);
+                  },
+                  borderRadius:
+                      const BorderRadius.vertical(bottom: Radius.zero),
                 ),
+                if (reminder.compareTo('None') != 0)
+                  TextButtonRow(
+                    label: 'Second Reminder',
+                    text: secondReminder,
+                    icon: true,
+                    onPressed: () {
+                      _setSecondReminder(context);
+                    },
+                    borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(10.0)),
+                  ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _setFirstReminder(BuildContext context) async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ReminderPicker(selectedReminder: reminder),
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {
+        reminder = result;
+      });
+    }
+  }
+
+  Future<void> _setSecondReminder(BuildContext context) async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ReminderPicker(selectedReminder: secondReminder),
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (result != null && result != reminder) {
+      setState(() {
+        secondReminder = result;
+      });
+    }
   }
 
   void _onSave() {
@@ -145,6 +195,31 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         categories[index].save();
       }
 
+      switch (reminder) {
+        case 'None':
+          break;
+        case '10 minutes before':
+          NotificationClass().setReminder(task.id.hashCode, category, title,
+              date.subtract(const Duration(minutes: 10)));
+          break;
+        case '30 minutes before':
+          NotificationClass().setReminder(task.id.hashCode, category, title,
+              date.subtract(const Duration(minutes: 30)));
+          break;
+        case '1 hour before':
+          NotificationClass().setReminder(task.id.hashCode, category, title,
+              date.subtract(const Duration(hours: 1)));
+          break;
+        case '2 hours before':
+          NotificationClass().setReminder(task.id.hashCode, category, title,
+              date.subtract(const Duration(hours: 2)));
+          break;
+        case 'One day before':
+          NotificationClass().setReminder(task.id.hashCode, category, title,
+              date.subtract(const Duration(days: 1)));
+          break;
+      }
+
       Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -156,7 +231,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   Future _selectTime() async {
-    TimeOfDay initialTime = TimeOfDay.fromDateTime(time).replacing(minute: 0);
+    TimeOfDay initialTime = TimeOfDay.fromDateTime(time);
 
     TimeOfDay? selectedTime = await showTimePicker(
       context: context,
@@ -173,6 +248,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     if (selectedTime != null) {
       setState(() {
         time = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
+
+        date = DateTime(
           date.year,
           date.month,
           date.day,
@@ -202,7 +285,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Future _selectDate() async {
     DateTime? selectedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: date,
       firstDate: DateTime.now(),
       lastDate:
           DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),
@@ -210,7 +293,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
     if (selectedDate != null) {
       setState(() {
-        date = selectedDate;
+        date = DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          time.hour,
+          time.minute,
+        );
       });
     }
   }

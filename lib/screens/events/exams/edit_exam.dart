@@ -25,6 +25,7 @@ class _EditExamState extends State<EditExam> {
   late String category = widget.exam.category;
   late String details = widget.exam.details;
   late String room = widget.exam.room;
+  late String building = widget.exam.building;
 
   @override
   Widget build(BuildContext context) {
@@ -94,11 +95,22 @@ class _EditExamState extends State<EditExam> {
                   },
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
-                TextButtonRow(
+                TextFieldRow(
+                  label: 'Building',
+                  maxLines: 20,
+                  defaultValue: building,
+                  onChannge: (value) {
+                    building = value.trim();
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextFieldRow(
                   label: 'Room',
-                  text: room,
-                  icon: true,
-                  onPressed: () {},
+                  maxLines: 6,
+                  defaultValue: room,
+                  onChannge: (value) {
+                    room = value.trim();
+                  },
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
                 TextButtonRow(
@@ -124,6 +136,7 @@ class _EditExamState extends State<EditExam> {
     widget.exam.category = category;
     widget.exam.details = details;
     widget.exam.room = room;
+    widget.exam.building = building;
 
     widget.exam.save();
     Navigator.of(context).pop();

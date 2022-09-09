@@ -1,4 +1,5 @@
 import 'package:buzzer/main.dart';
+import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/models/course_model.dart';
 import 'package:buzzer/screens/timetable/edit_class.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
@@ -21,6 +22,8 @@ class ClassList extends StatefulWidget {
 }
 
 class _ClassListState extends State<ClassList> {
+  late int weekNumber = preferences.get('weekNumber', defaultValue: 1);
+
   @override
   Widget build(BuildContext context) {
     final String day = widget.day;
@@ -47,6 +50,13 @@ class _ClassListState extends State<ClassList> {
       builder: (context, box, widget) {
         final classes = box.values.toList().cast<Course>();
         classes.removeWhere((element) => element.day.compareTo(day) != 0);
+
+        if (weekNumber % 2 == 0) {
+          classes.removeWhere((element) => element.week == 1);
+        } else {
+          classes.removeWhere((element) => element.week == 2);
+        }
+
         if (classes.isNotEmpty) {
           classes.sort((a, b) => a.startTime.compareTo(b.startTime));
         }
@@ -55,9 +65,13 @@ class _ClassListState extends State<ClassList> {
             ? defaultScreen
             : ListView.builder(
                 shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
                 itemCount: classes.length,
                 itemBuilder: (BuildContext context, int index) {
                   Course dayClass = classes[index];
+                  bool _isNow =
+                      (dayClass.startTime.hour < DateTime.now().hour &&
+                          dayClass.endTime.hour > DateTime.now().hour);
 
                   return customCard(
                     Theme(
@@ -66,13 +80,30 @@ class _ClassListState extends State<ClassList> {
                         tilePadding:
                             const EdgeInsets.symmetric(horizontal: 20.0),
                         title: classTitle(dayClass.title, dayClass.type),
-                        trailing: Text(
-                          DateFormat('Hm', 'en_US').format(dayClass.startTime),
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        trailing: _isNow
+                            ? Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 5.0),
+                                decoration: BoxDecoration(
+                                    color: BuzzerColors.orange,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(5.0))),
+                                child: const Text(
+                                  'Now',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                DateFormat('Hm', 'en_US')
+                                    .format(dayClass.startTime),
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                         childrenPadding: const EdgeInsets.symmetric(
                           horizontal: 20.0,
                           vertical: 0.0,
@@ -80,6 +111,18 @@ class _ClassListState extends State<ClassList> {
                         expandedCrossAxisAlignment: CrossAxisAlignment.start,
                         expandedAlignment: Alignment.centerLeft,
                         children: <Widget>[
+                          if (dayClass.building.isNotEmpty)
+                            classRow(
+                              'Building',
+                              Text(
+                                dayClass.building,
+                                style: TextStyle(
+                                  color: BuzzerColors.grey,
+                                ),
+                              ),
+                            ),
+                          if (dayClass.building.isNotEmpty)
+                            const SizedBox(height: 10.0),
                           if (dayClass.room.isNotEmpty)
                             classRow(
                               'Room',
@@ -141,18 +184,37 @@ class _ClassListState extends State<ClassList> {
                             context,
                             EditClass(classs: dayClass),
                             () {
-                              dayClass.delete();
+                              _deleteClass(dayClass);
                             },
                           ),
                         ],
                       ),
                     ),
-                    false,
+                    _isNow,
                   );
                 },
               );
       },
     );
+  }
+
+  void _deleteClass(Course course) {
+    course.delete();
+
+    final categoryBox = Hive.box<Category>('categories');
+    final categories = categoryBox.values.toList().cast<Category>();
+
+    final index = categories
+        .indexWhere((category) => category.name.compareTo(course.title) == 0);
+
+    if (index != -1) {
+      categories[index].uses--;
+      categories[index].save();
+
+      if (categories[index].uses < 1) {
+        categories[index].delete();
+      }
+    }
   }
 
   Future openEmail({required String professor}) async {

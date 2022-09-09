@@ -1,7 +1,8 @@
-import 'package:buzzer/main.dart';
 import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/models/exam_model.dart';
+import 'package:buzzer/models/notifications.dart';
 import 'package:buzzer/screens/categories.dart';
+import 'package:buzzer/screens/reminders.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
@@ -17,13 +18,15 @@ class AddExamScreen extends StatefulWidget {
 }
 
 class _AddExamScreenState extends State<AddExamScreen> {
-  late String title;
+  late String title = '';
   DateTime date = DateTime.now();
   late DateTime time = date.add(const Duration(hours: 1));
 
   String category = 'None';
   String details = '';
   String room = '';
+  String building = '';
+  String reminder = 'None';
 
   String _id() {
     final now = DateTime.now();
@@ -97,18 +100,31 @@ class _AddExamScreenState extends State<AddExamScreen> {
                   },
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
-                TextButtonRow(
+                TextFieldRow(
+                  label: 'Building',
+                  maxLines: 20,
+                  defaultValue: building,
+                  onChannge: (value) {
+                    building = value.trim();
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextFieldRow(
                   label: 'Room',
-                  text: '',
-                  icon: true,
-                  onPressed: () {},
+                  maxLines: 6,
+                  defaultValue: room,
+                  onChannge: (value) {
+                    room = value.trim();
+                  },
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
                 TextButtonRow(
                   label: 'Reminder',
-                  text: '1 hour before',
+                  text: reminder,
                   icon: true,
-                  onPressed: () {},
+                  onPressed: () {
+                    _setReminder(context);
+                  },
                   borderRadius: const BorderRadius.vertical(
                       bottom: Radius.circular(10.0)),
                 ),
@@ -136,6 +152,7 @@ class _AddExamScreenState extends State<AddExamScreen> {
         category: category,
         details: details,
         room: room,
+        building: building,
       );
 
       final box = Hive.box<Exam>('exams');
@@ -152,8 +169,39 @@ class _AddExamScreenState extends State<AddExamScreen> {
         categories[index].save();
       }
 
+      switch (reminder) {
+        case 'None':
+          break;
+        case '10 minutes before':
+          NotificationClass().setReminder(
+              0, category, title, date.subtract(const Duration(minutes: 10)));
+          break;
+        case '30 minutes before':
+          NotificationClass().setReminder(
+              0, category, title, date.subtract(const Duration(minutes: 30)));
+          break;
+        case '1 hour before':
+          NotificationClass().setReminder(
+              0, category, title, date.subtract(const Duration(hours: 1)));
+          break;
+        case '2 hours before':
+          NotificationClass().setReminder(
+              0, category, title, date.subtract(const Duration(hours: 2)));
+          break;
+        case 'One day before':
+          NotificationClass().setReminder(
+              0, category, title, date.subtract(const Duration(days: 1)));
+          break;
+      }
+
       FocusScope.of(context).unfocus();
       Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Exam name must not be empty'),
+        ),
+      );
     }
   }
 
@@ -181,6 +229,25 @@ class _AddExamScreenState extends State<AddExamScreen> {
           selectedTime.hour,
           selectedTime.minute,
         );
+
+        date = DateTime(date.year, date.month, date.day, selectedTime.hour,
+            selectedTime.minute);
+      });
+    }
+  }
+
+  Future<void> _setReminder(BuildContext context) async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ReminderPicker(selectedReminder: reminder),
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {
+        reminder = result;
       });
     }
   }
@@ -188,7 +255,7 @@ class _AddExamScreenState extends State<AddExamScreen> {
   Future selectDate() async {
     DateTime? selectedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: date,
       firstDate: DateTime.now(),
       lastDate:
           DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),
@@ -196,7 +263,8 @@ class _AddExamScreenState extends State<AddExamScreen> {
 
     if (selectedDate != null) {
       setState(() {
-        date = selectedDate;
+        date = DateTime(selectedDate.year, selectedDate.month, selectedDate.day,
+            time.hour, time.minute);
       });
     }
   }

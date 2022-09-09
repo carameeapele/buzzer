@@ -23,13 +23,14 @@ class CourseAdapter extends TypeAdapter<Course> {
       professorEmail: fields[7] as String,
       details: fields[8] as String,
       week: fields[9] as int,
+      building: fields[10] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Course obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -49,7 +50,9 @@ class CourseAdapter extends TypeAdapter<Course> {
       ..writeByte(8)
       ..write(obj.details)
       ..writeByte(9)
-      ..write(obj.week);
+      ..write(obj.week)
+      ..writeByte(10)
+      ..write(obj.building);
   }
 
   @override

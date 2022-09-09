@@ -20,11 +20,40 @@ import 'package:buzzer/screens/timetable/timetable.dart';
 import 'package:buzzer/style/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:timezone/data/latest_all.dart' as timezone;
+import 'package:timezone/timezone.dart' as timezone;
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  await _setTimezone();
+
+  const AndroidInitializationSettings androidInitializationSettings =
+      AndroidInitializationSettings('buzzer_icon');
+
+  const InitializationSettings initializationSettings =
+      InitializationSettings(android: androidInitializationSettings);
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onSelectNotification: (String? payload) async {
+      if (payload != null) {
+        debugPrint('notification payload: $payload');
+      }
+    },
+  );
+
+  flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.requestPermission();
 
   await Hive.initFlutter();
 
@@ -79,6 +108,13 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+}
+
+Future<void> _setTimezone() async {
+  timezone.initializeTimeZones();
+  final String? localTimezone = await FlutterNativeTimezone.getLocalTimezone();
+
+  timezone.setLocalLocation(timezone.getLocation(localTimezone!));
 }
 
 class BuzzerColors {

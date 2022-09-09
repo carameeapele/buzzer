@@ -45,6 +45,8 @@ dependencies:
   flutter_launcher_icons: ^0.10.0
   flutter_native_splash: ^2.2.8
   url_launcher: ^6.1.5
+  flutter_local_notifications: ^9.9.1
+  flutter_native_timezone: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +78,7 @@ flutter:
   assets:
     - assets/media/buzzer_icon.png
     - assets/media/splash.png
+    - assets/media/first_onboard.png
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

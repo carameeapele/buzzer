@@ -2,26 +2,26 @@ import 'package:buzzer/main.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
-class ClassTypes extends StatefulWidget {
-  const ClassTypes({
+class WeekPicker extends StatefulWidget {
+  const WeekPicker({
     Key? key,
-    required this.selectedType,
+    required this.optionIndex,
   }) : super(key: key);
 
-  final String selectedType;
+  final int optionIndex;
 
   @override
-  State<ClassTypes> createState() => _ClassTypesState();
+  State<WeekPicker> createState() => _WeekPickerState();
 }
 
-class _ClassTypesState extends State<ClassTypes> {
-  List<String> types = ['None', 'Course', 'Seminar', 'Laboratory'];
-  late String selectedType = widget.selectedType;
+class _WeekPickerState extends State<WeekPicker> {
+  List<String> options = ['Every Week', 'Odd Week', 'Even Week'];
+  late int selectedOption = widget.optionIndex;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 280.0,
+      height: 220.0,
       padding: const EdgeInsets.symmetric(
         horizontal: 20.0,
         vertical: 25.0,
@@ -30,20 +30,17 @@ class _ClassTypesState extends State<ClassTypes> {
         children: <Widget>[
           ListView.builder(
             shrinkWrap: true,
-            itemCount: types.length,
+            itemCount: options.length,
             itemBuilder: (BuildContext context, int index) {
-              final type = types[index];
+              final option = options[index];
 
               return customCard(
                 ListTile(
-                  selected: (selectedType.compareTo(type) == 0),
+                  selected: (selectedOption == index),
                   selectedColor: BuzzerColors.orange,
                   dense: true,
-                  title: Text(
-                    type,
-                    style: const TextStyle(fontSize: 15.0),
-                  ),
-                  trailing: (selectedType.compareTo(type) == 0)
+                  title: Text(option),
+                  trailing: (selectedOption == index)
                       ? Icon(
                           Icons.check,
                           size: 20.0,
@@ -52,8 +49,8 @@ class _ClassTypesState extends State<ClassTypes> {
                       : null,
                   onTap: () {
                     setState(() {
-                      selectedType = type;
-                      Navigator.pop(context, selectedType);
+                      selectedOption = index;
+                      Navigator.pop(context, selectedOption);
                     });
                   },
                 ),

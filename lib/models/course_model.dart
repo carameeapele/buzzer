@@ -32,6 +32,9 @@ class Course extends HiveObject {
   @HiveField(9)
   late int week;
 
+  @HiveField(10)
+  late String building;
+
   Course({
     required this.id,
     required this.title,
@@ -43,5 +46,6 @@ class Course extends HiveObject {
     required this.professorEmail,
     required this.details,
     required this.week,
+    required this.building,
   });
 }

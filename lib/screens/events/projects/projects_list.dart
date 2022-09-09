@@ -5,7 +5,6 @@ import 'package:buzzer/screens/events/projects/edit_project.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:intl/intl.dart';
 
 class ProjectsList extends StatefulWidget {
   const ProjectsList({Key? key}) : super(key: key);
@@ -54,131 +53,87 @@ class _ProjectsListState extends State<ProjectsList> {
         final projects = box.values.toList().cast<Project>();
         projects.sort((a, b) => a.date.compareTo(b.date));
 
-        return projects.isEmpty
-            ? defaultScreen
-            : ListView.builder(
-                shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
-                itemCount: projects.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final project = projects[index];
-                  final List<Task> tasks = [];
-                  final List<Task> completeTasks = [];
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: const BouncingScrollPhysics(),
+          itemCount: projects.length,
+          itemBuilder: (BuildContext context, int index) {
+            final project = projects[index];
+            final List<Task> tasks = project.tasks.toList().cast<Task>();
 
-                  DateTime now = DateTime.now();
-                  bool _isToday = (project.date.day == now.day &&
-                      project.date.month == now.month &&
-                      project.date.year == now.year);
+            late int completeTasks =
+                tasks.where((task) => task.complete).length;
 
-                  return customCard(
-                    Theme(
-                      data: data,
-                      child: ExpansionTile(
-                        tilePadding:
-                            const EdgeInsets.symmetric(horizontal: 20.0),
-                        title: classTitle(project.title, project.category),
-                        subtitle: LinearProgressIndicator(
-                          color: BuzzerColors.orange,
-                          value: 0.5,
-                        ),
-                        childrenPadding: const EdgeInsets.symmetric(
-                          horizontal: 15.0,
-                          vertical: 0.0,
-                        ),
-                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                        expandedAlignment: Alignment.centerLeft,
-                        children: <Widget>[
-                          ListView.builder(
+            late double progress = (completeTasks == 0)
+                ? 0.0
+                : (completeTasks * (1 / tasks.length));
+
+            return customCard(
+              Theme(
+                data: data,
+                child: ExpansionTile(
+                  tilePadding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  title: classTitle(project.title, project.category),
+                  subtitle: LinearProgressIndicator(
+                    backgroundColor: Colors.white,
+                    color: BuzzerColors.orange,
+                    value: progress,
+                  ),
+                  childrenPadding: const EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                    vertical: 0.0,
+                  ),
+                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                  expandedAlignment: Alignment.centerLeft,
+                  children: <Widget>[
+                    tasks.isEmpty
+                        ? const SizedBox()
+                        : ListView.builder(
                             shrinkWrap: true,
                             itemCount: tasks.length,
                             itemBuilder: (BuildContext context, int index) {
                               final task = tasks[index];
 
-                              return Text(task.title);
-                              // return ListTile(
-                              //   dense: true,
-                              //   title: Text(task.title),
-                              //   trailing: Checkbox(
-                              //     value: task.complete,
-                              //     onChanged: (value) {
-                              //       task.complete = value!;
-                              //       task.save();
-                              //     },
-                              //   ),
-                              // );
+                              return ListTile(
+                                dense: true,
+                                title: Text(
+                                  task.title,
+                                  style: const TextStyle(fontSize: 16.0),
+                                ),
+                                trailing: Checkbox(
+                                  value: task.complete,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      task.complete = value!;
+                                      task.save();
+
+                                      if (value) {
+                                        progress =
+                                            progress + (1 / tasks.length);
+                                      } else {
+                                        progress =
+                                            progress - (1 / tasks.length);
+                                      }
+                                    });
+                                  },
+                                ),
+                              );
                             },
                           ),
-                          options(project),
-                        ],
-                      ),
-                    ),
-                    false,
-                  );
-                },
-              );
+                    options(project),
+                  ],
+                ),
+              ),
+              false,
+            );
+          },
+        );
       },
     );
   }
 
-  final projectTiles = <ListTile>[];
-
-  RichText title(
-    String title,
-    String category,
-    DateTime date,
-    DateTime time,
-  ) {
-    DateTime now = DateTime.now();
-    bool _isBefore = (date.isBefore(now));
-
-    return RichText(
-      text: TextSpan(
-        text: (category.compareTo('None') == 0) ? '' : category,
-        style: TextStyle(
-          color: (_isBefore && time.isBefore(now))
-              ? BuzzerColors.grey
-              : Colors.black,
-          fontSize: 17.0,
-          fontStyle: FontStyle.italic,
-          decoration: (_isBefore && time.isBefore(now))
-              ? TextDecoration.lineThrough
-              : null,
-          decorationThickness: 2.0,
-        ),
-        children: <TextSpan>[
-          TextSpan(
-            text: ' $title',
-            style: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.normal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Text trailing(DateTime date, DateTime time) {
-    DateTime now = DateTime.now();
-    bool _isToday = (date.day == now.day &&
-        date.month == now.month &&
-        date.year == now.year);
-
-    return Text(
-      _isToday
-          ? DateFormat('Hm', 'en_US').format(time)
-          : DateFormat('dd MMM', 'en_US').format(date),
-      style: TextStyle(
-        color: ((date.isBefore(now) && time.isBefore(now)))
-            ? BuzzerColors.grey
-            : Colors.black,
-        fontSize: 16.0,
-      ),
-    );
-  }
-
   void _deleteProject(Project project) {
+    project.tasks.deleteAllFromHive();
     project.delete();
   }
 

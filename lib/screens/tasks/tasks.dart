@@ -15,6 +15,14 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
+  late bool deleteTasks = preferences.get('deleteTasks', defaultValue: false);
+
+  @override
+  void initState() {
+    _automaticallyDelete();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final data = Theme.of(context).copyWith(dividerColor: Colors.transparent);
@@ -45,7 +53,13 @@ class _TasksScreenState extends State<TasksScreen> {
       valueListenable: Hive.box<Task>('tasks').listenable(),
       builder: (context, box, widget) {
         final tasks = box.values.toList().cast<Task>();
+        tasks.removeWhere((task) => task.complete == true);
         tasks.sort((a, b) => a.date.compareTo(b.date));
+
+        final completeTasks = box.values.toList().cast<Task>();
+        completeTasks.removeWhere((task) => task.complete == false);
+
+        tasks.addAll(completeTasks);
 
         return Scaffold(
           appBar: AppBar(title: const Text('Tasks')),
@@ -86,6 +100,9 @@ class _TasksScreenState extends State<TasksScreen> {
                                       value: task.complete,
                                       onChanged: (value) {
                                         _completeTask(task, value!);
+
+                                        tasks.remove(task);
+                                        completeTasks.add(task);
                                       },
                                     ),
                                     childrenPadding: const EdgeInsets.symmetric(
@@ -150,26 +167,43 @@ class _TasksScreenState extends State<TasksScreen> {
         ),
         TextButton(
           onPressed: () {
-            task.delete();
-
-            final categoryBox = Hive.box<Category>('categories');
-            final categories = categoryBox.values.toList().cast<Category>();
-
-            final index = categories.indexWhere(
-                (category) => category.name.compareTo(task.category) == 0);
-
-            if (index != -1) {
-              categories[index].uses--;
-              categories[index].save();
-
-              if (categories[index].uses < 1) {
-                categories[index].delete();
-              }
-            }
+            _deleteTask(task);
           },
           child: const Text('Delete'),
         ),
       ],
     );
+  }
+
+  void _deleteTask(Task task) {
+    task.delete();
+
+    final categoryBox = Hive.box<Category>('categories');
+    final categories = categoryBox.values.toList().cast<Category>();
+
+    final index = categories
+        .indexWhere((category) => category.name.compareTo(task.category) == 0);
+
+    if (index != -1) {
+      categories[index].uses--;
+      categories[index].save();
+
+      if (categories[index].uses < 1) {
+        categories[index].delete();
+      }
+    }
+  }
+
+  void _automaticallyDelete() {
+    if (deleteTasks) {
+      final box = Hive.box<Task>('tasks');
+      final tasks = box.values.toList().cast<Task>();
+
+      for (var task in tasks) {
+        if (task.date.add(const Duration(days: 1)).isBefore(DateTime.now())) {
+          _deleteTask(task);
+        }
+      }
+    }
   }
 }

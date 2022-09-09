@@ -14,35 +14,30 @@ class TimetableScreen extends StatefulWidget {
 
 class _TimetableScreenState extends State<TimetableScreen>
     with TickerProviderStateMixin {
-  bool loading = false;
+  DateTime now = DateTime.now();
+  late int initialIndex = now.weekday - 1;
+
+  final preferences = Hive.box('preferences');
+  late bool weekendDays = preferences.get('weekendDays', defaultValue: false);
+
+  late bool countWeeks = preferences.get('countWeeks', defaultValue: false);
+  late DateTime firstDay =
+      preferences.get('firstDay', defaultValue: DateTime.now());
+  late int weekNumber = preferences.get('weekNumber', defaultValue: 1);
+
+  late int repeatAfter = preferences.get('repeatAfter', defaultValue: 1);
 
   @override
   void initState() {
+    _weekCounter();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    late int initialIndex = now.weekday - 1;
-
-    final preferences = Hive.box('preferences');
-    late bool? weekendDays =
-        preferences.get('weekendDays', defaultValue: false);
-
-    final int repeatAfter = preferences.get('repeatAfter', defaultValue: 1);
-    int _week = 1;
-
-    void _toggleWeek() {
-      if (repeatAfter == 2) {
-        if (initialIndex >= 4) {
-          _week = 2;
-        }
-      }
-    }
-
     TabController _controller = TabController(
-      initialIndex: weekendDays! ? initialIndex : 0,
+      initialIndex:
+          initialIndex > 4 ? (weekendDays ? initialIndex : 0) : initialIndex,
       length: weekendDays ? 7 : 5,
       vsync: this,
     );
@@ -70,10 +65,12 @@ class _TimetableScreenState extends State<TimetableScreen>
     final double height = MediaQuery.of(context).size.height -
         AppBar().preferredSize.height -
         MediaQuery.of(context).padding.top -
-        68.0;
+        120.0;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Timetable')),
+      appBar: AppBar(
+        title: countWeeks ? Text('Week $weekNumber') : const Text('Timetable'),
+      ),
       endDrawer: const MenuDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,9 +133,37 @@ class _TimetableScreenState extends State<TimetableScreen>
                 builder: (context) => const AddClass(day: 'Friday', week: 1),
               ));
               break;
+            case 5:
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AddClass(day: 'Saturday', week: 1),
+              ));
+              break;
+            case 6:
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AddClass(day: 'Sunday', week: 1),
+              ));
           }
         },
       ),
     );
+  }
+
+  void _weekCounter() {
+    if (countWeeks) {
+      final difference = DateTime.now().difference(firstDay);
+      int days = difference.inDays.toInt();
+
+      if (days / 7 <= 1) {
+        setState(() {
+          weekNumber = 1;
+          preferences.put('weekNumber', weekNumber);
+        });
+      } else {
+        setState(() {
+          weekNumber = (days / 7).round() + 1;
+          preferences.put('weekNumber', weekNumber);
+        });
+      }
+    }
   }
 }

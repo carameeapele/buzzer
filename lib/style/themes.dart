@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 ThemeData darkTheme = ThemeData(
   snackBarTheme: SnackBarThemeData(
-    backgroundColor: Colors.white.withOpacity(0.3),
+    backgroundColor: Colors.grey[800],
     contentTextStyle: const TextStyle(color: Colors.white),
   ),
   inputDecorationTheme: InputDecorationTheme(
@@ -109,7 +109,7 @@ ThemeData darkTheme = ThemeData(
 
 ThemeData lightTheme = ThemeData(
   snackBarTheme: SnackBarThemeData(
-    backgroundColor: Colors.black.withOpacity(0.3),
+    backgroundColor: Colors.grey[350],
     contentTextStyle: const TextStyle(color: Colors.black),
   ),
   inputDecorationTheme: InputDecorationTheme(
@@ -182,7 +182,6 @@ ThemeData lightTheme = ThemeData(
   dividerTheme: DividerThemeData(
     color: BuzzerColors.lightGrey,
     thickness: 2.0,
-    space: 40.0,
   ),
   checkboxTheme: CheckboxThemeData(
     checkColor: MaterialStateProperty.all(Colors.white),

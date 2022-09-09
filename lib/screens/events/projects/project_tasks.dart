@@ -4,17 +4,18 @@ import 'package:buzzer/screens/events/projects/add_project_task.dart';
 import 'package:buzzer/widgets/buttons.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
 class ProjectTasks extends StatefulWidget {
   const ProjectTasks({
     Key? key,
     required this.category,
+    required this.date,
     required this.tasks,
   }) : super(key: key);
 
   final String category;
+  final DateTime date;
   final List<Task> tasks;
 
   @override
@@ -22,33 +23,33 @@ class ProjectTasks extends StatefulWidget {
 }
 
 class _ProjectTasksState extends State<ProjectTasks> {
-  final tasksBox = Hive.box<Task>('tasks');
-  List<Task> tasks = <Task>[];
+  late List<Task> tasks = widget.tasks;
 
   @override
   Widget build(BuildContext context) {
+    tasks.sort((a, b) => a.date.compareTo(b.date));
+
     return Scaffold(
       bottomNavigationBar: bottomOptions(context, _onSave),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 60.0, 20.0, 20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             tasks.isEmpty
-                ? const Center(
-                    child: Text('No Tasks'),
+                ? customCard(
+                    const Center(
+                      heightFactor: 3.0,
+                      child: Text('No Tasks'),
+                    ),
+                    false,
                   )
                 : ListView.builder(
                     shrinkWrap: true,
                     itemCount: tasks.length,
                     itemBuilder: (BuildContext context, int index) {
                       final task = tasks[index];
-
-                      DateTime now = DateTime.now();
-                      bool _isToday = (task.date.day == now.day &&
-                          task.date.month == now.month &&
-                          task.date.year == now.year);
 
                       return customCard(
                         ListTile(
@@ -63,9 +64,11 @@ class _ProjectTasksState extends State<ProjectTasks> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          subtitle: Text(task.details),
+                          subtitle: task.details.isNotEmpty
+                              ? Text(task.details)
+                              : null,
                         ),
-                        _isToday,
+                        false,
                       );
                     },
                   ),
@@ -89,7 +92,10 @@ class _ProjectTasksState extends State<ProjectTasks> {
   Future<void> _addTask(BuildContext context) async {
     final Task? result = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => AddProjectTask(category: widget.category),
+        builder: (context) => AddProjectTask(
+          category: widget.category,
+          date: widget.date,
+        ),
       ),
     );
 

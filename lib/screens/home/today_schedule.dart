@@ -1,5 +1,6 @@
 import 'package:buzzer/main.dart';
 import 'package:buzzer/models/course_model.dart';
+import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
@@ -69,43 +70,33 @@ class _TodayScheduleState extends State<TodaySchedule> {
                         todayClasses.length > 3 ? 3 : todayClasses.length,
                     itemBuilder: (BuildContext context, int index) {
                       Course todayClass = todayClasses[index];
+                      bool _isNow =
+                          (todayClass.startTime.hour <= DateTime.now().hour &&
+                              todayClass.endTime.hour > DateTime.now().hour);
 
-                      return Card(
-                        elevation: 0.0,
-                        color: BuzzerColors.lightGrey,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                        ),
-                        child: ListTile(
+                      return classCard(
+                        ListTile(
                           dense: true,
-                          title: title(todayClass.title, todayClass.type),
-                          trailing: trailing(todayClass.startTime),
+                          title: todayTaskTitle(todayClass.title,
+                              todayClass.type, todayClass.startTime),
+                          trailing: _isNow
+                              ? Text(
+                                  'Now',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: BuzzerColors.orange,
+                                  ),
+                                )
+                              : Text(DateFormat('Hm')
+                                  .format(todayClass.startTime)),
                           onTap: () {
                             Navigator.of(context).popAndPushNamed('/timetable');
                           },
                         ),
+                        _isNow,
                       );
                     },
                   ),
-                  (todayClasses.length - 3) > 0
-                      ? ListTile(
-                          dense: true,
-                          title: Text(
-                            '+ ${todayClasses.length - 3} more',
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                              color: BuzzerColors.orange,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.of(context).popAndPushNamed('/timetable');
-                          },
-                        )
-                      : const SizedBox(),
                 ],
               );
       },

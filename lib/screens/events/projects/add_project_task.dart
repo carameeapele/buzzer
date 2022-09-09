@@ -1,20 +1,21 @@
-import 'package:buzzer/models/category_model.dart';
+import 'package:buzzer/models/notifications.dart';
 import 'package:buzzer/models/task_model.dart';
-import 'package:buzzer/screens/categories.dart';
+import 'package:buzzer/screens/reminders.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
 class AddProjectTask extends StatefulWidget {
   const AddProjectTask({
     Key? key,
     required this.category,
+    required this.date,
   }) : super(key: key);
 
   final String category;
+  final DateTime date;
 
   @override
   State<AddProjectTask> createState() => _AddProjectTaskState();
@@ -22,12 +23,14 @@ class AddProjectTask extends StatefulWidget {
 
 class _AddProjectTaskState extends State<AddProjectTask> {
   late String title = '';
+  late DateTime lastDate = widget.date;
   DateTime date = DateTime.now();
   late DateTime time =
       DateTime(date.year, date.month, date.day, date.hour + 1, 0);
 
   late String category = widget.category;
   String details = '';
+  String reminder = 'None';
 
   String _id() {
     final now = DateTime.now();
@@ -95,9 +98,11 @@ class _AddProjectTaskState extends State<AddProjectTask> {
                 ),
                 TextButtonRow(
                   label: 'Reminder',
-                  text: '1 hour before',
+                  text: reminder,
                   icon: true,
-                  onPressed: () {},
+                  onPressed: () {
+                    _setReminder(context);
+                  },
                   borderRadius: const BorderRadius.vertical(
                       bottom: Radius.circular(10.0)),
                 ),
@@ -126,6 +131,31 @@ class _AddProjectTaskState extends State<AddProjectTask> {
         details: details,
         complete: false,
       );
+
+      switch (reminder) {
+        case 'None':
+          break;
+        case '10 minutes before':
+          NotificationClass().setReminder(task.id.hashCode, category, title,
+              date.subtract(const Duration(minutes: 10)));
+          break;
+        case '30 minutes before':
+          NotificationClass().setReminder(task.id.hashCode, category, title,
+              date.subtract(const Duration(minutes: 30)));
+          break;
+        case '1 hour before':
+          NotificationClass().setReminder(task.id.hashCode, category, title,
+              date.subtract(const Duration(hours: 1)));
+          break;
+        case '2 hours before':
+          NotificationClass().setReminder(task.id.hashCode, category, title,
+              date.subtract(const Duration(hours: 2)));
+          break;
+        case 'One day before':
+          NotificationClass().setReminder(task.id.hashCode, category, title,
+              date.subtract(const Duration(days: 1)));
+          break;
+      }
 
       Navigator.of(context).pop<Task>(task);
     } else {
@@ -161,14 +191,22 @@ class _AddProjectTaskState extends State<AddProjectTask> {
           selectedTime.hour,
           selectedTime.minute,
         );
+
+        date = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
       });
     }
   }
 
-  Future<void> _getCategory(BuildContext context) async {
+  Future<void> _setReminder(BuildContext context) async {
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => CategoryPicker(selectedCategory: category),
+        builder: (context) => ReminderPicker(selectedReminder: reminder),
       ),
     );
 
@@ -176,23 +214,27 @@ class _AddProjectTaskState extends State<AddProjectTask> {
 
     if (result != null) {
       setState(() {
-        category = result;
+        reminder = result;
       });
     }
   }
 
   Future _selectDate() async {
     DateTime? selectedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate:
-          DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),
-    );
+        context: context,
+        initialDate: date,
+        firstDate: DateTime.now(),
+        lastDate: lastDate);
 
     if (selectedDate != null) {
       setState(() {
-        date = selectedDate;
+        date = DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          time.hour,
+          time.minute,
+        );
       });
     }
   }

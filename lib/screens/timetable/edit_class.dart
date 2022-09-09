@@ -1,12 +1,11 @@
 import 'package:buzzer/main.dart';
-import 'package:buzzer/models/category_model.dart';
 import 'package:buzzer/models/course_model.dart';
 import 'package:buzzer/screens/timetable/class_types.dart';
+import 'package:buzzer/screens/timetable/week_picker.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
 import 'package:buzzer/widgets/text_row.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
 class EditClass extends StatefulWidget {
@@ -30,6 +29,10 @@ class _EditClassState extends State<EditClass> {
   late String room = widget.classs.room;
   late String professorEmail = widget.classs.professorEmail;
   late String details = widget.classs.details;
+  late int optionIndex = widget.classs.week;
+  late String building = widget.classs.building;
+
+  List<String> options = ['Every Week', 'Odd Week', 'Even Week'];
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,7 @@ class _EditClassState extends State<EditClass> {
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.words,
                   onChannge: (value) {
-                    title = value;
+                    title = value.trim();
                   },
                   validator: (value) {
                     if (value != null && value.length > 20) {
@@ -75,6 +78,15 @@ class _EditClassState extends State<EditClass> {
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
                 TextButtonRow(
+                  label: 'Week',
+                  text: options[optionIndex],
+                  icon: false,
+                  onPressed: () {
+                    _weekPicker();
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextButtonRow(
                   label: 'Start',
                   text: DateFormat.Hm().format(startTime),
                   icon: false,
@@ -91,17 +103,28 @@ class _EditClassState extends State<EditClass> {
                 TextButtonRow(
                   label: 'Class Type',
                   text: type,
-                  icon: true,
+                  icon: false,
                   onPressed: () {
-                    _getType(context);
+                    _getType();
                   },
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
-                TextButtonRow(
+                TextFieldRow(
+                  label: 'Building',
+                  maxLines: 20,
+                  defaultValue: building,
+                  onChannge: (value) {
+                    building = value.trim();
+                  },
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                ),
+                TextFieldRow(
                   label: 'Room',
-                  text: room,
-                  icon: true,
-                  onPressed: () {},
+                  maxLines: 6,
+                  defaultValue: room,
+                  onChannge: (value) {
+                    room = value.trim();
+                  },
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
                 TextButtonRow(
@@ -117,7 +140,7 @@ class _EditClassState extends State<EditClass> {
                   keyboardType: TextInputType.emailAddress,
                   textCapitalization: TextCapitalization.none,
                   onChannge: (value) {
-                    professorEmail = value;
+                    professorEmail = value.trim();
                   },
                   validator: (value) {
                     if (value!.contains('@') && value.contains('.')) {
@@ -138,10 +161,14 @@ class _EditClassState extends State<EditClass> {
     );
   }
 
-  Future<void> _getType(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ClassTypes(selectedType: type)),
+  Future<void> _getType() async {
+    final result = await showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15.0))),
+      context: context,
+      builder: (BuildContext context) {
+        return ClassTypes(selectedType: type);
+      },
     );
 
     if (!mounted) return;
@@ -162,12 +189,30 @@ class _EditClassState extends State<EditClass> {
     widget.classs.room = room;
     widget.classs.professorEmail = professorEmail;
     widget.classs.details = details;
-
-    final categoryBox = Hive.box<Category>('categories');
-    categoryBox.add(Category(name: title, uses: 1));
+    widget.classs.week = optionIndex;
+    widget.classs.building = building;
 
     widget.classs.save();
     Navigator.of(context).pop();
+  }
+
+  Future<void> _weekPicker() async {
+    final result = await showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15.0))),
+      context: context,
+      builder: (BuildContext context) {
+        return WeekPicker(optionIndex: optionIndex);
+      },
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {
+        optionIndex = result;
+      });
+    }
   }
 
   Future _selectStartTime() async {

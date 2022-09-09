@@ -1,5 +1,7 @@
 import 'package:buzzer/models/project_model.dart';
+import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/categories.dart';
+import 'package:buzzer/screens/events/projects/project_tasks.dart';
 import 'package:buzzer/screens/reminders.dart';
 import 'package:buzzer/widgets/custom_widgets.dart';
 import 'package:buzzer/widgets/form_field.dart';
@@ -25,8 +27,11 @@ class _EditProjectState extends State<EditProject> {
   late DateTime date = widget.project.date;
   late DateTime time = widget.project.time;
   late String category = widget.project.category;
-  late HiveList tasks = widget.project.tasks;
-  late String reminder;
+  late HiveList tasksList = widget.project.tasks;
+  late List<Task> tasks = tasksList.toList().cast<Task>();
+  late List<Task> newTasks = [];
+
+  late String reminder = 'None';
 
   @override
   Widget build(BuildContext context) {
@@ -82,16 +87,18 @@ class _EditProjectState extends State<EditProject> {
                 ),
                 TextButtonRow(
                   label: 'Reminder',
-                  text: '1 hour before',
+                  text: reminder,
                   icon: true,
                   onPressed: () {},
                   borderRadius: const BorderRadius.all(Radius.zero),
                 ),
                 TextButtonRow(
                   label: 'Tasks',
-                  text: 'Add',
+                  text: newTasks.isEmpty ? 'Add' : '${newTasks.length}',
                   icon: true,
-                  onPressed: () {},
+                  onPressed: () {
+                    _setTasks();
+                  },
                   borderRadius: const BorderRadius.vertical(
                       bottom: Radius.circular(10.0)),
                 ),
@@ -103,7 +110,7 @@ class _EditProjectState extends State<EditProject> {
     );
   }
 
-  Future<void> _setReminder(BuildContext context) async {
+  Future<void> _setReminder() async {
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ReminderPicker(selectedReminder: reminder),
@@ -125,8 +132,38 @@ class _EditProjectState extends State<EditProject> {
     widget.project.time = time;
     widget.project.category = category;
 
+    final tasksBox = Hive.box<Task>('tasks');
+
+    if (newTasks.isNotEmpty) {
+      for (var newTask in newTasks) {
+        if (!tasks.contains(newTask)) {
+          tasksBox.add(newTask);
+          widget.project.tasks.add(newTask);
+        }
+      }
+    }
+
     widget.project.save();
     Navigator.of(context).pop();
+  }
+
+  Future<void> _setTasks() async {
+    newTasks.addAll(tasks);
+
+    final List<Task>? result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            ProjectTasks(category: category, date: date, tasks: newTasks),
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {
+        newTasks = result;
+      });
+    }
   }
 
   Future selectTime() async {
@@ -153,6 +190,14 @@ class _EditProjectState extends State<EditProject> {
           selectedTime.hour,
           selectedTime.minute,
         );
+
+        date = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
       });
     }
   }
@@ -161,9 +206,10 @@ class _EditProjectState extends State<EditProject> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => CategoryPicker(
-                selectedCategory: category,
-              )),
+        builder: (context) => CategoryPicker(
+          selectedCategory: category,
+        ),
+      ),
     );
 
     if (!mounted) return;
@@ -178,7 +224,7 @@ class _EditProjectState extends State<EditProject> {
   Future selectDate() async {
     DateTime? selectedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: date,
       firstDate: DateTime.now(),
       lastDate:
           DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),

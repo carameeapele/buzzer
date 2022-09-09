@@ -1,4 +1,5 @@
 import 'package:buzzer/models/category_model.dart';
+import 'package:buzzer/models/notifications.dart';
 import 'package:buzzer/models/project_model.dart';
 import 'package:buzzer/models/task_model.dart';
 import 'package:buzzer/screens/categories.dart';
@@ -22,10 +23,10 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   late String title = '';
   DateTime date = DateTime.now();
   late DateTime time = date.add(const Duration(hours: 1));
-  late List<Task> tasks = <Task>[];
+  late List<Task> tasks = [];
 
   String category = 'None';
-  late String reminder = '1 hour before';
+  late String reminder = 'None';
 
   String _id() {
     final now = DateTime.now();
@@ -99,7 +100,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                     ),
                     TextButtonRow(
                       label: 'Tasks',
-                      text: tasks.isEmpty ? 'Add' : '$tasks.length',
+                      text: tasks.isEmpty ? 'Add' : '${tasks.length}',
                       icon: true,
                       onPressed: () {
                         _setTasks(context);
@@ -134,35 +135,38 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   }
 
   Future<void> _setTasks(BuildContext context) async {
-    final List<Task>? result = await Navigator.of(context).push(
+    final List<Task>? results = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ProjectTasks(category: category, tasks: tasks),
+        builder: (context) =>
+            ProjectTasks(category: category, date: date, tasks: tasks),
       ),
     );
 
     if (!mounted) return;
 
-    if (result != null) {
-      tasks.addAll(result);
+    if (results != null) {
+      setState(() {
+        tasks = results;
+      });
     }
   }
 
   void _onSave() {
     if (title != '') {
       final project = Project(
-        _id(),
-        title,
-        category,
-        DateTime(
-          date.year,
-          date.month,
-          date.day,
-          time.hour,
-          time.minute,
-        ),
-        time,
-        false,
-      );
+          _id(),
+          title,
+          category,
+          DateTime(
+            date.year,
+            date.month,
+            date.day,
+            time.hour,
+            time.minute,
+          ),
+          time,
+          false,
+          0.0);
 
       final tasksBox = Hive.box<Task>('tasks');
       project.tasks = HiveList(tasksBox);
@@ -188,6 +192,31 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       } else {
         categories[index].uses++;
         categories[index].save();
+      }
+
+      switch (reminder) {
+        case 'None':
+          break;
+        case '10 minutes before':
+          NotificationClass().setReminder(project.id.hashCode, category, title,
+              date.subtract(const Duration(minutes: 10)));
+          break;
+        case '30 minutes before':
+          NotificationClass().setReminder(project.id.hashCode, category, title,
+              date.subtract(const Duration(minutes: 30)));
+          break;
+        case '1 hour before':
+          NotificationClass().setReminder(project.id.hashCode, category, title,
+              date.subtract(const Duration(hours: 1)));
+          break;
+        case '2 hours before':
+          NotificationClass().setReminder(project.id.hashCode, category, title,
+              date.subtract(const Duration(hours: 2)));
+          break;
+        case 'One day before':
+          NotificationClass().setReminder(project.id.hashCode, category, title,
+              date.subtract(const Duration(days: 1)));
+          break;
       }
 
       FocusScope.of(context).unfocus();
@@ -225,6 +254,14 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
           selectedTime.hour,
           selectedTime.minute,
         );
+
+        date = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
       });
     }
   }
@@ -232,7 +269,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   Future _selectDate() async {
     DateTime? selectedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: date,
       firstDate: DateTime.now(),
       lastDate:
           DateTime(DateTime.now().add(const Duration(days: 365 * 4)).year),

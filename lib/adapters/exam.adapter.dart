@@ -20,13 +20,14 @@ class ExamAdapter extends TypeAdapter<Exam> {
       category: fields[4] as String,
       details: fields[5] as String,
       room: fields[6] as String,
+      building: fields[7] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Exam obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -40,6 +41,8 @@ class ExamAdapter extends TypeAdapter<Exam> {
       ..writeByte(5)
       ..write(obj.details)
       ..writeByte(6)
-      ..write(obj.room);
+      ..write(obj.room)
+      ..writeByte(7)
+      ..write(obj.building);
   }
 }
