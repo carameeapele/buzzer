@@ -1,6 +1,6 @@
 # buzzer
-
-A new Flutter project.
+Univeristy final project.
+An agenda dedicated to students to help them manage their projects and classes. They can save their schedules and tasks, and can also add their projects, divide them in smaller tasks and keep track of its progress.
 
 ## Getting Started
 
